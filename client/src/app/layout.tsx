@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {ReactNode} from "react";
+import Header from "@/components/Header/Header";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -10,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "eduWiki",
+  title: "EduMap",
   description: "О учёбе за границей",
 };
 
@@ -20,10 +21,11 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${inter.variable} pe-80 ps-80 antialiased bg-black`}
       >
+        <Header isLanding={true}/>
         {children}
       </body>
     </html>
