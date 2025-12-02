@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${inter.variable} pe-80 ps-80 antialiased bg-black`}
+        className={`${inter.variable} antialiased bg-black`}
       >
         <Header isLanding={true}/>
         {children}

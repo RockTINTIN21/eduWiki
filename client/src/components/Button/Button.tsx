@@ -19,8 +19,9 @@ const Button: FC<ButtonProps> = ({
   return (
     <button className={`
     rounded-full pe-7 ps-7 cursor-pointer
-    ${variant === 'primary' ? 'bg-accent hover:bg-accent-hover' : 'bg-secondary'} 
+    ${variant === 'primary' ? 'bg-accent hover:bg-accent-hover text-white' : 'bg-secondary'} 
     ${size === 'md' && 'h-10'}
+    ${className ? className : ''}
     `}>
       {children}
     </button>
