@@ -3,6 +3,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import {ReactNode} from "react";
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -22,11 +23,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body
-        className={`${inter.variable} antialiased bg-black`}
-      >
-        <Header isLanding={true}/>
-        {children}
+      {/* добавлено: min-h-screen flex flex-col */}
+      <body className={`${inter.variable} antialiased bg-black min-h-screen flex flex-col`}>
+        <Header isLanding={true} />
+
+        {/* main растягивается и отталкивает футер вниз */}
+        <main className="flex-1">
+          {children}
+        </main>
+
+        <Footer isLanding={true} />
       </body>
     </html>
   );
