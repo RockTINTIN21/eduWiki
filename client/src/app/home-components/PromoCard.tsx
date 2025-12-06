@@ -15,8 +15,8 @@ const PromoCard = ({icon, title, description, isShortCard}: PromoCardProps) => {
       `}
     >
       <HugeiconsIcon className={isShortCard === false ? 'text-accent' : 'text-white'}
-        width={isShortCard === false ? 40 : 30}
-        height={isShortCard === false ? 40 : 30}
+        width={isShortCard === false ? 40 : 25}
+        height={isShortCard === false ? 40 : 25}
         icon={icon}/>
       <div className={isShortCard === false ? 'flex flex-col gap-2 pb-12' : ''}>
         <p className={`font-medium ${isShortCard === false ? 'text-xl' : ' text-md'}`}>{title}</p>

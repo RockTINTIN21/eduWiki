@@ -7,8 +7,9 @@ import {aboutUs, ourAbilities, shortCards, statistics} from "@/app/home-componen
 import PromoCard from "@/app/home-components/PromoCard";
 import 'swiper/css';
 import 'swiper/css/pagination';
-import MobileCarousel from "@/app/home-components/MobileCarousel";
+import MobileCarousel from "@/app/home-components/MobileCarousel/MobileCarousel";
 import {HugeiconsIcon} from "@hugeicons/react";
+import Anchor from "@/components/Anchor/Anchor";
 
 export default async function Home() {
   const headersList = await headers();
@@ -17,6 +18,7 @@ export default async function Home() {
 
   return (
     <div className="text-white relative">
+      <Anchor/>
       <div className="relative md:pt-60 pt-30">
         <div className="absolute inset-0 bg-[url(/images/promo/earthBg.jpg)] bg-cover bg-center opacity-20"/>
 
@@ -30,6 +32,7 @@ export default async function Home() {
 
           <Image src='/images/promo/julesGabriel.png'
             alt={"Жюль Верн"}
+            loading={"eager"}
             width={750}
             height={500}
             className='absolute right-2 bottom-35 md:bottom-0 w-[250px] md:w-[750px]'
