@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import {usePathname} from "next/navigation";
 
-const Footer = ({isLanding}: {isLanding: boolean}) => {
+const Footer = () => {
+
+  const isLanding = usePathname() === "/aboutUs";
+
   return (
-    <footer className={isLanding ? 'mt-auto pb-4 text-white w-full md:px-80 px-4 ' : ''}>
+    <footer className={isLanding ? 'mt-auto pb-4 text-white w-full md:px-80 px-4 bg-black' : ''}>
       <div className='flex flex-col justify-center items-center gap-4 border-t-white border-t-[0.5px] pt-4'>
         <div className='flex justify-center items-center gap-4'>
           <Link href='/' className={`flex items-center gap-3`}>

@@ -5,12 +5,10 @@ import Button from "@/components/Button/Button";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Cancel01Icon, Menu01Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useState} from "react";
+import {usePathname} from "next/navigation";
 
-interface HeaderProps {
-  isLanding?: boolean;
-}
 
-const Header = ({isLanding}: HeaderProps) => {
+const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
@@ -18,12 +16,35 @@ const Header = ({isLanding}: HeaderProps) => {
     return () => { document.body.style.overflow = ''; };
   }, [showMenu]);
 
+  const isLanding = usePathname() === "/aboutUs";
+
+  const links = [
+    {
+      title: "Главная",
+      link: '/'
+    },
+    {
+      title: "Карта мира",
+      link: '/'
+    },
+    {
+      title: "Программы",
+      link: '/'
+    },
+    {
+      title: "О проекте",
+      link: '/aboutUs'
+    },
+  ]
+
   return (
-    <header className={`${isLanding ? 'text-white' : 'text-black'} ${!showMenu && 'px-4 mt-4'} absolute z-30 w-full md:px-80 `}>
+    <header className={`${!isLanding ? 'text-black md:px-96' : 'md:px-80'} ${!showMenu && 'px-4 mt-4'} absolute z-30 w-full  `}>
       <div className={`${isLanding ? ' backdrop-blur-lg bg-gray-800/40 rounded-full w-full py-3 px-5' : ''} justify-between flex`}>
-        <Link href='/' className={`flex items-center gap-3`}>
+        <Link href='/' className={`flex items-center gap-3 ${isLanding ? 'text-white' : 'text-accent'}`}>
           <h3 className='font-medium text-2xl'>edumap</h3>
-          <span className='border-l-white border-s-[1px] ps-2 text-sm leading-4'>Учись<br/>глобально</span>
+          <span className={` border-s-[1px] ps-2 text-sm leading-4 ${isLanding ? 'border-l-white' : 'border-l-accent'}`}>
+            Учись<br/>глобально
+          </span>
         </Link>
         <button className='md:hidden' onClick={() => setShowMenu(true)}>
           <HugeiconsIcon icon={Menu01Icon}/>
@@ -36,9 +57,9 @@ const Header = ({isLanding}: HeaderProps) => {
               : 'hidden'
           }`}
         >
-          <div className='px-9 mt-7'>
-            <div className="md:hidden flex justify-between  ">
-              <Link href={'/'} className="flex justify-center gap-3 ">
+          <div className={showMenu ? 'px-9 mt-7' : ''}>
+            <div className="md:hidden flex justify-between">
+              <Link href={'/'} className="flex justify-center gap-3 text-white">
                 <h3 className="font-medium text-2xl">edumap</h3>
                 <span className="border-l-white border-s-[1px] ps-2 text-sm leading-4">
                   Учись<br />глобально
@@ -55,11 +76,15 @@ const Header = ({isLanding}: HeaderProps) => {
                 showMenu ? 'flex-col mt-8' : ''
               }`}
             >
-              <li><Link href={'/'}>О проекте</Link></li>
-              <li><Link href={'/'}>Программы</Link></li>
-              <li><Link href={'/'}>Страны</Link></li>
-              <li><Link href={'/'}>Карта мира</Link></li>
+              {links.map((link, index) => (
+                <li key={index} 
+                  className={`${isLanding ? 'text-gray-200 hover:text-white hover:underline hover:underline-offset-5' 
+                    : 'hover:'} 
+                    transition duration-200 ease-in-out `}>
+                  <Link href={link.link}>{link.title}</Link></li>
+              ))}
               <li><Button className={'px-16 md:px-8'}>Войти</Button></li>
+
             </ul>
           </div>
 

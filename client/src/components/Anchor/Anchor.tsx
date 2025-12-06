@@ -28,7 +28,8 @@ const Anchor = () => {
   return (
     <div className="fixed bottom-6 right-6 z-30">
       {showAnchor &&
-        <button onClick={() => scrollToTop()} className="bg-accent-active rounded-full p-2">
+        <button onClick={() => scrollToTop()} className="bg-accent-active rounded-full p-2 cursor-pointer
+        hover:bg-accent">
           <HugeiconsIcon icon={ArrowUp01Icon} width={30} height={30} />
         </button>
       }

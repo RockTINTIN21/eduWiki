@@ -21,7 +21,7 @@ const Button: FC<ButtonProps> = ({
     rounded-full pe-7 ps-7 cursor-pointer transition duration-200 ease-in-out font-medium
     ${variant === 'primary' && 'bg-accent hover:bg-accent-hover active:bg-accent-active text-white'}
     ${variant === 'secondary' && 'bg-secondary text-black'}
-    ${variant === 'border' && 'outline-white outline-[1px] outline-offset-[-1px] text-white hover:bg-accent ' +
+    ${variant === 'border' && 'outline-white outline-[1px] outline-offset-[-2px] text-white hover:bg-accent ' +
     'hover:outline-accent active:outline-accent-active'}
     ${size === 'md' && 'h-10'}
     ${className ? className : ''}
