@@ -38,8 +38,9 @@ const Header = () => {
   ]
 
   return (
-    <header className={`${!isLanding ? 'text-black md:px-96' : 'md:px-80'} ${!showMenu && 'px-4 mt-4'} absolute z-30 w-full  `}>
-      <div className={`${isLanding ? ' backdrop-blur-lg bg-gray-800/40 rounded-full w-full py-3 px-5' : ''} justify-between flex`}>
+    <header className={`${!isLanding ? 'text-black' : 'md:px-80'} ${!showMenu && 'px-4 mt-4'} absolute z-30 w-full`}>
+      <div className={`${isLanding ? ' backdrop-blur-lg bg-gray-800/40 rounded-full w-full py-3 px-5' : ' md:mx-auto md:w-6/12'} 
+      justify-between flex`}>
         <Link href='/' className={`flex items-center gap-3 ${isLanding ? 'text-white' : 'text-accent'}`}>
           <h3 className='font-medium text-2xl'>edumap</h3>
           <span className={` border-s-[1px] ps-2 text-sm leading-4 ${isLanding ? 'border-l-white' : 'border-l-accent'}`}>

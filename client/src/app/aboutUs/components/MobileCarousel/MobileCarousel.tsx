@@ -2,7 +2,7 @@
 import './MobuleCarousel.css';
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Autoplay, Pagination} from "swiper/modules";
-import PromoCard, {PromoCardProps} from "@/app/home-components/PromoCard";
+import PromoCard, {PromoCardProps} from "@/app/aboutUs/components/PromoCard";
 import 'swiper/css';
 import 'swiper/css/pagination';
 

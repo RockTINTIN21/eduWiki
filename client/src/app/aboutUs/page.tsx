@@ -3,11 +3,11 @@ import Button from "@/components/Button/Button";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import {headers} from "next/headers";
-import {aboutUs, ourAbilities, shortCards, statistics} from "@/app/home-components/promoData";
-import PromoCard from "@/app/home-components/PromoCard";
+import {aboutUs, ourAbilities, shortCards, statistics} from "@/app/aboutUs/components/promoData";
+import PromoCard from "@/app/aboutUs/components/PromoCard";
 import 'swiper/css';
 import 'swiper/css/pagination';
-import MobileCarousel from "@/app/home-components/MobileCarousel/MobileCarousel";
+import MobileCarousel from "@/app/aboutUs/components/MobileCarousel/MobileCarousel";
 import {HugeiconsIcon} from "@hugeicons/react";
 import Anchor from "@/components/Anchor/Anchor";
 

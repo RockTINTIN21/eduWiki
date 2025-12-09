@@ -24,15 +24,11 @@ export default function RootLayout({
 
   return (
     <html lang="ru">
-      {/* добавлено: min-h-screen flex flex-col */}
       <body className={`${inter.variable} antialiased bg-white min-h-screen flex flex-col`}>
         <Header/>
-
-        {/* main растягивается и отталкивает футер вниз */}
         <main className="flex-1">
           {children}
         </main>
-
         <Footer/>
       </body>
     </html>
