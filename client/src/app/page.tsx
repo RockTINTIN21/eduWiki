@@ -1,6 +1,5 @@
 import 'swiper/css';
 import 'swiper/css/pagination';
-import {headers} from "next/headers";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Anchor from "@/components/Anchor/Anchor";
@@ -11,9 +10,6 @@ import Card from "@/app/home-components/Card";
 import Image from "next/image";
 
 export default async function Home() {
-  const headersList = await headers();
-  const uaString = headersList.get("user-agent") || "";
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(uaString);
 
   return (
     <div className="text-[#111827] relative mx-4 md:w-6/12 md:mx-auto pt-20 flex flex-col gap-6 pb-12">
@@ -23,8 +19,7 @@ export default async function Home() {
         <p className='text-lg'>Ищите страны, направления, программы, университеты</p>
 
         <div className="flex border-[1px] border-[#E8E8E8] md:mx-52 mt-5 rounded-full justify-between py-2 px-3
-        shadow-accent/20 shadow-xl gap-4
-        ">
+        shadow-accent/20 shadow-xl gap-4">
           <input type="text" placeholder='Искать' className='ms-4 w-full'/>
           <Button className='flex items-center gap-2'>
             <HugeiconsIcon icon={SearchIcon} width={18}/>
@@ -38,7 +33,7 @@ export default async function Home() {
         <div className='md:grid md:grid-cols-4 gap-4 md:w-full pt-3 overflow-x-auto flex'>
           <Card link={'/'} className={'md:col-span-2 md:aspect-2/1'} countryName='Германия' countryIcon={'DE'} bgImage={'germany.jpg'}/>
           <Card link={'/'} className={'md:col-span-2 md:aspect-2/1'} countryName='Швейцария' countryIcon={'SE'} bgImage={'sweden.png'}/>
-          <Card link={'/'} className={'md:aspect-square'} countryName='Сербия' countryIcon={'RS'} bgImage={'serbia.jpg'}/>
+          <Card link={'/country'} className={'md:aspect-square'} countryName='Сербия' countryIcon={'RS'} bgImage={'serbia.jpg'}/>
           <Card link={'/'} countryName='Италия' countryIcon={'IT'} bgImage={'italy.jpg'}/>
           <Card link={'/'} countryName='Беларусь' countryIcon={'BY'} bgImage={'belarus.jpg'}/>
           <Card link={'/'} countryName='Венгрия' countryIcon={'HU'} bgImage={'hungary.png'}/>
