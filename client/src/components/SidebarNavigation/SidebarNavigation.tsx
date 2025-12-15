@@ -1,81 +1,90 @@
 "use client";
 
 import Button from "@/components/Button/Button";
-import {RefObject, useEffect, useRef, useState} from "react";
+import {useEffect, useLayoutEffect, useRef, useState} from "react";
 
 interface SidebarNavigation {
   navigationList: {
     title: string;
-    id: string;
+    id: number;
   }[],
 
 }
 
 const SidebarNavigation = ({navigationList}: SidebarNavigation) => {
 
-  const [list, setList] = useState<HTMLElement[]>([]);
-  const [currentBlock, setCurrentBlock] = useState<string>();
+  const sectionsRef = useRef<HTMLElement[]>([]);
 
-  const elements = useRef([]);
-  // const observer = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const list = document.querySelectorAll('section[data-section]')
-    const htmlArray = Array.from(list) as HTMLElement[];
-    console.log('htmlArray', htmlArray)
-    setList(htmlArray);
-  },[])
-
-  function handleIntersection(entries: any, observer){
-    entries.forEach(entry => {
-      if(entry.isIntersecting) {
-        console.log('Элемент виден', entry.target.id)
-        setCurrentBlock(entry.target.id);
-      }else{
-        console.log('Элемент не виден')
-        // setCurrentBlock(entry.target.id);
-      }
-    })
-  }
-
-  const options = {
-    root: null, // null - наблюдаем относительно viewport
-    rootMargin: '0px', // Отступ от границ viewport
-    threshold: 0.9 // Когда элемент пересекается хотя бы на 10%
-  };
-
+  const [currentId, setCurrentId] = useState<number>();
+  const [progress, setProgress] = useState<number>(20);
 
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleIntersection, options)
-    console.log('вызов1')
-    console.log('list:',list)
-
-    list.forEach((elem)=> {
-      observer.observe(elem);
-    })
-
-  }, [list]);
+    sectionsRef.current = Array.from(
+      document.querySelectorAll<HTMLElement>('section[data-section]')
+    );
+  }, []);
 
   useEffect(() => {
-    console.log('currentBlock', currentBlock);
-  }, [currentBlock]);
+    if (!sectionsRef.current.length) return;
 
-  const goToBlockHandler = (id: string) => {
-    console.log('goToBlockHandler', list);
-    const block = list.find((elem) => elem.id === id);
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach((entry, index) => {
+        if(entry.isIntersecting) {
+          setCurrentId(Number(entry.target.id));
+        }
+      })
+    }, 
+    {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.9
+    });
+
+    sectionsRef.current.forEach(section => {observer.observe(section);});
+
+    return () => observer.disconnect();
+  }, []);
+
+  const goToBlockHandler = (id: number) => {
+    const block = sectionsRef.current.find((elem) => Number(elem.id) === id);
     if (block) {
       block.scrollIntoView({behavior: 'smooth'});
     }
   }
 
+  useLayoutEffect(() => {
+    if (currentId == null) return;
+
+    const currentIndex = navigationList.findIndex(
+      (item) => item.id === currentId
+    );
+
+    if (currentIndex === -1) return;
+
+    const total = navigationList.length;
+    const startOffset = 20;
+    const percent = startOffset + (currentIndex / (total - 1)) * (100 - startOffset);
+
+    requestAnimationFrame(() => {
+      setProgress(percent);
+    });
+  }, [currentId, navigationList]);
+
+
   return (
-    <nav className='fixed'>
-      <ul className='md:flex flex-col gap-4'>
+    <nav className='fixed left-4 right-4 md:left-auto md:right-auto flex gap-3 bg-white md:bg-transparent py-2'>
+      <div className='bg-[#f5f5f5] w-[4px] rounded-full ms-[2px] hidden md:block'>
+        <div className={`bg-accent w-[4px] rounded-full transition-all duration-300`} style={{height:`${progress}%`}}/>
+      </div>
+      <ul className='flex md:flex-col gap-4 overflow-x-auto flex-nowrap'>
         {navigationList.map((item, id) => (
-          <li key={id}>
-            <Button variant={currentBlock === item.id ? 'primary' : 'secondary'} onClick={() => goToBlockHandler(item.id)} className='w-full' size='sm'>
+          <li key={id} className='flex gap-2 flex-none'>
+            {item.id === currentId && <div className={`w-2 h-2 rounded-full bg-accent mt-3 left-0 hidden md:absolute md:block`}/>}
+
+            <Button variant={currentId === item.id ? 'primary' : 'secondary'}
+              onClick={() => goToBlockHandler(item.id)}
+              className='md:w-full min-w-[120px] px-7' size='sm'>
               {item.title}
             </Button>
           </li>

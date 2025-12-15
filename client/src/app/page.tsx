@@ -21,7 +21,7 @@ export default async function Home() {
         <div className="flex border-[1px] border-[#E8E8E8] md:mx-52 mt-5 rounded-full justify-between py-2 px-3
         shadow-accent/20 shadow-xl gap-4">
           <input type="text" placeholder='Искать' className='ms-4 w-full'/>
-          <Button className='flex items-center gap-2'>
+          <Button className='flex items-center gap-2 px-5'>
             <HugeiconsIcon icon={SearchIcon} width={18}/>
             Искать
           </Button>
