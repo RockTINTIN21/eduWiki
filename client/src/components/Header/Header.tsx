@@ -38,7 +38,7 @@ const Header = () => {
   ]
 
   return (
-    <header className={`${!isLanding ? 'text-black fixed bg-white' : 'md:px-80'} ${!showMenu && 'px-4 pt-4 pb-2'} absolute z-30 w-full`}>
+    <header className={`${!isLanding ? 'text-black bg-white' : 'md:px-80'} ${!showMenu && 'px-4 pt-4'} absolute z-30 w-full`}>
       <div className={`${isLanding ? ' backdrop-blur-lg bg-gray-800/40 rounded-full w-full py-3 px-5' : ' md:mx-auto md:w-6/12'} 
       justify-between flex`}>
         <Link href='/' className={`flex items-center gap-3 ${isLanding ? 'text-white' : 'text-accent'}`}>

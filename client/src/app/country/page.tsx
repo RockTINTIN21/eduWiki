@@ -3,7 +3,14 @@ import Image from "next/image";
 import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
 import Button from "@/components/Button/Button";
 import {HugeiconsIcon} from "@hugeicons/react";
-import {FavouriteIcon} from "@hugeicons/core-free-icons";
+import {ArrowRight01Icon, FavouriteIcon, Location01Icon, Menu01Icon} from "@hugeicons/core-free-icons";
+import {ourAbilities} from "@/app/aboutUs/components/promoData";
+import MobileCarousel from "@/app/aboutUs/components/MobileCarousel/MobileCarousel";
+
+import PromoCard from "@/app/aboutUs/components/PromoCard";
+import GalleryCarousel from "@/components/GalleryCarousel/GalleryCarousel";
+import Link from "next/link";
+
 
 const navigationList = [
   {
@@ -39,7 +46,24 @@ interface CountryData {
       text: string;
     }[]
   },
-
+  images: string[],
+  universities: {
+    name: string;
+    city?: string;
+  }[],
+  requirements: {
+    title: string;
+    text: string;
+  }[],
+  reviews: {
+    username: string,
+    avatar: string;
+    date: Date;
+    totalReviews: number;
+    text: string;
+    recommended: number;
+    unrecommended: number;
+  }[]
 }
 
 
@@ -53,24 +77,49 @@ const countryData: CountryData = {
       '                Сербия богата историческими памятниками и природными объектами, имеет православное большинство и\n' +
       '                национальную валюту — динар.',
     features: [
-      {
-        title: 'Языки',
-        text: 'Сербский, Русский'
-      },
-      {
-        title: 'Столица',
-        text: 'Белград'
-      },
-      {
-        title: 'Население',
-        text: '~ 1 200 000',
-      },
-      {
-        title: 'Валюта',
-        text: 'Динар',
-      }
+      {title: 'Языки', text: 'Сербский, Русский'},
+      {title: 'Столица', text: 'Белград'},
+      {title: 'Население', text: '~ 1 200 000',},
+      {title: 'Валюта', text: 'Динар',}
     ]
-  }
+  },
+  images: [
+    '/images/countries/serbia.jpg',
+    '/images/countries/belarus.jpg',
+    '/images/countries/germany.jpg',
+    '/images/countries/hungary.png',
+    '/images/countries/italy.jpg',
+    '/images/countries/sweden.png',
+  ],
+  universities: [
+    {name: 'Белградский университет', city: 'Белград'},
+    {name: 'Нишский университет', city: 'Ниш'},
+    {name: 'Нови-Садский университет', city: 'Новисад'},
+    {name: 'Университет обороны в Белграде', city: 'Белград'},
+    {name: 'Юридический факультет Университета союза'},
+    {name: 'Приштинский университет'},
+
+  ],
+  requirements: [
+    {title: 'Минимальный возраст для студенческой визы', text: '18 лет'},
+    {title: 'Требования к школьному образованию', text: '11 классов'},
+    {title: 'Нужна нострификация / апостиль', text: 'Да'},
+    {title: 'Финансовые гарантии', text: '~ 1000 €'},
+  ],
+  reviews: [
+    {
+      username: 'RockTINTIN21',
+      totalReviews: 11,
+      date: new Date,
+      avatar: '/images/avatar.jpg',
+      text: 'Мне 22 года, учусь в Сербии второй год. В целом страна оказалась проще и комфортнее, чем я ожидал. Адаптация проходит спокойно: язык понятен, местные относятся нормально, бюрократия терпимая. Стоимость жизни ниже, чем в большинстве европейских стран, и это сильно помогает, когда живёшь на студенческий бюджет.\n' +
+        'Учёба сама по себе не сложная. Университеты здесь не топовые по мировым рейтингам, но для получения диплома и легального статуса всё работает. На английских программах учиться удобнее, но вариантов на английском меньше. Документы принимают без лишних требований, главное — грамотно подготовить пакет перед подачей.\n' +
+        'Из минусов — карьерные перспективы в стране ограниченные. Если хотите строить высокооплачиваемую карьеру, особенно в IT, Сербия вряд ли станет конечным пунктом. Многие, как и я, рассматривают её как удобный старт: сначала адаптироваться, получить диплом или ВНЖ, а дальше двигаться в ЕС.\n' +
+        'Если нужен спокойный, доступный вариант для переезда через образование, то Сербия подходит. Но рассчитывать стоит на постепенную стратегию, а не на быстрый рост внутри страны.',
+      recommended: 14,
+      unrecommended: 4,
+    }
+  ]
 }
 
 const Page = () => {
@@ -78,20 +127,22 @@ const Page = () => {
   return (
     <div className='mx-4 md:w-6/12 md:mx-auto py-14'>
       <Breadcrumbs/>
-      <div className='flex gap-3 relative'>
+      <div className='flex gap-3 flex-col md:flex-row relative'>
         <SidebarNavigation navigationList={navigationList}/>
 
-        <div className='w-full flex flex-col gap-6 md:ps-48 pt-12'>
+        <div className='md:w-[80%] flex flex-col gap-6'>
           <section id='0' data-section='0'>
-            <h3 className='text-xl mb-3'>О стране</h3>
+            <h3 className='text-xl mb-3 underline'>О стране</h3>
 
             <div className='flex flex-col gap-3'>
-              <div className={`bg-[url(${countryData.aboutCountry.bgImage})] bg-center h-52 rounded-2xl p-3 flex 
-              flex-col justify-between`}>
+              <div className={`bg-center h-52 rounded-2xl p-3 flex 
+              flex-col justify-between`}
+              style={{ backgroundImage: `url(${countryData.aboutCountry.bgImage})` }}
+              >
 
                 <div className='flex justify-between'>
                   <div className='flex gap-2 bg-[#F3F3F3] px-4 py-1 rounded-full w-max items-center'>
-                    <span className='font-medium'>Сербия</span>
+                    <span className='font-medium'>{countryData.aboutCountry.name}</span>
                     <Image src={`https://flagsapi.com/${countryData.aboutCountry.regionCode}/flat/64.png`}
                       className='w-auto h-[20px]' width={20} height={20} alt={'Сербия'}/>
                   </div>
@@ -107,7 +158,7 @@ const Page = () => {
               </div>
 
               <div>
-                <h2 className='text-xl'>{countryData.aboutCountry.name}</h2>
+                <h2 className='text-xl !mb-0'>{countryData.aboutCountry.name}</h2>
                 <p>{countryData.aboutCountry.description}</p>
               </div>
 
@@ -130,92 +181,84 @@ const Page = () => {
           </section>
 
           <section id='1' data-section='1'>
-            <h3 className='text-xl'>Фотографии</h3>
-            
+            <h3 className='text-xl underline'>Фотографии</h3>
+            <GalleryCarousel images={countryData.images} />
           </section>
 
           <section id='2' data-section='2'>
-            <h3 className='text-xl'>Университеты</h3>
-            <div className='p-4 mt-3 rounded-2xl bg-secondary'>
-              <div className='flex justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Image src={'/images/avatar.jpg'} width={30} height={30} alt={'Администратор'}
-                    className='rounded-full border-accent border-2'/>
-                  <p className='font-medium'>Администратор</p>
-                </div>
-                <span className='text-[#5A5A5A]'>29 ноября 2025 в 12:33</span>
-              </div>
-              <p className='pt-3'>
-                Мне 22 года, учусь в Сербии второй год. В целом страна оказалась проще и комфортнее, чем я ожидал. Адаптация проходит спокойно: язык понятен, местные относятся нормально, бюрократия терпимая. Стоимость жизни ниже, чем в большинстве европейских стран, и это сильно помогает, когда живёшь на студенческий бюджет.
-                Учёба сама по себе не сложная. Университеты здесь не топовые по мировым рейтингам, но для получения диплома и легального статуса всё работает. На английских программах учиться удобнее, но вариантов на английском меньше. Документы принимают без лишних требований, главное — грамотно подготовить пакет перед подачей.
-                Из минусов — карьерные перспективы в стране ограниченные. Если хотите строить высокооплачиваемую карьеру, особенно в IT, Сербия вряд ли станет конечным пунктом. Многие, как и я, рассматривают её как удобный старт: сначала адаптироваться, получить диплом или ВНЖ, а дальше двигаться в ЕС.
-                Если нужен спокойный, доступный вариант для переезда через образование, то Сербия подходит. Но рассчитывать стоит на постепенную стратегию, а не на быстрый рост внутри страны.
-              </p>
-              <div className='pt-2 flex justify-end gap-4'>
-                <button className={'bg-white rounded-full text-[#00A81F] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>693</b>
-                </button>
-                <button className={'bg-white rounded-full text-[#C6363C] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>12</b>
-                </button>
-              </div>
+            <h3 className='text-xl underline'>Университеты - {countryData.universities.length}</h3>
+            <div className='grid grid-cols-2 md:grid-cols-3 gap-3'>
+              {countryData.universities.map((university, i) => (
+                <Link href='/serbia/unviersity' 
+                  className='bg-secondary py-3 px-5 rounded-2xl flex flex-col gap-1 justify-between text-[#5A5A5A]
+                  hover:outline-1 hover:outline-accent hover:bg-white hover:text-black transition duration-100
+                  ease-in-out relative group active:outline-accent active:bg-white active:text-black active:outline-1'
+                  key={i}
+                >
+                  <p className='font-medium leading-5'>{university.name}</p>
+                  {!!university.city &&
+                    <div className='flex gap-1'>
+                      <HugeiconsIcon width={15} icon={Location01Icon}/>
+                      <span>{university.city}</span>
+                    </div>
+                  }
+                  <HugeiconsIcon
+                    className="absolute right-4 top-1/2 -translate-y-1/2
+                     opacity-0 translate-x-2
+                     group-hover:opacity-100 group-hover:translate-x-0
+                     transition-all duration-150
+                     group-active:opacity-100 group-active:translate-x-0
+                     "
+                    width={30}
+                    icon={ArrowRight01Icon}
+                  />
+                </Link>
+              ))}
             </div>
           </section>
 
           <section id='3' data-section='3'>
-            <h3 className='text-xl'>Требования</h3>
-            <div className='p-4 mt-3 rounded-2xl bg-secondary'>
-              <div className='flex justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Image src={'/images/avatar.jpg'} width={30} height={30} alt={'Администратор'}
-                    className='rounded-full border-accent border-2'/>
-                  <p className='font-medium'>Администратор</p>
+            <h3 className='text-xl underline'>Требования</h3>
+
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-3'>
+              {countryData.requirements.map((requirement, i) => (
+                <div className='bg-secondary rounded-2xl flex flex-col justify-between gap-2 p-3 text-center' key={i}>
+                  <span className='text-[#5a5a5a] leading-5'>{requirement.title}</span>
+                  <p className='font-medium text-lg'>{requirement.text}</p>
                 </div>
-                <span className='text-[#5A5A5A]'>29 ноября 2025 в 12:33</span>
-              </div>
-              <p className='pt-3'>
-                Мне 22 года, учусь в Сербии второй год. В целом страна оказалась проще и комфортнее, чем я ожидал. Адаптация проходит спокойно: язык понятен, местные относятся нормально, бюрократия терпимая. Стоимость жизни ниже, чем в большинстве европейских стран, и это сильно помогает, когда живёшь на студенческий бюджет.
-                Учёба сама по себе не сложная. Университеты здесь не топовые по мировым рейтингам, но для получения диплома и легального статуса всё работает. На английских программах учиться удобнее, но вариантов на английском меньше. Документы принимают без лишних требований, главное — грамотно подготовить пакет перед подачей.
-                Из минусов — карьерные перспективы в стране ограниченные. Если хотите строить высокооплачиваемую карьеру, особенно в IT, Сербия вряд ли станет конечным пунктом. Многие, как и я, рассматривают её как удобный старт: сначала адаптироваться, получить диплом или ВНЖ, а дальше двигаться в ЕС.
-                Если нужен спокойный, доступный вариант для переезда через образование, то Сербия подходит. Но рассчитывать стоит на постепенную стратегию, а не на быстрый рост внутри страны.
-              </p>
-              <div className='pt-2 flex justify-end gap-4'>
-                <button className={'bg-white rounded-full text-[#00A81F] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>693</b>
-                </button>
-                <button className={'bg-white rounded-full text-[#C6363C] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>12</b>
-                </button>
-              </div>
+              ))}
             </div>
-          </section>s
+
+          </section>
 
           <section id='4' data-section='4'>
-            <h3 className='text-xl'>Реценезии</h3>
-            <div className='p-4 mt-3 rounded-2xl bg-secondary'>
-              <div className='flex justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Image src={'/images/avatar.jpg'} width={30} height={30} alt={'Администратор'}
-                    className='rounded-full border-accent border-2'/>
-                  <p className='font-medium'>Администратор</p>
+            <h3 className='text-xl underline'>Рецензии</h3>
+            {countryData.reviews.map((review, i) => (
+              <div className='p-5 mt-3 rounded-2xl bg-secondary' key={i}>
+                <div className='flex justify-between items-center'>
+                  <div>
+                    <div className='flex items-center gap-2 pb-1'>
+                      <Image src={review.avatar} width={30} height={30} alt={'Администратор'}
+                        className='rounded-full border-accent border-2'/>
+                      <p className='font-medium'>{review.username}</p>
+                    </div>
+                    {!!review.totalReviews && <span className='text-[#5A5A5A]'>{review.totalReviews} рецензий</span>}
+                  </div>
+
+                  <span className='text-[#5A5A5A]'>29 ноября 2025 в 12:33</span>
                 </div>
-                <span className='text-[#5A5A5A]'>29 ноября 2025 в 12:33</span>
+                <p className='pt-3'>{review.text}</p>
+                <div className='pt-2 flex justify-end gap-4'>
+                  <button className={'bg-white rounded-full text-[#00A81F] px-4 py-1'}>
+                    Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>{review.recommended}</b>
+                  </button>
+                  <button className={'bg-white rounded-full text-[#C6363C] px-4 py-1'}>
+                    Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>{review.unrecommended}</b>
+                  </button>
+                </div>
               </div>
-              <p className='pt-3'>
-                Мне 22 года, учусь в Сербии второй год. В целом страна оказалась проще и комфортнее, чем я ожидал. Адаптация проходит спокойно: язык понятен, местные относятся нормально, бюрократия терпимая. Стоимость жизни ниже, чем в большинстве европейских стран, и это сильно помогает, когда живёшь на студенческий бюджет.
-                Учёба сама по себе не сложная. Университеты здесь не топовые по мировым рейтингам, но для получения диплома и легального статуса всё работает. На английских программах учиться удобнее, но вариантов на английском меньше. Документы принимают без лишних требований, главное — грамотно подготовить пакет перед подачей.
-                Из минусов — карьерные перспективы в стране ограниченные. Если хотите строить высокооплачиваемую карьеру, особенно в IT, Сербия вряд ли станет конечным пунктом. Многие, как и я, рассматривают её как удобный старт: сначала адаптироваться, получить диплом или ВНЖ, а дальше двигаться в ЕС.
-                Если нужен спокойный, доступный вариант для переезда через образование, то Сербия подходит. Но рассчитывать стоит на постепенную стратегию, а не на быстрый рост внутри страны.
-              </p>
-              <div className='pt-2 flex justify-end gap-4'>
-                <button className={'bg-white rounded-full text-[#00A81F] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>693</b>
-                </button>
-                <button className={'bg-white rounded-full text-[#C6363C] px-4 py-1'}>
-                  Понравилось <b className='font-medium text-[#5A5A5A] ps-1'>12</b>
-                </button>
-              </div>
-            </div>
+            ))}
+
           </section>
 
         </div>

@@ -73,7 +73,7 @@ const SidebarNavigation = ({navigationList}: SidebarNavigation) => {
 
 
   return (
-    <nav className='fixed left-4 right-4 md:left-auto md:right-auto flex gap-3 bg-white md:bg-transparent py-2'>
+    <nav className='sticky top-0 left-4 right-4 md:left-auto md:right-auto flex gap-3 z-40 h-max bg-white md:bg-transparent py-2'>
       <div className='bg-[#f5f5f5] w-[4px] rounded-full ms-[2px] hidden md:block'>
         <div className={`bg-accent w-[4px] rounded-full transition-all duration-300`} style={{height:`${progress}%`}}/>
       </div>
