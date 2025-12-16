@@ -45,7 +45,7 @@ export default async function Home() {
         <div className='md:grid grid-cols-4 gap-4 w-full pt-3 overflow-x-auto flex'>
           <Card link={'/'} className={'aspect-square'} countryName='Сербия' countryIcon={'RS'} bgImage={'belgrade.jpg'} title={'Белградский университет'}/>
           <Card link={'/'} className={'aspect-square'} countryName='Германия' countryIcon={'DE'} bgImage={'germanyUniversity.jpg'} title={'Мюнхенский технический университет'}/>
-          <Card link={'/'} className={'aspect-square'} countryName='Венгрия' countryIcon={'HU'} bgImage={'hungaryUniversity.jpg'} title={'University of Szeged'}/>
+          <Card link={'/'} className={'aspect-square'} countryName='Венгрия' countryIcon={'HU'} bgImage={'hungaryUniversity.jpg'} title={'Page of Szeged'}/>
           <Card link={'/'} className={'aspect-square'} countryName='Италия' countryIcon={'IT'} bgImage={'italyUniversity.jpg'} title={'Римский университет Ла Сапиенца'}/>
         </div>
       </div>

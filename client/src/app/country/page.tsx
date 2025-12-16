@@ -3,36 +3,16 @@ import Image from "next/image";
 import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
 import Button from "@/components/Button/Button";
 import {HugeiconsIcon} from "@hugeicons/react";
-import {ArrowRight01Icon, FavouriteIcon, Location01Icon, Menu01Icon} from "@hugeicons/core-free-icons";
-import {ourAbilities} from "@/app/aboutUs/components/promoData";
-import MobileCarousel from "@/app/aboutUs/components/MobileCarousel/MobileCarousel";
-
-import PromoCard from "@/app/aboutUs/components/PromoCard";
+import {ArrowRight01Icon, FavouriteIcon, Location01Icon} from "@hugeicons/core-free-icons";
 import GalleryCarousel from "@/components/GalleryCarousel/GalleryCarousel";
 import Link from "next/link";
 
-
 const navigationList = [
-  {
-    title: 'О стране',
-    id: 0
-  },
-  {
-    title: 'Фотографии',
-    id: 1
-  },
-  {
-    title: 'Университеты',
-    id: 2,
-  },
-  {
-    title: 'Требования',
-    id: 3,
-  },
-  {
-    title: 'Рецензии',
-    id: 4,
-  },
+  {title: 'О стране', id: 0},
+  {title: 'Фотографии', id: 1},
+  {title: 'Университеты', id: 2,},
+  {title: 'Требования', id: 3,},
+  {title: 'Рецензии', id: 4,},
 ]
 
 interface CountryData {
@@ -125,7 +105,7 @@ const countryData: CountryData = {
 const Page = () => {
 
   return (
-    <div className='mx-4 md:w-6/12 md:mx-auto py-14'>
+    <div className='mx-4 md:w-6/12 md:mx-auto py-14 mt-4'>
       <Breadcrumbs/>
       <div className='flex gap-3 flex-col md:flex-row relative'>
         <SidebarNavigation navigationList={navigationList}/>

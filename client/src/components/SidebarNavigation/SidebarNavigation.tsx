@@ -37,8 +37,8 @@ const SidebarNavigation = ({navigationList}: SidebarNavigation) => {
     }, 
     {
       root: null,
-      rootMargin: '0px',
-      threshold: 0.9
+      rootMargin: '-50% 0px -50% 0px',
+      threshold: 0
     });
 
     sectionsRef.current.forEach(section => {observer.observe(section);});
@@ -49,7 +49,8 @@ const SidebarNavigation = ({navigationList}: SidebarNavigation) => {
   const goToBlockHandler = (id: number) => {
     const block = sectionsRef.current.find((elem) => Number(elem.id) === id);
     if (block) {
-      block.scrollIntoView({behavior: 'smooth'});
+      console.log('goToBlockHandler', id);
+      block.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start', });
     }
   }
 
