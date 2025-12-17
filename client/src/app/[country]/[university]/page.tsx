@@ -8,6 +8,7 @@ import GalleryCarousel from "@/components/GalleryCarousel/GalleryCarousel";
 import Link from "next/link";
 import Tabs from "@/components/Tabs/Tabs";
 import Accordion from "@/components/Accordion/Accordion";
+import type {Metadata} from "next";
 
 const navigationList = [
   {title: 'О университете', id: 0},
@@ -118,10 +119,22 @@ const data: UniversityData = {
   ]
 }
 
-const Page = () => {
+export const metadata: Metadata = {
+  title: data.aboutUniversity.name
+}
+
+interface PageProps {
+  params: Promise<{
+    country: string
+    university: string
+  }>
+}
+
+const Page = async ({ params }: PageProps) => {
+  const { country, university } = await params
 
   return (
-    <div className='mx-4 md:w-6/12 md:mx-auto py-14 mt-4'>
+    <div className='mx-4 md:w-[960px] md:mx-auto py-14 mt-4'>
       <Breadcrumbs/>
       <div className='flex gap-3 flex-col md:flex-row relative'>
         <SidebarNavigation navigationList={navigationList}/>
@@ -214,7 +227,7 @@ const Page = () => {
                       key: 'test',
                       children: <div className='flex gap-2 flex-wrap'>{
                         data.programs[0].programs.map((program)=>(
-                          <Link href={'/'}
+                          <Link href={`/${country}/${university}/${program.id}`}
                             className='bg-secondary rounded-full px-4 py-2 mt-3 text-[#5a5a5a] hover:bg-accent
                                 transition duration-100 hover: hover:text-white'
                             key={program.id}>
@@ -235,7 +248,7 @@ const Page = () => {
                       key: 'test',
                       children: <div className='flex gap-2 flex-wrap'>{
                         data.programs[1].programs.map((program)=>(
-                          <Link href={'/'}
+                          <Link href={`/${country}/${university}/${program.id}`}
                             className='bg-secondary rounded-full px-4 py-2 mt-3 text-[#5a5a5a] hover:bg-accent
                                 transition duration-100 hover: hover:text-white'
                             key={program.id}>
@@ -256,7 +269,7 @@ const Page = () => {
                       key: 'test',
                       children: <div className='flex gap-2 flex-wrap'>{
                         data.programs[2].programs.map((program)=>(
-                          <Link href={'/'}
+                          <Link href={`/${country}/${university}/${program.id}`}
                             className='bg-secondary rounded-full px-4 py-2 mt-3 text-[#5a5a5a] hover:bg-accent
                                 transition duration-100 hover: hover:text-white'
                             key={program.id}>

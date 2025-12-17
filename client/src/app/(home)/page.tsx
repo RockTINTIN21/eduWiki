@@ -6,13 +6,13 @@ import Anchor from "@/components/Anchor/Anchor";
 import Button from "@/components/Button/Button";
 import {SearchIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
-import Card from "@/app/home-components/Card";
+import Card from "@/app/(home)/components/Card";
 import Image from "next/image";
 
 export default async function Home() {
 
   return (
-    <div className="text-[#111827] relative mx-4 md:w-6/12 md:mx-auto pt-20 flex flex-col gap-6 pb-12">
+    <div className="text-[#111827] relative mx-4 md:w-[960px] md:mx-auto pt-20 flex flex-col gap-6 pb-12">
       <Anchor/>
       <div className='text-center'>
         <h1 className='text-3xl'>Найдите вашу следующую остановку</h1>
@@ -31,12 +31,12 @@ export default async function Home() {
       <div>
         <h3 className='text-xl'>Популярные страны</h3>
         <div className='md:grid md:grid-cols-4 gap-4 md:w-full pt-3 overflow-x-auto flex'>
-          <Card link={'/'} className={'md:col-span-2 md:aspect-2/1'} countryName='Германия' countryIcon={'DE'} bgImage={'germany.jpg'}/>
-          <Card link={'/'} className={'md:col-span-2 md:aspect-2/1'} countryName='Швейцария' countryIcon={'SE'} bgImage={'sweden.png'}/>
-          <Card link={'/country'} className={'md:aspect-square'} countryName='Сербия' countryIcon={'RS'} bgImage={'serbia.jpg'}/>
-          <Card link={'/'} countryName='Италия' countryIcon={'IT'} bgImage={'italy.jpg'}/>
-          <Card link={'/'} countryName='Беларусь' countryIcon={'BY'} bgImage={'belarus.jpg'}/>
-          <Card link={'/'} countryName='Венгрия' countryIcon={'HU'} bgImage={'hungary.png'}/>
+          <Card link={'/germany'} className={'md:col-span-2 md:aspect-2/1'} countryName='Германия' countryIcon={'DE'} bgImage={'germany.jpg'}/>
+          <Card link={'/sweden'} className={'md:col-span-2 md:aspect-2/1'} countryName='Швейцария' countryIcon={'SE'} bgImage={'sweden.png'}/>
+          <Card link={'/serbia'} className={'md:aspect-square'} countryName='Сербия' countryIcon={'RS'} bgImage={'serbia.jpg'}/>
+          <Card link={'/italy'} countryName='Италия' countryIcon={'IT'} bgImage={'italy.jpg'}/>
+          <Card link={'/belarus'} countryName='Беларусь' countryIcon={'BY'} bgImage={'belarus.jpg'}/>
+          <Card link={'/hungary'} countryName='Венгрия' countryIcon={'HU'} bgImage={'hungary.png'}/>
         </div>
       </div>
 

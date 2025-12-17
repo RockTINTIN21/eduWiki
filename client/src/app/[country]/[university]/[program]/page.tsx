@@ -2,6 +2,7 @@ import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import Image from "next/image";
 import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
 import Tabs from "@/components/Tabs/Tabs";
+import type {Metadata} from "next";
 
 const navigationList = [
   {title: 'О программе', id: 0},
@@ -82,10 +83,14 @@ const data: ProgramData = {
   ]
 }
 
+export const metadata: Metadata = {
+  title: data.aboutProgram.name
+}
+
 const Page = () => {
 
   return (
-    <div className='mx-4 md:w-6/12 md:mx-auto py-14 mt-4'>
+    <div className='mx-4 md:w-[960px] md:mx-auto py-14 mt-4'>
       <Breadcrumbs/>
       <div className='flex gap-3 flex-col md:flex-row relative'>
         <SidebarNavigation navigationList={navigationList}/>

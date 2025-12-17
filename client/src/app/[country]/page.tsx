@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import Image from "next/image";
 import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
@@ -28,6 +29,7 @@ interface CountryData {
   },
   images: string[],
   universities: {
+    id: string;
     name: string;
     city?: string;
   }[],
@@ -72,12 +74,12 @@ const countryData: CountryData = {
     '/images/countries/sweden.png',
   ],
   universities: [
-    {name: 'Белградский университет', city: 'Белград'},
-    {name: 'Нишский университет', city: 'Ниш'},
-    {name: 'Нови-Садский университет', city: 'Новисад'},
-    {name: 'Университет обороны в Белграде', city: 'Белград'},
-    {name: 'Юридический факультет Университета союза'},
-    {name: 'Приштинский университет'},
+    {name: 'Белградский университет', city: 'Белград', id: '12345'},
+    {name: 'Нишский университет', city: 'Ниш', id: '12344'},
+    {name: 'Нови-Садский университет', city: 'Новисад', id: '12245'},
+    {name: 'Университет обороны в Белграде', city: 'Белград', id: '12365'},
+    {name: 'Юридический факультет Университета союза', id: '17345'},
+    {name: 'Приштинский университет', id: '22345'},
 
   ],
   requirements: [
@@ -102,10 +104,21 @@ const countryData: CountryData = {
   ]
 }
 
-const Page = () => {
+export const metadata: Metadata = {
+  title: countryData.aboutCountry.name
+}
+
+interface PageProps {
+  params: Promise<{
+    country: string
+  }>
+}
+
+const Page = async ({ params }: PageProps) => {
+  const { country } = await params
 
   return (
-    <div className='mx-4 md:w-6/12 md:mx-auto py-14 mt-4'>
+    <div className='mx-4 md:w-[960px] md:mx-auto py-14 mt-4'>
       <Breadcrumbs/>
       <div className='flex gap-3 flex-col md:flex-row relative'>
         <SidebarNavigation navigationList={navigationList}/>
@@ -169,7 +182,7 @@ const Page = () => {
             <h3 className='text-xl underline'>Университеты - {countryData.universities.length}</h3>
             <div className='grid grid-cols-2 md:grid-cols-3 gap-3'>
               {countryData.universities.map((university, i) => (
-                <Link href='/serbia/unviersity' 
+                <Link href={`${country}/${university.id}`}
                   className='bg-secondary py-3 px-5 rounded-2xl flex flex-col gap-1 justify-between text-[#5A5A5A]
                   hover:outline-1 hover:outline-accent hover:bg-white hover:text-black transition duration-100
                   ease-in-out relative group active:outline-accent active:bg-white active:text-black active:outline-1'

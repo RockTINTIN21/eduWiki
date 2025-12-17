@@ -22,7 +22,7 @@ export default async function Home() {
       <div className="relative md:pt-60 pt-30">
         <div className="absolute inset-0 bg-[url(/images/promo/earthBg.jpg)] bg-cover bg-center opacity-20"/>
 
-        <div className="relative p-8 flex gap-3 flex-col mx-4 md:w-8/12 md:mx-auto backdrop-blur-md
+        <div className="relative p-8 flex gap-3 flex-col mx-4 md:w-[1260px] md:mx-auto backdrop-blur-md
         bg-gray-800/50 rounded-4xl">
           <h1 className="md:text-4xl leading-7 md:leading-10 md:w-1/2 pe-16 text-2xl font-medium">
             Все, что стоит делать, стоит делать за границей своих привычных горизонтов.
@@ -47,7 +47,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="mx-4 mt-8 pb-12 md:flex md:w-8/12 md:mx-auto md:gap-4">
+        <div className="mx-4 mt-8 pb-12 md:flex md:w-[1260px] md:mx-auto md:gap-4">
           {isMobile ? <MobileCarousel data={shortCards}/>
             : shortCards.map((card, index) =>
               <PromoCard key={index} title={card.title} description={card.description} icon={card.icon} />
@@ -59,7 +59,7 @@ export default async function Home() {
       <div className='relative'>
         <div className="absolute inset-0 bg-[url(/images/promo/abstractBg.jpg)] z-10 bg-cover bg-center opacity-20"/>
 
-        <div className='relative mx-4 md:w-8/12 md:mx-auto pt-6 z-20 flex flex-col gap-8'>
+        <div className='relative mx-4 md:w-[1260px] md:mx-auto pt-6 z-20 flex flex-col gap-8'>
           <div>
             <h3 className='font-medium text-4xl'>Что мы делаем</h3>
             <p className='text-lg pt-2'>Узнайте больше о проекте</p>
@@ -111,7 +111,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className='flex flex-col gap-12 pt-8 pb-12 bg-black mx-4 md:w-8/12 md:mx-auto pt-6'>
+      <div className='flex flex-col gap-12 pb-12 bg-black mx-4 md:w-[1260px] md:mx-auto pt-6'>
         <div className='bg-[#0A0A0A] rounded-2xl p-8 flex gap-8 flex-col justify-center items-center'>
           <h1 className='text-4xl font-medium md:w-4/12 text-center'>Вступайте в <b className='text-accent'>ряды </b>
               нашего <b className='text-accent'>сообщества</b>

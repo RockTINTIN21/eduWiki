@@ -3,10 +3,13 @@
 import {HugeiconsIcon} from "@hugeicons/react";
 import {ArrowUp01Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useState} from "react";
+import {usePathname} from "next/navigation";
 
 const Anchor = () => {
 
   const [showAnchor, setShowAnchor] = useState(false);
+
+  const isLanding = usePathname() === "/aboutUs";
 
   useEffect(()=>{
     window.addEventListener("scroll", function() {
@@ -30,7 +33,7 @@ const Anchor = () => {
       {showAnchor &&
         <button onClick={() => scrollToTop()} className="bg-accent-active rounded-full p-2 cursor-pointer
         hover:bg-accent">
-          <HugeiconsIcon icon={ArrowUp01Icon} width={30} height={30} />
+          <HugeiconsIcon className='text-white' icon={ArrowUp01Icon} width={30} height={30} />
         </button>
       }
 
