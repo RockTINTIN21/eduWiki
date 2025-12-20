@@ -7,9 +7,46 @@ datasource db {
   provider = "postgresql"
 }
 
-model Country {
-  id          Int     @id @default(autoincrement())
-  name        String
-  countryCode String
-  bgImage     String
+model country {
+  id                   Int                   @id(map: "Country_pkey") @default(autoincrement())
+  name                 String
+  country_code         String
+  bg_image             String
+  country_information  country_information?
+  country_requirements country_requirements?
+}
+
+model currency {
+  id                  Int                   @id @default(autoincrement())
+  name                String?               @db.VarChar(255)
+  symbol              String?               @db.VarChar(255)
+  country_information country_information[]
+}
+
+model country_information {
+  country_id  Int       @id(map: "general_country_information_pkey")
+  languages   String[]  @db.VarChar
+  capital     String?   @db.VarChar(255)
+  population  Int?
+  currency_id Int?
+  currency    currency? @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
+  country     country   @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
+}
+
+model country_requirements {
+  minimal_student_visa_age Int?
+  education_requirements   String?  @db.VarChar
+  nostrification           Boolean?
+  financial_guarantees     Int?
+  country_id               Int      @id(map: "general_country_requirements_pkey")
+  country                  country  @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
+}
+
+model users {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username     String  @db.VarChar(50)
+  email        String  @db.VarChar(255)
+  password     String  @db.VarChar(255)
+  avatar_url   String? @db.VarChar(255)
+  is_activated Boolean @default(false)
 }

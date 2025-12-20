@@ -1,14 +1,66 @@
-import { IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  Length,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateCountriesDto {
+class CountryInformationDto {
+  @IsArray()
+  @IsString({ each: true })
+  languages: string[];
+
+  @IsOptional()
+  @IsString()
+  capital?: string;
+
+  @IsOptional()
+  @IsInt()
+  population?: number;
+
+  @IsOptional()
+  @IsInt()
+  currency_id?: number;
+}
+
+class CountryRequirementsDto {
+  @IsOptional()
+  @IsInt()
+  minimalStudentVisaAge?: number;
+
+  @IsOptional()
+  @IsString()
+  educationRequirements?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  nostrification?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  financialGuarantees?: number;
+}
+
+export class CreateCountryDto {
   @IsString()
   name: string;
 
   @IsString()
+  @Length(2, 2)
   countryCode: string;
 
   @IsString()
   bgImage: string;
-}
 
-export type TUpdateCountriesDto = Partial<CreateCountriesDto>;
+  @ValidateNested()
+  @Type(() => CountryInformationDto)
+  information: CountryInformationDto;
+
+  @ValidateNested()
+  @Type(() => CountryRequirementsDto)
+  requirements: CountryRequirementsDto;
+}

@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CountriesService } from './countries.service.js';
-import { CreateCountriesDto } from './DTO/countries.dto.js';
-
+import { CreateCountryDto } from './DTO/countries.dto.js';
 
 @Controller('countries')
 export class CountriesController {
@@ -13,7 +12,7 @@ export class CountriesController {
   }
 
   @Post('/add')
-  addCountry(@Body() dto: CreateCountriesDto){
+  addCountry(@Body() dto: CreateCountryDto) {
     return this.countriesService.addCountry(dto);
   }
 }
