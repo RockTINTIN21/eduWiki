@@ -12,10 +12,10 @@ import { UpdateUserDTO } from './DTO/users.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthGuard)
   @Get('')
   findAll() {
     return this.usersService.findAll();
