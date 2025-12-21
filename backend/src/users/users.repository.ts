@@ -1,5 +1,5 @@
 import { PrismaService } from '../prisma.service.js';
-import { CreateUserDTO, UpdateUserDTO } from './DTO/users.dto.js';
+import { UpdateUserDTO } from './DTO/users.dto.js';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -19,36 +19,6 @@ export class UsersRepository {
       `SELECT * FROM users WHERE username=$1`,
       username,
     );
-  }
-
-  createUser(dto: CreateUserDTO) {
-    return this.prisma.$executeRawUnsafe(
-      `INSERT INTO users (username, email, password, avatar_url) 
-            VALUES ($1, $2, $3, $4)`,
-      dto.username,
-      dto.email,
-      dto.password,
-      dto.avatarUrl,
-    );
-  }
-
-  async checkUsernameExists(username: string): Promise<boolean> {
-    const res = await this.prisma.$queryRawUnsafe<{ username: string }[]>(
-      'SELECT username FROM users WHERE username = $1',
-      username,
-    );
-
-    return res.length > 0;
-  }
-
-  async checkEmailExists(email: string): Promise<boolean> {
-    const res = await this.prisma.$queryRawUnsafe<{ username: string }[]>(
-      `SELECT email
-              FROM users
-              WHERE email = $1`,
-      email,
-    );
-    return res.length > 0;
   }
 
   async updateUser(id: string, dto: UpdateUserDTO) {

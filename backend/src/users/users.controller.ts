@@ -3,15 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service.js';
-import { CreateUserDTO, UpdateUserDTO } from './DTO/users.dto.js';
+import { UpdateUserDTO } from './DTO/users.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 
 @Controller('users')
@@ -32,15 +29,6 @@ export class UsersController {
   @Get('byUsername/:username')
   findByUsername(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
-  }
-
-  @Post('/create')
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() dto: CreateUserDTO) {
-    await this.usersService.createUser(dto);
-    return {
-      message: 'User created successfully.',
-    };
   }
 
   @Patch('update/:id')
