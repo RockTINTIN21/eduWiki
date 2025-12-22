@@ -26,7 +26,7 @@ export class AuthService {
       throw new HttpException('Неверный пароль', HttpStatus.UNAUTHORIZED);
     }
 
-    const payload = { id: user.id };
+    const payload = { id: user[0].id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
@@ -59,7 +59,7 @@ export class AuthService {
       isActivated: false,
     });
 
-    const payload = { id: res.id };
+    const payload = { id: res[0].id };
 
     return { access_token: await this.jwtService.signAsync(payload) };
   }

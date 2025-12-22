@@ -8,29 +8,31 @@ datasource db {
 }
 
 model country {
-  id                   Int                   @id(map: "Country_pkey") @default(autoincrement())
   name                 String
   country_code         String
   bg_image             String
+  created_at           DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at           DateTime?             @default(now()) @db.Timestamp(6)
+  id                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   country_information  country_information?
   country_requirements country_requirements?
 }
 
 model currency {
-  id                  Int                   @id @default(autoincrement())
   name                String?               @db.VarChar(255)
   symbol              String?               @db.VarChar(255)
+  id                  Int                   @id @default(autoincrement())
   country_information country_information[]
 }
 
 model country_information {
-  country_id  Int       @id(map: "general_country_information_pkey")
   languages   String[]  @db.VarChar
   capital     String?   @db.VarChar(255)
   population  Int?
   currency_id Int?
-  currency    currency? @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
+  country_id  String    @id @db.Uuid
   country     country   @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
+  currency    currency? @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
 }
 
 model country_requirements {
@@ -38,15 +40,39 @@ model country_requirements {
   education_requirements   String?  @db.VarChar
   nostrification           Boolean?
   financial_guarantees     Int?
-  country_id               Int      @id(map: "general_country_requirements_pkey")
+  country_id               String   @id @db.Uuid
   country                  country  @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
 }
 
 model users {
-  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String  @db.VarChar(50)
-  email        String  @db.VarChar(255)
-  password     String  @db.VarChar(255)
-  avatar_url   String? @db.VarChar(255)
-  is_activated Boolean @default(false)
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username     String    @db.VarChar(50)
+  email        String    @db.VarChar(255)
+  password     String    @db.VarChar(255)
+  avatar_url   String?   @db.VarChar(255)
+  is_activated Boolean   @default(false)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+  tickets      tickets[]
+}
+
+model tickets {
+  id               Int              @id(map: "edit_requests_pkey") @default(autoincrement())
+  status_id        Int
+  user_id          String           @db.Uuid
+  type             String           @db.VarChar(50)
+  created_at       DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?        @db.Timestamp(6)
+  entity_type      String           @db.VarChar(255)
+  entity_id        String?          @db.Uuid
+  reviewed_by      String?          @db.Uuid
+  payload          Json?
+  tickets_statuses tickets_statuses @relation(fields: [status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_status_id")
+  users            users            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_id")
+}
+
+model tickets_statuses {
+  status_id   Int       @id @default(autoincrement())
+  status_name String?   @db.VarChar(20)
+  tickets     tickets[]
 }

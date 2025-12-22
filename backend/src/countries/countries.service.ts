@@ -32,24 +32,44 @@ export class CountriesService {
     //   data: dto,
     // });
     console.log('DTO:', dto);
-    const country = await this.prisma.$queryRawUnsafe<{ id: number }[]>(`
+    const country = await this.prisma.$queryRawUnsafe<{ id: number }[]>(
+      `
       INSERT INTO country(name, country_code, bg_image)
-      VALUES (${dto.countryCode}, ${dto.bgImage},) RETURNING id;
-      `);
+      VALUES ($1, $2, $3) RETURNING id;
+      `,
+      dto.name,
+      dto.countryCode,
+      dto.bgImage,
+    );
 
     const countryId = country[0].id;
 
-    await this.prisma.$queryRawUnsafe(`
+    await this.prisma.$queryRawUnsafe(
+      `
       INSERT INTO country_information(languages, capital, population, currency_id, country_id)
-      VALUES (${dto.information.capital}, ${dto.information.population},
-              ${dto.information.currency_id}, ${countryId},);
-      `);
+      VALUES ($1, $2,
+              $3, $4, $5);
+      `,
+      dto.information.languages,
+      dto.information.capital,
+      dto.information.population,
+      dto.information.currency_id,
+      countryId,
+    );
 
-    await this.prisma.$queryRawUnsafe(`
-      INSERT INTO country_requirements(minimal_student_visa_age, education_requirements, nostrification,
-                                       financial_guarantees, country_id)
-      VALUES (${dto.requirements.educationRequirements}, ${dto.requirements.nostrification},
-              ${dto.requirements.financialGuarantees}, ${countryId},);
-    `);
+    await this.prisma.$queryRawUnsafe(
+      `
+        INSERT INTO country_requirements(
+          minimal_student_visa_age, education_requirements, nostrification,
+          financial_guarantees, country_id
+        )
+        VALUES ($1, $2, $3, $4, $5);
+      `,
+      dto.requirements.minimalStudentVisaAge,
+      dto.requirements.educationRequirements,
+      dto.requirements.nostrification,
+      dto.requirements.financialGuarantees,
+      countryId,
+    );
   }
 }
