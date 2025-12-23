@@ -2,12 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TicketsRepository } from './tickets.repository.js';
 import { CreateTicket, UpdateTicket } from './DTO/tickets.dto.js';
 import { CountriesService } from '../countries/countries.service.js';
+import { UniversitiesService } from '../universities/universities.service.js';
 
 @Injectable()
 export class TicketsService {
   constructor(
     private readonly repo: TicketsRepository,
     private readonly countries: CountriesService,
+    private readonly universities: UniversitiesService,
   ) {}
 
   getAllTickets() {
@@ -42,6 +44,13 @@ export class TicketsService {
         console.log('TICKET FROM DB:', ticket.entity_type);
         if (ticket.entity_type === 'country') {
           const res = await this.countries.updateCountry(
+            ticket.entity_id,
+            ticket.payload,
+          );
+          console.log('res:', res);
+        }
+        if (ticket.entity_type === 'university') {
+          const res = await this.universities.updateUniversity(
             ticket.entity_id,
             ticket.payload,
           );

@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -96,7 +95,7 @@ model universities {
   id                        String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                      String?                    @db.VarChar(100)
   description               String?
-  bgimage                   String?                    @db.VarChar(50)
+  bg_image                  String?                    @db.VarChar(50)
   created_at                DateTime?                  @default(now()) @db.Timestamp(6)
   updated_at                DateTime?                  @db.Timestamp(6)
   created_by                String?                    @db.Uuid
