@@ -3,6 +3,6 @@ export interface Ticket {
   userId: string;
   entityId: string;
   entityType: string;
-  payload: string;
+  payload: object;
   reviewedBy: string;
 }

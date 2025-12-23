@@ -16,6 +16,8 @@ model country {
   id                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   country_information  country_information?
   country_requirements country_requirements?
+  country_review       country_review[]
+  universities         universities[]
 }
 
 model currency {
@@ -31,7 +33,7 @@ model country_information {
   population  Int?
   currency_id Int?
   country_id  String    @id @db.Uuid
-  country     country   @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
+  country     country   @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
   currency    currency? @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
 }
 
@@ -41,19 +43,21 @@ model country_requirements {
   nostrification           Boolean?
   financial_guarantees     Int?
   country_id               String   @id @db.Uuid
-  country                  country  @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
+  country                  country  @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
 }
 
 model users {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String    @db.VarChar(50)
-  email        String    @db.VarChar(255)
-  password     String    @db.VarChar(255)
-  avatar_url   String?   @db.VarChar(255)
-  is_activated Boolean   @default(false)
-  created_at   DateTime? @default(now()) @db.Timestamp(6)
-  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username     String         @db.VarChar(50)
+  email        String         @db.VarChar(255)
+  password     String         @db.VarChar(255)
+  avatar_url   String?        @db.VarChar(255)
+  is_activated Boolean        @default(false)
+  created_at   DateTime?      @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?      @default(now()) @db.Timestamp(6)
+  reviews      reviews[]
   tickets      tickets[]
+  universities universities[]
 }
 
 model tickets {
@@ -74,4 +78,105 @@ model tickets_statuses {
   status_id   Int       @id @default(autoincrement())
   status_name String?   @db.VarChar(20)
   tickets     tickets[]
+}
+
+model fields_of_study {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String?             @db.VarChar(150)
+  university_fields university_fields[]
+}
+
+model programs_of_study {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String?               @db.VarChar(150)
+  university_programs university_programs[]
+}
+
+model universities {
+  id                        String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                      String?                    @db.VarChar(100)
+  description               String?
+  bgimage                   String?                    @db.VarChar(50)
+  created_at                DateTime?                  @default(now()) @db.Timestamp(6)
+  updated_at                DateTime?                  @db.Timestamp(6)
+  created_by                String?                    @db.Uuid
+  country_id                String?                    @db.Uuid
+  country                   country?                   @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_country_id")
+  users                     users?                     @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  universities_information  universities_information?
+  universities_requirements universities_requirements?
+  universities_review       universities_review[]
+  university_fields         university_fields[]
+}
+
+model universities_information {
+  university_id      String       @id @db.Uuid
+  top                Int?
+  city               String?      @db.VarChar(255)
+  students           Int?
+  year_of_foundation Int?         @db.SmallInt
+  universities       universities @relation(fields: [university_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model universities_requirements {
+  university_id  String       @id @db.Uuid
+  language_level String?      @db.VarChar(4)
+  documents      String[]     @db.VarChar(255)
+  deadline       DateTime?    @db.Date
+  universities   universities @relation(fields: [university_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model university_fields {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  university_id       String?               @db.Uuid
+  field_id            String?               @db.Uuid
+  name                String?               @db.VarChar(150)
+  fields_of_study     fields_of_study?      @relation(fields: [field_id], references: [id], onUpdate: NoAction, map: "fk_field_id")
+  universities        universities?         @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_university_id")
+  university_programs university_programs[]
+}
+
+model university_programs {
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  university_fields_id String?            @db.Uuid
+  name                 String?            @db.VarChar(150)
+  description          String?
+  program_of_study_id  String?            @db.Uuid
+  programs_of_study    programs_of_study? @relation(fields: [program_of_study_id], references: [id], onUpdate: NoAction, map: "fk_program_of_study_id")
+  university_fields    university_fields? @relation(fields: [university_fields_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model country_review {
+  country_id String  @db.Uuid
+  review_id  String  @db.Uuid
+  country    country @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reviews    reviews @relation(fields: [review_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([country_id, review_id])
+}
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model eduWiki_backup {
+// }
+
+model reviews {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id             String?               @db.Uuid
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  content             String?
+  is_recommended      Boolean?
+  recommended         Int?
+  unrecommended       Int?
+  country_review      country_review[]
+  users               users?                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  universities_review universities_review[]
+}
+
+model universities_review {
+  university_id String       @db.Uuid
+  review_id     String       @db.Uuid
+  reviews       reviews      @relation(fields: [review_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  universities  universities @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([university_id, review_id])
 }

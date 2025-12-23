@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { TicketsService } from './tickets.service.js';
 import { AuthGuard } from '../auth/auth.guard.js';
-import { CreateTicket } from './DTO/tickets.dto.js';
+import { CreateTicket, UpdateTicket } from './DTO/tickets.dto.js';
 
 @Controller('tickets')
 @UseGuards(AuthGuard)
@@ -16,5 +26,19 @@ export class TicketsController {
   @Post('/create')
   createTicket(@Req() req: Request, @Body() dto: CreateTicket) {
     return this.ticketsService.createTicket(req, dto);
+  }
+
+  @Patch('/update/:id')
+  updateTicket(
+    @Req() req: Request,
+    @Param('id') id: number,
+    @Body() dto: UpdateTicket,
+  ) {
+    return this.ticketsService.updateTicket(req, dto, id);
+  }
+
+  @Delete('/delete/:id')
+  deleteTicket(@Param('id') id: number) {
+    return this.ticketsService.deleteTicket(id);
   }
 }

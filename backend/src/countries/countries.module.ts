@@ -9,5 +9,6 @@ import CountriesRepo from './countries.repo.js';
   imports: [AuthModule],
   controllers: [CountriesController],
   providers: [CountriesService, PrismaService, CountriesRepo],
+  exports: [CountriesService, CountriesRepo],
 })
 export class CountriesModule {}

@@ -1,6 +1,8 @@
 import { PrismaService } from '../prisma.service.js';
 import { CreateCountryDto, UpdateCountryDto } from './DTO/countries.dto.js';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export default class CountriesRepo {
   constructor(private prisma: PrismaService) {}
 
@@ -62,6 +64,7 @@ export default class CountriesRepo {
   async updateCountry(id: string, dto: UpdateCountryDto) {
     if (dto.bgImage || dto.countryCode || dto.name) {
       if (dto.bgImage)
+        console.log('выполняю обновление BG', dto.bgImage, 'id:', id);
         await this.prisma.$executeRawUnsafe(
           `
           UPDATE country SET bg_image = $1 WHERE id = $2

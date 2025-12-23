@@ -1,17 +1,14 @@
 import {
   IsIn,
-  IsJSON,
   IsNotEmpty,
+  IsNumber,
   IsObject,
+  IsOptional,
   IsString,
   IsUUID,
 } from 'class-validator';
 
 export class CreateTicket {
-  // @IsNotEmpty()
-  // @IsUUID()
-  // userId: string;
-
   @IsNotEmpty()
   @IsUUID()
   entityId: string;
@@ -23,11 +20,43 @@ export class CreateTicket {
   })
   entityType: string;
 
-  // @IsNotEmpty()
-  // @IsUUID()
-  // reviewed_by: string;
-
   @IsNotEmpty()
   @IsObject()
-  payload: string;
+  payload: object;
+
+  @IsOptional()
+  @IsNumber()
+  @IsIn([1, 2, 3])
+  statusId: number;
+
+  @IsOptional()
+  @IsUUID()
+  userId: string;
+
+  @IsOptional()
+  @IsString()
+  reviewedBy: string;
+}
+
+export class UpdateTicket {
+  @IsOptional()
+  @IsNumber()
+  @IsIn([1, 2, 3])
+  statusId?: number;
+
+  @IsOptional()
+  @IsUUID()
+  entityId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  userId?: string;
+
+  @IsOptional()
+  @IsString()
+  reviewedBy?: string;
+
+  @IsOptional()
+  @IsObject()
+  payload?: object;
 }

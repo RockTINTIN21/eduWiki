@@ -21,7 +21,7 @@ export class AuthService {
     }
 
     const passwordIsMatch = await bcrypt.compare(dto.password, user.password);
-    console.log('33333', user);
+    console.log('user', user);
     if (!passwordIsMatch) {
       throw new HttpException('Неверный пароль', HttpStatus.UNAUTHORIZED);
     }
