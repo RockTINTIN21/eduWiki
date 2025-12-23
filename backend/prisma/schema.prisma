@@ -60,7 +60,6 @@ model tickets {
   id               Int              @id(map: "edit_requests_pkey") @default(autoincrement())
   status_id        Int
   user_id          String           @db.Uuid
-  type             String           @db.VarChar(50)
   created_at       DateTime?        @default(now()) @db.Timestamp(6)
   updated_at       DateTime?        @db.Timestamp(6)
   entity_type      String           @db.VarChar(255)

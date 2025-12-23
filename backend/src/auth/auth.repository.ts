@@ -12,7 +12,7 @@ export class AuthRepository {
     const res = await this.prisma.$queryRawUnsafe<
       { password: string; id: string }[]
     >(
-      `SELECT password
+      `SELECT password, id
        FROM users
        WHERE email = $1
        LIMIT 1`,

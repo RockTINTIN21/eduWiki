@@ -21,12 +21,12 @@ export class AuthService {
     }
 
     const passwordIsMatch = await bcrypt.compare(dto.password, user.password);
-    console.log(passwordIsMatch);
+    console.log('33333', user);
     if (!passwordIsMatch) {
       throw new HttpException('Неверный пароль', HttpStatus.UNAUTHORIZED);
     }
 
-    const payload = { id: user[0].id };
+    const payload = { id: user.id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

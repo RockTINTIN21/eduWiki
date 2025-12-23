@@ -22,9 +22,6 @@ export class UsersRepository {
   }
 
   async updateUser(id: string, dto: UpdateUserDTO) {
-    // Захардкодил по причине того, что не знаю как это сделать через цикл т.к. может быть столбец где название
-    // идёт через нижнее подчеркивание и это слишком муторно для MVP и практики
-
     if (dto.username) {
       await this.prisma.$executeRawUnsafe(
         `UPDATE users 

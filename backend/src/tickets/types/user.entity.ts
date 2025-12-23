@@ -1,7 +1,8 @@
 export interface Ticket {
-  statusId: 1 | 2 | 3;
+  statusId: number;
   userId: string;
   entityId: string;
   entityType: string;
   payload: string;
+  reviewedBy: string;
 }

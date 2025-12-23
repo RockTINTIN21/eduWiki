@@ -64,3 +64,5 @@ export class CreateCountryDto {
   @Type(() => CountryRequirementsDto)
   requirements: CountryRequirementsDto;
 }
+
+export type UpdateCountryDto = Partial<CreateCountryDto>;
