@@ -155,10 +155,6 @@ model country_review {
   @@id([country_id, review_id])
 }
 
-/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
-// model eduWiki_backup {
-// }
-
 model reviews {
   id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id             String?               @db.Uuid
@@ -180,3 +176,7 @@ model universities_review {
 
   @@id([university_id, review_id])
 }
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model eduWiki_backup {
+// }
