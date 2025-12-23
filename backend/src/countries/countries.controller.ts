@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CountriesService } from './countries.service.js';
 import { CreateCountryDto } from './DTO/countries.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
@@ -10,6 +10,11 @@ export class CountriesController {
   @Get()
   findAll() {
     return this.countriesService.findAll();
+  }
+
+  @Get('/:id')
+  findOne(@Param('id') id: string) {
+    return this.countriesService.findOne(id);
   }
 
   @UseGuards(AuthGuard)

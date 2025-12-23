@@ -8,11 +8,12 @@ datasource db {
 
 model country {
   name                 String
-  country_code         String
-  bg_image             String
-  created_at           DateTime?             @default(now()) @db.Timestamp(6)
-  updated_at           DateTime?             @default(now()) @db.Timestamp(6)
+  countryCode          String                @map("country_code")
+  bgImage              String                @map("bg_image")
+  createdAt            DateTime?             @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime?             @default(now()) @map("updated_at") @db.Timestamp(6)
   id                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  description          String?
   country_information  country_information?
   country_requirements country_requirements?
   country_review       country_review[]
@@ -27,22 +28,22 @@ model currency {
 }
 
 model country_information {
-  languages   String[]  @db.VarChar
-  capital     String?   @db.VarChar(255)
-  population  Int?
-  currency_id Int?
-  country_id  String    @id @db.Uuid
-  country     country   @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
-  currency    currency? @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
+  languages  String[]  @db.VarChar
+  capital    String?   @db.VarChar(255)
+  population Int?
+  currencyId Int?      @map("currency_id")
+  countryId  String    @id @map("country_id") @db.Uuid
+  country    country   @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_information_country_id_fkey")
+  currency   currency? @relation(fields: [currencyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_currency")
 }
 
 model country_requirements {
-  minimal_student_visa_age Int?
-  education_requirements   String?  @db.VarChar
-  nostrification           Boolean?
-  financial_guarantees     Int?
-  country_id               String   @id @db.Uuid
-  country                  country  @relation(fields: [country_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
+  minimalStudentVisaAge Int?     @map("minimal_student_visa_age")
+  educationRequirements String?  @map("education_requirements") @db.VarChar
+  nostrification        Boolean?
+  financialGuarantees   Int?     @map("financial_guarantees")
+  countryId             String   @id @map("country_id") @db.Uuid
+  country               country  @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "general_country_requirements_country_id_fkey")
 }
 
 model users {

@@ -1,6 +1,11 @@
 const nextConfig = {
   images: {
-    remotePatterns: [new URL('https://flagsapi.com/**')],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
 };
 

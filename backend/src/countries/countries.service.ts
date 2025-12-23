@@ -10,6 +10,10 @@ export class CountriesService {
     return this.repo.gelAllCounties();
   }
 
+  async findOne(id: string) {
+    return this.repo.getCountry(id);
+  }
+
   async addCountry(dto: CreateCountryDto) {
     return this.repo.createCountry(dto);
   }

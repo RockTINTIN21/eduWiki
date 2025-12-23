@@ -14,9 +14,35 @@ export default class CountriesRepo {
         ON country.id = country_requirements.country_id
       JOIN country_information
         ON country.id = country_information.country_id
-      JOIN currency
-        ON country_information.currency_id = currency.id
     `);
+
+
+    //
+    // const country = this.prisma.country.findMany();
+    //
+    // const res = {
+    //
+    // }
+  }
+
+  async getCountry(id: string) {
+    const country = await this.prisma.country.findUnique({
+      where: { id: id },
+    });
+    console.log('country', country);
+    const information = await this.prisma.country_information.findUnique({
+      where: { countryId: id },
+    });
+
+    const requirements = await this.prisma.country_requirements.findUnique({
+      where: { countryId: id },
+    });
+
+    return {
+      ...country,
+      information: information,
+      requirements: requirements,
+    };
   }
 
   async createCountry(dto: CreateCountryDto) {
@@ -65,13 +91,13 @@ export default class CountriesRepo {
     if (dto.bgImage || dto.countryCode || dto.name) {
       if (dto.bgImage)
         console.log('выполняю обновление BG', dto.bgImage, 'id:', id);
-        await this.prisma.$executeRawUnsafe(
-          `
+      await this.prisma.$executeRawUnsafe(
+        `
           UPDATE country SET bg_image = $1 WHERE id = $2
         `,
-          dto.bgImage,
-          id,
-        );
+        dto.bgImage,
+        id,
+      );
 
       if (dto.countryCode)
         await this.prisma.$executeRawUnsafe(
@@ -158,7 +184,5 @@ export default class CountriesRepo {
       `DELETE FROM country WHERE id = $1`,
       id,
     );
-  };
-
-
+  }
 }
