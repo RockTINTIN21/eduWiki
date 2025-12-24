@@ -85,7 +85,7 @@ export default async function Home() {
                       <h3 className='font-medium text-2xl pb-2'>{card.title}</h3>
                       <p>{card.description}</p>
                     </div>
-                    <Image className='hidden md:block'
+                    <Image className='hidden md:block min-h-[150px]'
                       src={'/images/promo/' + card.icon}
                       width={150} height={150} alt={card.title}
                     />
