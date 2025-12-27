@@ -58,8 +58,8 @@ export class AuthService {
       password: hashPassword,
       isActivated: false,
     });
-
-    const payload = { id: res[0].id };
+    console.log('res:', res);
+    const payload = { id: res.id };
 
     return { access_token: await this.jwtService.signAsync(payload) };
   }

@@ -6,6 +6,7 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { Prisma } from '@prisma/client';
 
 export class LoginDTO {
   @IsString()
