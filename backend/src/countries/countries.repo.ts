@@ -30,11 +30,11 @@ export default class CountriesRepo {
       where: { id: id },
     });
     console.log('country', country);
-    const information = await this.prisma.country_information.findUnique({
+    const information = await this.prisma.countryInformation.findUnique({
       where: { countryId: id },
     });
 
-    const requirements = await this.prisma.country_requirements.findUnique({
+    const requirements = await this.prisma.countryRequirements.findUnique({
       where: { countryId: id },
     });
 

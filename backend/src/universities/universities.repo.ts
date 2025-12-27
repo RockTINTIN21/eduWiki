@@ -29,33 +29,33 @@ export class UniversitiesRepo {
 
   async createUniversity(dto: CreateUniversityDTO) {
     console.log('DTO:', dto);
-    const university = await this.prisma.universities.create({
+    const university = await this.prisma.university.create({
       data: {
         name: dto.name,
         description: dto.description,
-        country_id: dto.countryId,
-        created_by: dto.createdBy,
-        bg_image: dto.bgImage,
+        countryId: dto.countryId,
+        createdBy: dto.createdBy,
+        bgImage: dto.bgImage,
       },
     });
     console.log('UNIVERTSITY:', university);
     if (dto.information) {
-      await this.prisma.universities_information.create({
+      await this.prisma.universityInformation.create({
         data: {
-          university_id: university.id,
+          universityId: university.id,
           top: dto.information.top,
           city: dto.information.city,
           students: dto.information.students,
-          year_of_foundation: dto.information.yearOfFoundation,
+          yearOfFoundation: dto.information.yearOfFoundation,
         },
       });
     }
 
     if (dto.requirements) {
-      await this.prisma.universities_requirements.create({
+      await this.prisma.universityRequirements.create({
         data: {
-          university_id: university.id,
-          language_level: dto.requirements.languageLevel,
+          universityId: university.id,
+          languageLevel: dto.requirements.languageLevel,
           documents: dto.requirements.documents,
           deadline: dto.requirements.deadline,
         },
@@ -64,38 +64,38 @@ export class UniversitiesRepo {
   }
 
   async updateUniversity(id: string, dto: UpdateUniversityDTO) {
-    await this.prisma.universities.update({
+    await this.prisma.university.update({
       where: {
         id: id,
       },
       data: {
         name: dto.name,
         description: dto.description,
-        bg_image: dto.bgImage,
+        bgImage: dto.bgImage,
       },
     });
 
     if (dto.information) {
-      await this.prisma.universities_information.update({
+      await this.prisma.universityInformation.update({
         where: {
-          university_id: id,
+          universityId: id,
         },
         data: {
           top: dto.information.top,
           city: dto.information.city,
           students: dto.information.students,
-          year_of_foundation: dto.information.yearOfFoundation,
+          yearOfFoundation: dto.information.yearOfFoundation,
         },
       });
     }
 
     if (dto.requirements) {
-      await this.prisma.universities_requirements.update({
+      await this.prisma.universityRequirements.update({
         where: {
-          university_id: id,
+          universityId: id,
         },
         data: {
-          language_level: dto.requirements.languageLevel,
+          languageLevel: dto.requirements.languageLevel,
           documents: dto.requirements.documents,
           deadline: dto.requirements.deadline,
         },

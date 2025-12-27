@@ -37,7 +37,7 @@ export class TicketsRepository {
   }
 
   updateTicket(id: number, dto: UpdateTicket) {
-    return this.prisma.tickets.update({
+    return this.prisma.ticket.update({
       where: { id },
       data: {
         ...(dto.statusId !== undefined && { status_id: dto.statusId }),
