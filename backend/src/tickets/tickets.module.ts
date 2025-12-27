@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TicketsService } from './tickets.service.js';
-import { TicketsController } from './tickets.controller.js';
-import { PrismaService } from '../prisma.service.js';
-import { TicketsRepository } from './tickets.repository.js';
-import { AuthModule } from '../auth/auth.module.js';
-import { CountriesService } from '../countries/countries.service.js';
-import CountriesRepo from '../countries/countries.repo.js';
-import { UniversitiesService } from '../universities/universities.service.js';
-import { UniversitiesRepo } from '../universities/universities.repo.js';
+import { TicketsService } from './tickets.service';
+import { TicketsController } from './tickets.controller';
+import { PrismaService } from '../prisma.service';
+import { TicketsRepository } from './tickets.repository';
+import { AuthModule } from '../auth/auth.module';
+import { CountriesService } from '../countries/countries.service';
+import CountriesRepo from '../countries/countries.repo';
+import { UniversitiesService } from '../universities/universities.service';
+import { UniversitiesRepo } from '../universities/universities.repo';
 
 @Module({
   imports: [AuthModule],

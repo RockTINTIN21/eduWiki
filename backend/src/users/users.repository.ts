@@ -1,5 +1,5 @@
-import { PrismaService } from '../prisma.service.js';
-import { UpdateUserDTO } from './DTO/users.dto.js';
+import { PrismaService } from '../prisma.service';
+import { UpdateUserDTO } from './DTO/users.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -7,67 +7,33 @@ export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.$queryRawUnsafe(`SELECT * FROM users`);
+    return this.prisma.user.findMany();
   }
 
-  async findById(id: string): Promise<[]> {
-    return this.prisma.$queryRawUnsafe(`SELECT * FROM users WHERE id=$1`, id);
+  async findById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
   }
 
-  async findByUsername(username: string): Promise<[]> {
-    return this.prisma.$queryRawUnsafe(
-      `SELECT * FROM users WHERE username=$1`,
-      username,
-    );
+  async findByUsername(username: string) {
+    return this.prisma.user.findUnique({
+      where: { username },
+    });
   }
 
   async updateUser(id: string, dto: UpdateUserDTO) {
-    if (dto.username) {
-      await this.prisma.$executeRawUnsafe(
-        `UPDATE users 
-            SET username = $2
-            WHERE id = $1
-        `,
-        id,
-        dto.username,
-      );
-    }
-
-    if (dto.email) {
-      await this.prisma.$executeRawUnsafe(
-        `UPDATE users 
-            SET email = $2
-            WHERE id = $1
-        `,
-        id,
-        dto.email,
-      );
-    }
-
-    if (dto.avatarUrl) {
-      await this.prisma.$executeRawUnsafe(
-        `UPDATE users 
-            SET avatar_url = $2
-            WHERE id = $1
-        `,
-        id,
-        dto.avatarUrl,
-      );
-    }
-
-    if (dto.isActivated) {
-      await this.prisma.$executeRawUnsafe(
-        `UPDATE users 
-            SET is_activated = $2
-            WHERE id = $1
-        `,
-        id,
-        dto.isActivated,
-      );
-    }
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        username: dto.username,
+        email: dto.email,
+        avatarUrl: dto.avatarUrl,
+      },
+    });
   }
 
   async deleteUser(id: string) {
-    await this.prisma.$executeRawUnsafe(`DELETE FROM users WHERE id = $1`, id);
+    await this.prisma.user.delete({ where: { id } });
   }
 }

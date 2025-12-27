@@ -7,9 +7,9 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service.js';
-import { UpdateUserDTO } from './DTO/users.dto.js';
-import { AuthGuard } from '../auth/auth.guard.js';
+import { UsersService } from './users.service';
+import { UpdateUserDTO } from './DTO/users.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('users')
 @UseGuards(AuthGuard)

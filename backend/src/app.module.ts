@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CountriesModule } from './countries/countries.module.js';
-import { UsersModule } from './users/users.module.js';
-import { AuthModule } from './auth/auth.module.js';
-import { TicketsModule } from './tickets/tickets.module.js';
-import { ProgramsModule } from './programs/programs.module.js';
-import { UniversitiesModule } from './universities/universities.module.js';
+import { CountriesModule } from './countries/countries.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { TicketsModule } from './tickets/tickets.module';
+import { ProgramsModule } from './programs/programs.module';
+import { UniversitiesModule } from './universities/universities.module';
 
 @Module({
   imports: [

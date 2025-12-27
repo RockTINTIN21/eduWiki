@@ -9,9 +9,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { TicketsService } from './tickets.service.js';
-import { AuthGuard } from '../auth/auth.guard.js';
-import { CreateTicket, UpdateTicket } from './DTO/tickets.dto.js';
+import { TicketsService } from './tickets.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { CreateTicket, UpdateTicket } from './DTO/tickets.dto';
 
 @Controller('tickets')
 @UseGuards(AuthGuard)

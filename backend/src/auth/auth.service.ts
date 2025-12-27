@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { LoginDTO, RegisterDTO } from './DTO/auth.dto.js';
-import { AuthRepository } from './auth.repository.js';
+import { LoginDTO, RegisterDTO } from './DTO/auth.dto';
+import { AuthRepository } from './auth.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -56,9 +56,7 @@ export class AuthService {
     const res = await this.repo.createUser({
       ...dto,
       password: hashPassword,
-      isActivated: false,
     });
-    console.log('res:', res);
     const payload = { id: res.id };
 
     return { access_token: await this.jwtService.signAsync(payload) };

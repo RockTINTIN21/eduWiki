@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProgramsRepo } from './programs.repo.js';
-import { CreateProgramDTO } from './DTO/programs.dto.js';
+import { ProgramsRepo } from './programs.repo';
 
 @Injectable()
 export class ProgramsService {

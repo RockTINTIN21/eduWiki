@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UniversitiesService } from './universities.service.js';
-import { UniversitiesController } from './universities.controller.js';
-import { UniversitiesRepo } from './universities.repo.js';
-import { PrismaService } from '../prisma.service.js';
-import { AuthModule } from '../auth/auth.module.js';
+import { UniversitiesService } from './universities.service';
+import { UniversitiesController } from './universities.controller';
+import { UniversitiesRepo } from './universities.repo';
+import { PrismaService } from '../prisma.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [AuthModule],

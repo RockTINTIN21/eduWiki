@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service.js';
-import { RegisterDTO } from './DTO/auth.dto.js';
+import { PrismaService } from '../prisma.service';
+import { RegisterDTO } from './DTO/auth.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -23,7 +23,6 @@ export class AuthRepository {
       username: dto.username,
       email: dto.email,
       password: dto.password,
-      avatarUrl: dto.avatarUrl,
     };
 
     return this.prisma.user.create({

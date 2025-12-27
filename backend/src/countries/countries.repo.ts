@@ -1,5 +1,5 @@
-import { PrismaService } from '../prisma.service.js';
-import { CreateCountryDto, UpdateCountryDto } from './DTO/countries.dto.js';
+import { PrismaService } from '../prisma.service';
+import { CreateCountryDto, UpdateCountryDto } from './DTO/countries.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -16,13 +16,6 @@ export default class CountriesRepo {
         ON country.id = country_information.country_id
     `);
 
-
-    //
-    // const country = this.prisma.country.findMany();
-    //
-    // const res = {
-    //
-    // }
   }
 
   async getCountry(id: string) {

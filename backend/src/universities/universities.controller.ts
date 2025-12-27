@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { UniversitiesService } from './universities.service.js';
-import { CreateUniversityDTO } from './DTO/universities.dto.js';
-import { AuthGuard } from '../auth/auth.guard.js';
+import { UniversitiesService } from './universities.service';
+import { CreateUniversityDTO } from './DTO/universities.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('universities')
 export class UniversitiesController {

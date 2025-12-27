@@ -1,12 +1,9 @@
 import {
-  IsBoolean,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { Prisma } from '@prisma/client';
 
 export class LoginDTO {
   @IsString()
@@ -35,19 +32,13 @@ export class LoginDTO {
 }
 
 export class RegisterDTO {
+  @IsNotEmpty({ message: 'Username is required' })
   @IsString()
   username: string;
 
+  @IsNotEmpty({ message: 'Email is required' })
   @IsEmail()
   email: string;
-
-  @IsString()
-  @IsOptional()
-  avatarUrl: string;
-
-  @IsBoolean()
-  @IsOptional()
-  isActivated: boolean;
 
   @IsString()
   @IsStrongPassword(

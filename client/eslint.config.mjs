@@ -7,19 +7,22 @@ const eslintConfig = defineConfig([
   prettier,
   {
     rules: {
-      indent: ['error', 2],
-      'react/no-unescaped-entities': 'off',
-      '@next/next/no-page-custom-font': 'off',
+      indent: ["error", 2],
+      "react/no-unescaped-entities": "off",
+      "@next/next/no-page-custom-font": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
-    '.next/**',
-    'out/**',
-    'build/**',
-    'next-env.d.ts',
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
   ]),
-])
+]);
 
 export default eslintConfig

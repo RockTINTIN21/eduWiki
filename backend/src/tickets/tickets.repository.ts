@@ -1,7 +1,7 @@
-import { PrismaService } from '../prisma.service.js';
+import { PrismaService } from '../prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Ticket } from './types/user.entity.js';
-import { UpdateTicket } from './DTO/tickets.dto.js';
+import { Ticket } from './types/user.entity';
+import { UpdateTicket } from './DTO/tickets.dto';
 
 @Injectable()
 export class TicketsRepository {

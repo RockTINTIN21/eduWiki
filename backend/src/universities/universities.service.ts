@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UniversitiesRepo } from './universities.repo.js';
+import { UniversitiesRepo } from './universities.repo';
 import {
   CreateUniversityDTO,
   UpdateUniversityDTO,
-} from './DTO/universities.dto.js';
+} from './DTO/universities.dto';
 
 @Injectable()
 export class UniversitiesService {

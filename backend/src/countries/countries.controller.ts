@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { CountriesService } from './countries.service.js';
-import { CreateCountryDto } from './DTO/countries.dto.js';
-import { AuthGuard } from '../auth/auth.guard.js';
+import { CountriesService } from './countries.service';
+import { CreateCountryDto } from './DTO/countries.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('countries')
 export class CountriesController {

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { TicketsRepository } from './tickets.repository.js';
-import { CreateTicket, UpdateTicket } from './DTO/tickets.dto.js';
-import { CountriesService } from '../countries/countries.service.js';
-import { UniversitiesService } from '../universities/universities.service.js';
+import { TicketsRepository } from './tickets.repository';
+import { CreateTicket, UpdateTicket } from './DTO/tickets.dto';
+import { CountriesService } from '../countries/countries.service';
+import { UniversitiesService } from '../universities/universities.service';
 
 @Injectable()
 export class TicketsService {

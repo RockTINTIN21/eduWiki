@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UpdateUserDTO } from './DTO/users.dto.js';
-import { UsersRepository } from './users.repository.js';
+import { UpdateUserDTO } from './DTO/users.dto';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +12,7 @@ export class UsersService {
 
   async findById(id: string) {
     const res = await this.repo.findById(id);
-    if (!res.length) {
+    if (!res) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
     return res;
@@ -20,7 +20,7 @@ export class UsersService {
 
   async findByUsername(username: string) {
     const res = await this.repo.findByUsername(username);
-    if (!res.length) {
+    if (!res) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
     return res;
