@@ -56,6 +56,10 @@ export class CreateCountryDto {
   @IsString()
   bgImage: string;
 
+  @IsOptional()
+  @IsString()
+  description: string;
+
   @ValidateNested()
   @Type(() => CountryInformationDto)
   information: CountryInformationDto;
