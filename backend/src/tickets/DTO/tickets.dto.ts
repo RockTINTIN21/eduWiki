@@ -11,18 +11,19 @@ import {
 export class CreateTicket {
   @IsNotEmpty()
   @IsUUID()
-  entityId: string;
+  @IsOptional()
+  entityId?: string;
 
   @IsNotEmpty()
   @IsString()
   @IsIn(['country', 'university', 'program'], {
-    message: 'entity_type должен быть одним из: country, university, program',
+    message: 'entityType должен быть одним из: country, university, program',
   })
-  entityType: string;
+  entityType: 'country' | 'university' | 'program';
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsObject()
-  payload: object;
+  payload?: object;
 
   @IsOptional()
   @IsNumber()
@@ -36,6 +37,13 @@ export class CreateTicket {
   @IsOptional()
   @IsString()
   reviewedBy: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['CREATE', 'UPDATE', 'DELETE'], {
+    message: 'entityAction должен быть одним из: CREATE, UPDATE, DELETE',
+  })
+  entityAction: 'CREATE' | 'UPDATE' | 'DELETE';
 }
 
 export class UpdateTicket {

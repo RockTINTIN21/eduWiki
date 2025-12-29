@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDTO, RegisterDTO } from './DTO/auth.dto';
-import { AuthRepository } from './auth.repository';
+import { AuthRepo } from './auth.repo';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly repo: AuthRepository,
+    private readonly repo: AuthRepo,
     private readonly jwtService: JwtService,
   ) {}
 

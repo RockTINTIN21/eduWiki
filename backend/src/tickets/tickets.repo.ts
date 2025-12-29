@@ -1,10 +1,10 @@
 import { PrismaService } from '../prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Ticket } from './types/user.entity';
-import { UpdateTicket } from './DTO/tickets.dto';
+import { CreateTicket, UpdateTicket } from './DTO/tickets.dto';
 
 @Injectable()
-export class TicketsRepository {
+export class TicketsRepo {
   constructor(private readonly prisma: PrismaService) {}
 
   getAllTickets() {
@@ -19,21 +19,19 @@ export class TicketsRepository {
     return res[0] ?? null;
   }
 
-  createTicket(t: Ticket) {
-    return this.prisma.$queryRawUnsafe(
-      `INSERT INTO tickets (
-                     status_id, 
-                     user_id, 
-                     entity_type, 
-                     entity_id, 
-                     payload
-      ) VALUES ($1, $2, $3, $4, $5)`,
-      t.statusId,
-      t.userId,
-      t.entityType,
-      t.entityId,
-      t.payload,
-    );
+  createTicket(t: CreateTicket) {
+    return this.prisma.ticket.create({
+      data: {
+        statusId: t.statusId,
+        userId: t.userId,
+        entityType: t.entityType,
+        payload: t.payload,
+        entityAction: t.entityAction,
+      },
+      select: {
+        id: true,
+      },
+    });
   }
 
   updateTicket(id: number, dto: UpdateTicket) {

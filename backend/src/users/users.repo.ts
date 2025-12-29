@@ -3,7 +3,7 @@ import { UpdateUserDTO } from './DTO/users.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UsersRepository {
+export class UsersRepo {
   constructor(private readonly prisma: PrismaService) {}
 
   findAll() {
@@ -35,5 +35,11 @@ export class UsersRepository {
 
   async deleteUser(id: string) {
     await this.prisma.user.delete({ where: { id } });
+  }
+
+  getUserRoles(id: string) {
+    return this.prisma.userRoles.findMany({
+      where: { userId: id },
+    });
   }
 }

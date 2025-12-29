@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateUserDTO } from './DTO/users.dto';
-import { UsersRepository } from './users.repository';
+import { UsersRepo } from './users.repo';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly repo: UsersRepository) {}
+  constructor(private readonly repo: UsersRepo) {}
 
   findAll() {
     return this.repo.findAll();

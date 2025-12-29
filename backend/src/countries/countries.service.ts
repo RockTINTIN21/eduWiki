@@ -16,9 +16,7 @@ export class CountriesService {
 
   async addCountry(dto: CreateCountryDto) {
     if (dto.information.currency_id) {
-      console.log('dto:', dto)
       const res = await this.repo.getCurrency(dto.information.currency_id);
-      console.log('res', res);
       if (!res) {
         throw new HttpException(
           'No currency found with this id',
@@ -48,13 +46,17 @@ export class CountriesService {
         );
       }
     }
-
-    const res = await this.repo.findByNameOrCountry(dto.name, dto.countryCode);
-    if (res) {
-      throw new HttpException(
-        'Country with this name already exists',
-        HttpStatus.CONFLICT,
+    if (dto.name || dto.countryCode) {
+      const res = await this.repo.findByNameOrCountry(
+        dto.name,
+        dto.countryCode,
       );
+      if (res) {
+        throw new HttpException(
+          'Country with this name already exists',
+          HttpStatus.CONFLICT,
+        );
+      }
     }
 
     return this.repo.updateCountry(id, dto);

@@ -77,14 +77,14 @@ export default class CountriesRepo {
         countryCode: dto.countryCode,
         bgImage: dto.bgImage,
         information: {
-          create: {
+          update: {
             capital: dto.information?.capital,
             population: dto.information?.population,
             currencyId: dto.information?.currency_id,
           },
         },
         requirements: {
-          create: {
+          update: {
             minimalStudentVisaAge: dto.requirements?.minimalStudentVisaAge,
             nostrification: dto.requirements?.nostrification,
             financialGuarantees: dto.requirements?.financialGuarantees,

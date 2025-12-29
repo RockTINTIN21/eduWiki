@@ -4,7 +4,7 @@ import { RegisterDTO } from './DTO/auth.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class AuthRepository {
+export class AuthRepo {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(
@@ -18,16 +18,23 @@ export class AuthRepository {
     });
   }
 
-  createUser(dto: RegisterDTO): Promise<{ id: string }> {
+  async createUser(dto: RegisterDTO): Promise<{ id: string }> {
     const data: Prisma.UserCreateInput = {
       username: dto.username,
       email: dto.email,
       password: dto.password,
     };
 
-    return this.prisma.user.create({
-      data,
+    const user = await this.prisma.user.create({ data });
+
+    await this.prisma.userRoles.create({
+      data: {
+        userId: user.id,
+        roleId: 4,
+      },
     });
+
+    return user;
   }
 
   async checkUsernameExists(username: string): Promise<boolean> {
