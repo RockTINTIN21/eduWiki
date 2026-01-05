@@ -40,6 +40,11 @@ export class UsersRepo {
   getUserRoles(id: string) {
     return this.prisma.userRoles.findMany({
       where: { userId: id },
+      include: {
+        role: {
+          select: { name: true },
+        },
+      },
     });
   }
 }

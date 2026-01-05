@@ -31,12 +31,12 @@ export class UsersController {
     return this.usersService.findByUsername(username);
   }
 
-  @Patch('update/:id')
+  @Patch('/:id')
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
     await this.usersService.updateUser(id, dto);
   }
 
-  @Delete('delete/:id')
+  @Delete('/:id')
   async deleteUser(@Param('id') id: string) {
     await this.usersService.deleteUser(id);
   }

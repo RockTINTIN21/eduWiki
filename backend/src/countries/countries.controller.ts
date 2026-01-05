@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CountriesService } from './countries.service';
 import { CreateCountryDto } from './DTO/countries.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -12,19 +20,19 @@ export class CountriesController {
     return this.countriesService.findAll();
   }
 
-  @Get('/:id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.countriesService.findOne(id);
   }
 
   @UseGuards(AuthGuard)
-  @Post('/add')
+  @Post('')
   addCountry(@Body() dto: CreateCountryDto) {
-    return this.countriesService.addCountry(dto);
+    return this.countriesService.createCountry({ dto });
   }
 
-  @Delete('/delete/:id')
+  @Delete(':id')
   deleteCountry(@Param('id') id: string) {
-    return this.countriesService.deleteCountry(id);
+    return this.countriesService.deleteCountry({ id });
   }
 }

@@ -10,6 +10,10 @@ export class UsersService {
     return this.repo.findAll();
   }
 
+  async getUserRoles(id: string) {
+    return this.repo.getUserRoles(id);
+  }
+
   async findById(id: string) {
     const res = await this.repo.findById(id);
     if (!res) {

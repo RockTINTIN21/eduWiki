@@ -30,7 +30,7 @@ export class AuthRepo {
     await this.prisma.userRoles.create({
       data: {
         userId: user.id,
-        roleId: 4,
+        roleId: 1,
       },
     });
 

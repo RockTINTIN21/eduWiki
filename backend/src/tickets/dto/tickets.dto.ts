@@ -7,36 +7,27 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
+import { TicketStatusName } from '../types/tickets.entity';
 
-export class CreateTicket {
-  @IsNotEmpty()
-  @IsUUID()
+export class CreateTicketDTO {
   @IsOptional()
+  @IsNumber()
+  id?: number;
+
+  @IsOptional()
+  @IsUUID()
   entityId?: string;
 
   @IsNotEmpty()
   @IsString()
-  @IsIn(['country', 'university', 'program'], {
+  @IsIn(['COUNTRY', 'UNIVERSITY', 'PROGRAM'], {
     message: 'entityType должен быть одним из: country, university, program',
   })
-  entityType: 'country' | 'university' | 'program';
+  entityType: 'COUNTRY' | 'UNIVERSITY' | 'PROGRAM';
 
   @IsOptional()
   @IsObject()
   payload?: object;
-
-  @IsOptional()
-  @IsNumber()
-  @IsIn([1, 2, 3])
-  statusId: number;
-
-  @IsOptional()
-  @IsUUID()
-  userId: string;
-
-  @IsOptional()
-  @IsString()
-  reviewedBy: string;
 
   @IsNotEmpty()
   @IsString()
@@ -46,23 +37,11 @@ export class CreateTicket {
   entityAction: 'CREATE' | 'UPDATE' | 'DELETE';
 }
 
-export class UpdateTicket {
-  @IsOptional()
-  @IsNumber()
-  @IsIn([1, 2, 3])
-  statusId?: number;
-
-  @IsOptional()
-  @IsUUID()
-  entityId?: string;
-
-  @IsOptional()
-  @IsUUID()
-  userId?: string;
-
+export class UpdateTicketDTO {
   @IsOptional()
   @IsString()
-  reviewedBy?: string;
+  @IsIn(['OPEN', 'APPROVED', 'REJECTED'])
+  status?: TicketStatusName;
 
   @IsOptional()
   @IsObject()

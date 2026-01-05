@@ -1,124 +1,140 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { TicketsRepo } from './tickets.repo';
-import { CreateTicket, UpdateTicket } from './DTO/tickets.dto';
+import { TicketsRepo } from './repo/tickets.repo';
+import { CreateTicketDTO, UpdateTicketDTO } from './dto/tickets.dto';
 import { CountriesService } from '../countries/countries.service';
-import { UniversitiesService } from '../universities/universities.service';
-import { UsersRepo } from '../users/users.repo';
-import { CreateCountryDto } from '../countries/DTO/countries.dto';
-import { CreateUniversityDTO } from '../universities/DTO/universities.dto';
+import { HandlerInput } from './types/tickets.entity';
+import { CountryBusinessRules } from '../countries/rules/country.business-rules';
+import { uniqueEntityHandler } from './handlers/unique-entity.handler';
+import { updateEntityHandler } from './handlers/update-entity.handler';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class TicketsService {
   constructor(
     private readonly repo: TicketsRepo,
-    private readonly usersRepo: UsersRepo,
+    private readonly users: UsersService,
     private readonly countries: CountriesService,
-    private readonly universities: UniversitiesService,
+    private readonly countriesRules: CountryBusinessRules,
   ) {}
-
-  async updateEntityByTicket(
-    entityAction: 'CREATE' | 'UPDATE' | 'DELETE',
-    entityType: 'country' | 'university' | 'program',
-    payload?: object,
-    entityId?: string,
-  ) {
-    if (entityType === 'country') {
-      if (entityAction === 'CREATE') {
-        return await this.countries.addCountry(payload as CreateCountryDto);
-      }
-      if (entityAction === 'UPDATE' && entityId && payload) {
-        return await this.countries.updateCountry(entityId, payload);
-      }
-      if (entityAction === 'DELETE' && entityId) {
-        return await this.countries.deleteCountry(entityId);
-      }
-    }
-
-    if (entityType === 'university') {
-      if (entityAction === 'CREATE') {
-        return await this.universities.createUniversity(
-          payload as CreateUniversityDTO,
-        );
-      }
-      if (entityAction === 'UPDATE' && entityId && payload) {
-        return await this.universities.updateUniversity(entityId, payload);
-      }
-      if (entityAction === 'DELETE' && entityId) {
-        return this.universities.deleteUniversity(entityId);
-      }
-    }
-
-    throw new HttpException(
-      'Cannot find entityAction or EntityType',
-      HttpStatus.NOT_FOUND,
-    );
-  }
 
   getAllTickets() {
     return this.repo.getAllTickets();
   }
 
-  async createTicket(payload: any, dto: CreateTicket) {
-    const userRoles = await this.usersRepo.getUserRoles(
-      payload.user.id as string,
+  private async checkEntityUnique(t: HandlerInput) {
+    return await uniqueEntityHandler(
+      {
+        assertCountryCreate: this.countriesRules.assertCreate.bind(
+          this.countriesRules,
+        ),
+        assertCountryUpdate: this.countriesRules.assertUpdate.bind(
+          this.countriesRules,
+        ),
+        assertCountryDelete: this.countriesRules.assertDelete.bind(
+          this.countriesRules,
+        ),
+      },
+      t,
+    );
+  }
+
+  private async updateEntityByTicket(t: HandlerInput) {
+    return updateEntityHandler(
+      {
+        countryCreate: this.countries.createCountry.bind(this.countries),
+        countryUpdate: this.countries.updateCountry.bind(this.countries),
+        countryDelete: this.countries.deleteCountry.bind(this.countries),
+      },
+      t,
+    );
+  }
+
+  async createTicket(payload: any, dto: CreateTicketDTO) {
+    const userRoles = await this.users.getUserRoles(payload.user.id as string);
+
+    const isAdmin = userRoles.some(
+      ({ role }) => role.name === 'ADMIN' || role.name === 'OWNER',
     );
 
-    const isAdmin = userRoles.findIndex(
-      (role) => role.roleId === 1 || role.roleId === 2,
-    );
-
-    const ticket: CreateTicket = {
-      ...dto,
-      statusId: isAdmin ? 3 : 1,
-      userId: payload.user.id,
+    const handlerData: HandlerInput = {
+      entityAction: dto.entityAction,
+      entityType: dto.entityType,
+      entityId: dto.entityId,
+      payload: dto.payload,
     };
 
-    await this.repo.createTicket(ticket);
+    await this.checkEntityUnique(handlerData);
+
+    if (dto.entityAction !== 'CREATE') {
+      if (dto.entityId) {
+        await this.repo.createTicket({
+          ...dto,
+          entityId: dto.entityId,
+          statusName: isAdmin ? 'APPROVED' : 'OPEN',
+          userId: payload.user.id,
+        });
+      } else {
+        throw new HttpException(
+          'Cannot find entity with this id',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    } else {
+      await this.repo.createTicket({
+        ...dto,
+        statusName: isAdmin ? 'APPROVED' : 'OPEN',
+        userId: payload.user.id,
+      });
+    }
+
     if (isAdmin) {
-      await this.updateEntityByTicket(
-        ticket.entityAction,
-        ticket.entityType,
-        ticket.payload,
-        ticket.entityId,
-      );
+      await this.updateEntityByTicket(handlerData);
     }
   }
 
-  async updateTicket(payload: any, dto: UpdateTicket, id: number) {
-    const userRoles = await this.usersRepo.getUserRoles(
-      payload.user.id as string,
+  async updateTicket(payload: any, dto: UpdateTicketDTO, id: number) {
+    const ticket = await this.repo.getTicket(id);
+
+    const userRoles = await this.users.getUserRoles(payload.user.id as string);
+
+    const isModerator = userRoles.some(({ role }: { role: { name: string } }) =>
+      ['OWNER', 'ADMIN', 'MODERATOR'].includes(role.name),
     );
 
-    const isModerator = userRoles.findIndex((role) =>
-      [2, 3, 4].includes(role.roleId),
-    );
-
-    if (isModerator) {
-      const ticket = await this.repo.updateTicket(id, {
-        ...(dto.payload && { payload: dto.payload }),
-        statusId: dto.statusId,
-        reviewedBy: payload.user.id,
-      });
-
-      if (dto.statusId === 2 && ticket.payload && ticket.entityId)
-        await this.updateEntityByTicket(
-          'UPDATE',
-          ticket.entityType as 'country' | 'university' | 'program',
-          ticket.payload as object,
-          ticket.entityId,
-        );
-    } else if (
-      dto.statusId &&
-      userRoles.findIndex(
-        (role) => role.roleId === 2 || role.roleId === 3 || role.roleId === 4,
-      )
-    ) {
+    if (ticket?.userId !== payload.user.id && !isModerator) {
       throw new HttpException(
-        'You dont have permission to update status ticket',
+        'You dont have permission to update this ticket',
         HttpStatus.FORBIDDEN,
       );
+    }
+
+    if (dto.status) {
+      if (isModerator) {
+        const ticket = await this.repo.updateTicket({
+          id: id,
+          reviewedBy: payload.user.id,
+          payload: dto.payload,
+          statusName: dto.status,
+        });
+        if (dto.status === 'APPROVED' && ticket.payload) {
+          return this.updateEntityByTicket({
+            entityType: ticket.entityType,
+            entityAction: ticket.entityAction,
+            entityId: ticket.entityId || undefined,
+            payload: ticket.payload as object,
+          });
+        }
+      } else {
+        throw new HttpException(
+          'You dont have permission to update status ticket',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     } else {
-      return this.repo.updateTicket(id, { payload: dto.payload });
+      return this.repo.updateTicket({
+        id: id,
+        payload: dto.payload,
+      });
     }
   }
 

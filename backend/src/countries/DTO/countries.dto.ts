@@ -23,8 +23,8 @@ class CountryInformationDto {
   population?: number;
 
   @IsOptional()
-  @IsInt()
-  currency_id?: number;
+  @IsString()
+  currency?: string;
 }
 
 class CountryRequirementsDto {

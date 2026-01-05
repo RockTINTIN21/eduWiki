@@ -28,7 +28,7 @@ export class UniversitiesRepo {
   }
 
   async createUniversity(dto: CreateUniversityDTO) {
-    console.log('DTO:', dto);
+    console.log('dto:', dto);
     const university = await this.prisma.university.create({
       data: {
         name: dto.name,
