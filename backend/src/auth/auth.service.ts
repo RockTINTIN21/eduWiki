@@ -12,6 +12,7 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDTO) {
+    console.log('DTO:', dto)
     const user = await this.repo.findByEmail(dto.email);
     if (!user) {
       throw new HttpException(

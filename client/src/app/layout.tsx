@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "EduMap",
+  title: "EduWiki",
   description: "О учёбе за границей",
 };
 

@@ -8,18 +8,8 @@ import {SearchIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import Card from "@/app/(home)/components/Card";
 import Image from "next/image";
-import { CountryData } from "@/app/[country]/page";
-
-const getData = async () => {
-  const res = await fetch(
-    "http://localhost:3000/api/countries/",
-  );
-  return await res.json();
-};
 
 export default async function Home() {
-  const countryData = await getData();
-  console.log('DATA: ', countryData);
 
   return (
     <div className="text-[#111827] relative mx-4 md:w-[960px] md:mx-auto pt-20 flex flex-col gap-6 pb-12">
@@ -31,7 +21,7 @@ export default async function Home() {
         </p>
 
         <div
-          className="flex border-[1px] border-[#E8E8E8] md:mx-52 mt-5 rounded-full justify-between py-2 px-3
+          className="flex border border-[#E8E8E8] md:mx-52 mt-5 rounded-full justify-between py-2 px-3
         shadow-accent/20 shadow-xl gap-4"
         >
           <input type="text" placeholder="Искать" className="ms-4 w-full" />
@@ -45,46 +35,46 @@ export default async function Home() {
       <div>
         <h3 className="text-xl">Популярные страны</h3>
         <div className="md:grid md:grid-cols-4 gap-4 md:w-full pt-3 overflow-x-auto flex">
-          <Card
-            link={countryData[0].country_id}
-            className={"md:col-span-2 md:aspect-2/1"}
-            countryName={countryData[0].name}
-            countryIcon={countryData[0].country_code}
-            bgImage={countryData[0].bg_image}
-          />
+          {/*<Card*/}
+          {/*  link={countryData[0].country_id}*/}
+          {/*  className={"md:col-span-2 md:aspect-2/1"}*/}
+          {/*  countryName={countryData[0].name}*/}
+          {/*  countryIcon={countryData[0].country_code}*/}
+          {/*  bgImage={countryData[0].bg_image}*/}
+          {/*/>*/}
 
-          <Card
-            link={countryData[1].country_id}
-            className={"md:col-span-2 md:aspect-2/1"}
-            countryName={countryData[1].name}
-            countryIcon={countryData[1].country_code}
-            bgImage={countryData[1].bg_image}
-          />
-          <Card
-            link={countryData[2].country_id}
-            className={"aspect-square"}
-            countryName={countryData[2].name}
-            countryIcon={countryData[2].country_code}
-            bgImage={countryData[2].bg_image}
-          />
-          <Card
-            link={countryData[3].country_id}
-            countryName={countryData[3].name}
-            countryIcon={countryData[3].country_code}
-            bgImage={countryData[3].bg_image}
-          />
-          <Card
-            link={countryData[4].country_id}
-            countryName={countryData[4].name}
-            countryIcon={countryData[4].country_code}
-            bgImage={countryData[4].bg_image}
-          />
-          <Card
-            link={countryData[5].country_id}
-            countryName={countryData[5].name}
-            countryIcon={countryData[5].country_code}
-            bgImage={countryData[5].bg_image}
-          />
+          {/*<Card*/}
+          {/*  link={countryData[1].country_id}*/}
+          {/*  className={"md:col-span-2 md:aspect-2/1"}*/}
+          {/*  countryName={countryData[1].name}*/}
+          {/*  countryIcon={countryData[1].country_code}*/}
+          {/*  bgImage={countryData[1].bg_image}*/}
+          {/*/>*/}
+          {/*<Card*/}
+          {/*  link={countryData[2].country_id}*/}
+          {/*  className={"aspect-square"}*/}
+          {/*  countryName={countryData[2].name}*/}
+          {/*  countryIcon={countryData[2].country_code}*/}
+          {/*  bgImage={countryData[2].bg_image}*/}
+          {/*/>*/}
+          {/*<Card*/}
+          {/*  link={countryData[3].country_id}*/}
+          {/*  countryName={countryData[3].name}*/}
+          {/*  countryIcon={countryData[3].country_code}*/}
+          {/*  bgImage={countryData[3].bg_image}*/}
+          {/*/>*/}
+          {/*<Card*/}
+          {/*  link={countryData[4].country_id}*/}
+          {/*  countryName={countryData[4].name}*/}
+          {/*  countryIcon={countryData[4].country_code}*/}
+          {/*  bgImage={countryData[4].bg_image}*/}
+          {/*/>*/}
+          {/*<Card*/}
+          {/*  link={countryData[5].country_id}*/}
+          {/*  countryName={countryData[5].name}*/}
+          {/*  countryIcon={countryData[5].country_code}*/}
+          {/*  bgImage={countryData[5].bg_image}*/}
+          {/*/>*/}
         </div>
       </div>
 
