@@ -63,6 +63,10 @@ export class AuthService {
     return tokens;
   }
 
+  async logout(userId: string) {
+    return this.repo.updateRefreshToken(userId, null);
+  }
+
   hashData(data: string) {
     return bcrypt.hash(data, 10);
   }

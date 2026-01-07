@@ -18,7 +18,7 @@ export class AuthRepo {
     });
   }
 
-  async updateRefreshToken(id: string, refreshToken: string) {
+  async updateRefreshToken(id: string, refreshToken: string | null) {
     await this.prisma.user.update({
       data: {
         refreshToken,
