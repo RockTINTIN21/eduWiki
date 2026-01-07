@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CountriesService } from './countries.service';
 import { CreateCountryDto } from './DTO/countries.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 
 @Controller('countries')
 export class CountriesController {
@@ -25,7 +25,7 @@ export class CountriesController {
     return this.countriesService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Post('')
   addCountry(@Body() dto: CreateCountryDto) {
     return this.countriesService.createCountry({ dto });

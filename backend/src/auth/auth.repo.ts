@@ -9,16 +9,27 @@ export class AuthRepo {
 
   async findByEmail(
     email: string,
-  ): Promise<{ password: string; id: string } | null> {
+  ): Promise<{ password: string; id: string; username: string } | null> {
     return this.prisma.user.findUnique({
       where: {
         email: email,
       },
-      select: { password: true, id: true },
+      select: { password: true, id: true, username: true },
     });
   }
 
-  async createUser(dto: RegisterDTO): Promise<{ id: string }> {
+  async updateRefreshToken(id: string, refreshToken: string) {
+    await this.prisma.user.update({
+      data: {
+        refreshToken,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  async createUser(dto: RegisterDTO) {
     const data: Prisma.UserCreateInput = {
       username: dto.username,
       email: dto.email,

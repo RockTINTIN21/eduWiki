@@ -10,11 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
-import { AuthGuard } from '../auth/auth.guard';
 import { CreateTicketDTO, UpdateTicketDTO } from './dto/tickets.dto';
+import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 
 @Controller('tickets')
-@UseGuards(AuthGuard)
+@UseGuards(AccessTokenGuard)
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 

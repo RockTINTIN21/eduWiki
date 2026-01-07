@@ -64,6 +64,7 @@ model User {
   isActivated  Boolean      @default(false) @map("is_activated")
   createdAt    DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?    @default(now()) @map("updated_at") @db.Timestamp(6)
+  refreshToken String?
   reviews      Review[]
   tickets      Ticket[]
   universities University[]

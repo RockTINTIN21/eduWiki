@@ -3,15 +3,15 @@ import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 export class UpdateUserDTO {
   @IsString()
   @IsOptional()
-  username: string;
+  username?: string;
 
   @IsEmail()
   @IsOptional()
-  email: string;
+  email?: string;
 
   @IsString()
   @IsOptional()
-  avatarUrl: string;
+  avatarUrl?: string;
 
   @IsBoolean()
   @IsOptional()

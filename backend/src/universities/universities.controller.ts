@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UniversitiesService } from './universities.service';
 import { CreateUniversityDTO } from './DTO/universities.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 
 @Controller('universities')
 export class UniversitiesController {
@@ -17,7 +17,7 @@ export class UniversitiesController {
     return this.universitiesService.getUniversity(id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Post('/create')
   createUniversity(@Body() dto: CreateUniversityDTO) {
     return this.universitiesService.createUniversity(dto);
