@@ -1,3 +1,5 @@
+"use client";
+
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css';
@@ -8,11 +10,16 @@ import {SearchIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import Card from "@/app/(home)/components/Card";
 import Image from "next/image";
+import {useEffect, useReducer, useRef} from "react";
+import {AppState, CounterId, DecrementAction, IncrementAction, store} from "@/lib/store";
 
-export default async function Home() {
+export default function Home() {
 
   return (
     <div className="text-[#111827] relative mx-4 md:w-[960px] md:mx-auto pt-20 flex flex-col gap-6 pb-12">
+
+      <Counter counterId="first"/>
+      <Counter counterId="second"/>
       <Anchor />
       <div className="text-center">
         <h1 className="text-3xl">Найдите вашу следующую остановку</h1>
@@ -167,4 +174,45 @@ export default async function Home() {
       </div>
     </div>
   );
+}
+
+const selectCounter = (state: AppState, counterId: CounterId) =>
+  state.counters[counterId];
+
+
+export function Counter({counterId}: {counterId: CounterId}){
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0)
+
+  const lastStateRef = useRef<ReturnType<typeof selectCounter>>();
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const currentState = selectCounter(store.getState(), counterId);
+      const lasState = selectCounter(store.getState(), counterId);
+
+      if(currentState !== lasState){
+        forceUpdate();
+      }
+      lastStateRef.current = currentState;
+    });
+    return unsubscribe;
+  }, [])
+
+  const counterState = selectCounter(store.getState(), counterId);
+
+  return (
+    <>
+      <h3>count: {counterState?.counter}</h3>
+      <Button onClick={() =>
+        store.dispatch({type: "increment", payload: {counterId}} satisfies IncrementAction)}>
+        Increment
+      </Button>
+      <Button onClick={() =>
+        store.dispatch({type: "decrement", payload: {counterId}} satisfies DecrementAction)}>
+        Decrement
+      </Button>
+    </>
+
+  )
 }

@@ -29,6 +29,13 @@ export class AuthRepo {
     });
   }
 
+  async findRefreshTokenByUserId(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: { refreshToken: true },
+    });
+  }
+
   async createUser(dto: RegisterDTO) {
     const data: Prisma.UserCreateInput = {
       username: dto.username,

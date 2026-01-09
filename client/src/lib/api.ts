@@ -41,11 +41,9 @@ export async function apiFetch<T>(
     ...init,
     headers,
     body,
-    // важно для cookie-based auth:
     credentials: "include",
   });
 
-  // Пустое тело
   if (res.status === 204) return undefined as T;
 
   const contentType = res.headers.get("content-type") || "";

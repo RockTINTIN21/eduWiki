@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginDTO, RegisterDTO } from './DTO/auth.dto';
 import { AuthRepo } from './auth.repo';
 import * as bcrypt from 'bcrypt';
@@ -28,7 +33,7 @@ export class AuthService {
       throw new HttpException('Неверный пароль', HttpStatus.UNAUTHORIZED);
     }
 
-    const tokens = await this.getTokens(user.username, user.id);
+    const tokens = await this.getTokens(user.id);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -58,13 +63,33 @@ export class AuthService {
       ...dto,
       password: hashPassword,
     });
-    const tokens = await this.getTokens(res.username, res.id);
+    const tokens = await this.getTokens(res.id);
     await this.updateRefreshToken(res.id, tokens.refreshToken);
     return tokens;
   }
 
   async logout(userId: string) {
     return this.repo.updateRefreshToken(userId, null);
+  }
+
+  async refreshAccessToken(userId: string, refreshToken: string) {
+    console.log('USERiD', userId);
+    const res = await this.repo.findRefreshTokenByUserId(userId);
+    if (!res) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+    console.log('storedToken', res);
+
+    const isValid = await bcrypt.compare(
+      refreshToken,
+      res.refreshToken as string,
+    );
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    const tokens = await this.getTokens(userId);
+    await this.updateRefreshToken(userId, tokens.refreshToken);
+    return tokens;
   }
 
   hashData(data: string) {
@@ -76,7 +101,7 @@ export class AuthService {
     await this.repo.updateRefreshToken(userId, hashedRefreshToken);
   }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userId: string) {
     const accessSecret =
       this.configService.getOrThrow<string>('JWT_ACCESS_SECRET');
     const refreshSecret =
@@ -89,7 +114,7 @@ export class AuthService {
       'JWT_REFRESH_EXPIRATION',
     );
 
-    const payload = { sub: userId, username };
+    const payload = { id: userId };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {

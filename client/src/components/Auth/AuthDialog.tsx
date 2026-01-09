@@ -1,48 +1,170 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AuthForm from "@/components/Auth/AuthForm";
+import LoginForm from "@/components/Auth/LoginForm";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import RegisterFormStageOne from "@/components/Auth/RegisterForms/RegisterFormStageOne";
+import RegisterFormStageTwo from "@/components/Auth/RegisterForms/RegisterFormStageTwo";
+import RegisterFormStageThree from "@/components/Auth/RegisterForms/RegisterFormStageThree";
+import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
 
-interface ModalProps {
-  children: React.ReactNode;
-  buttonName: string;
-}
+export type AutoDialogModeType = "login" | "register" | "resetPassword"
 
 const AuthDialog = () => {
+
+  const [mode, setMode] = useState<AutoDialogModeType>("login");
+  const [stage, setStage] = useState<1 | 2 | 3>(1);
+
+  const onChangeMode = (mode: AutoDialogModeType) =>{
+    setMode(mode);
+  }
+
+  const onChangeStage = (stage: 1 | 2 | 3) => {
+    setStage(stage);
+  };
+
+  const onCloseModal = () => {
+    setMode("login");
+    setStage(1)
+  }
+
   return (
-    <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button className="bg-accent">Войти</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className={"text-center text-2xl font-medium!"}>
-              Вход
-            </DialogTitle>
-            <DialogDescription className={"text-center font-medium text-[#5A5A5A]"}>
-              Продолжая, вы соглашаетесь с Политикой конфиденциальности и
-              Пользовательским соглашением.
-            </DialogDescription>
-          </DialogHeader>
-          <AuthForm />
-          {/*<DialogFooter>*/}
-          {/*  <DialogClose asChild>*/}
-          {/*    <Button variant="outline">Cancel</Button>*/}
-          {/*  </DialogClose>*/}
-          {/*  <Button type="submit">Save changes</Button>*/}
-          {/*</DialogFooter>*/}
-        </DialogContent>
-      </form>
+    <Dialog onOpenChange={(isOpen) => !isOpen && onCloseModal()}>
+      <DialogTrigger asChild>
+        <Button className="bg-accent">Войти</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-106.25 px-8">
+        <DialogHeader>
+          <DialogTitle className={"text-center text-2xl font-medium!"}>
+            {mode === "login" && "Вход"}
+            {mode === "register" && "Регистрация"}
+            {mode === "resetPassword" && "Сброс пароля"}
+          </DialogTitle>
+          <DialogDescription
+            className={"text-center font-medium text-[#5A5A5A]"}
+          >
+            {(mode === "login" || (mode === "register" && stage === 1)) && (
+              <>
+                Продолжая, вы соглашаетесь с{" "}
+                <Link className="text-link hover:underline" href="/">
+                  Политикой конфиденциальности
+                </Link>{" "}
+                и{" "}
+                <Link className="text-link hover:underline" href="/">
+                  Пользовательским соглашением
+                </Link>
+                .
+              </>
+            )}
+            {mode === "resetPassword" && (
+              <>Введите почту на которую был зарегистрирован аккаунт</>
+            )}
+            {stage === 2 && <>Введите код отправленный на указанную почту</>}
+          </DialogDescription>
+        </DialogHeader>
+        <AnimatePresence mode="wait">
+          {mode === "login" ? (
+            <motion.div
+              key="login"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 20, opacity: 0 }}
+            >
+              <LoginForm onChangeMode={(stage: AutoDialogModeType) => onChangeMode(stage)} />
+            </motion.div>
+          ) : mode === "register" ? (
+            <motion.div
+              key="register"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 20, opacity: 0 }}
+            >
+              {stage === 1 ? (
+                <motion.div
+                  key="1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: 20, opacity: 0 }}
+                >
+                  <RegisterFormStageOne
+                    onChangeStage={(stage) => onChangeStage(stage)}
+                  />
+                </motion.div>
+              ) : stage === 2 ? (
+                <motion.div
+                  key="2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: 20, opacity: 0 }}
+                >
+                  <RegisterFormStageTwo
+                    onChangeStage={(stage) => onChangeStage(stage)}
+                  />
+                </motion.div>
+              ) : (
+                stage === 3 && (
+                  <motion.div
+                    key="3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 20, opacity: 0 }}
+                  >
+                    <RegisterFormStageThree
+                      onChangeStage={(stage) => onChangeStage(stage)}
+                    />
+                  </motion.div>
+                )
+              )}
+            </motion.div>
+          ) : (
+            mode === "resetPassword" && (
+              <motion.div
+                key="resetPassword"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 20, opacity: 0 }}
+              >
+                <ResetPasswordForm />
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
+
+        {(mode === "login" || mode === "resetPassword" || stage === 1) && (
+          <>
+            <div className="relative pb-2 py-2">
+              <div className="h-px w-full bg-[#E0E5F2] z-10 absolute"></div>
+              <div className="w-full text-center z-40 absolute -translate-y-1/2">
+                <span className="text-[#AFAFAF] w-full text-center  px-5 bg-white ">
+                  или
+                </span>
+              </div>
+            </div>
+            <Button
+              onClick={() =>
+                setMode((prevState) =>
+                  prevState === "login" ? "register" : "login",
+                )
+              }
+              variant="secondary"
+            >
+              {mode === "login"
+                ? "Зарегистрироваться"
+                : "Войти в уже существующий аккаунт"}
+            </Button>
+          </>
+        )}
+      </DialogContent>
     </Dialog>
   );
 };
