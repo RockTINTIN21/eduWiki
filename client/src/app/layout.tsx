@@ -4,6 +4,7 @@ import "./globals.css";
 import {ReactNode} from "react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import StoreProvider from "@/app/StoreProvider";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -24,12 +25,14 @@ export default function RootLayout({
 
   return (
     <html lang="ru">
-      <body className={`${inter.variable} antialiased bg-white min-h-screen flex flex-col`}>
-        <Header/>
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer/>
+      <body
+        className={`${inter.variable} antialiased bg-white min-h-screen flex flex-col`}
+      >
+        <StoreProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </StoreProvider>
       </body>
     </html>
   );

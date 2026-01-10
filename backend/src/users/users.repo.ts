@@ -22,6 +22,12 @@ export class UsersRepo {
     });
   }
 
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
   async updateUser(id: string, dto: UpdateUserDTO) {
     return this.prisma.user.update({
       where: { id },

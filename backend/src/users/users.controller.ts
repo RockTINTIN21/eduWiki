@@ -11,7 +11,6 @@ import { UsersService } from './users.service';
 import { UpdateUserDTO } from './DTO/users.dto';
 import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 
-
 @Controller('users')
 @UseGuards(AccessTokenGuard)
 export class UsersController {
@@ -30,6 +29,11 @@ export class UsersController {
   @Get('byUsername/:username')
   findByUsername(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
+  }
+
+  @Get('byEmail/:email')
+  findByEmail(@Param('email') email: string) {
+    return this.usersService.findByEmail(email);
   }
 
   @Patch('/:id')

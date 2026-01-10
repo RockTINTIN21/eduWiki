@@ -30,6 +30,15 @@ export class UsersService {
     return res;
   }
 
+  async findByEmail(email: string) {
+    console.log('email', email);
+    const res = await this.repo.findByEmail(email);
+    if (!res) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+    return res;
+  }
+
   async updateUser(id: string, dto: UpdateUserDTO) {
     const res = await this.findById(id);
     if (res) {
