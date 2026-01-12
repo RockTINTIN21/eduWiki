@@ -12,12 +12,12 @@ import { AutoDialogModeType } from "@/components/Auth/AuthDialog";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  CounterId,
-  DecrementAction,
-  IncrementAction,
+  AppState,
   useAppSelector,
-  User, UserUpdateAction,
 } from "@/lib/store";
+import {CounterId} from "@/components/Counter/counter.slice";
+import { User, userUpdateAction } from "@/components/Auth/auth.slice";
+import {bindActionCreators} from "redux";
 
 const LoginForm = ({
   onChangeMode,
@@ -59,9 +59,8 @@ const LoginForm = ({
         email: resUser.email,
         role: "USER",
         username: resUser.username,
-        avatarUrl: resUser.avatarUrl
-      }
-      SetUserInStore(user);
+        avatarUrl: resUser.avatarUrl,
+      };
     } catch (e) {
       if (e instanceof ApiError)
         form.setError("password", { message: "Неправильный логин или пароль" });
@@ -172,24 +171,86 @@ const LoginForm = ({
       <Button onClick={() => updateToken()} type="button">
         Обновить токен
       </Button>
+      <SetUserInStore/>
     </form>
   );
 };
 
 export default LoginForm;
 
-export function SetUserInStore(user: User) {
-  console.log('test')
+// export function SetUserInStore(user: User) {
+//   console.log("test");
+//   const dispatch = useDispatch();
+//   const counterState = useAppSelector((state) => state.user);
+//
+//   console.log("STATE:", counterState?.avatarUrl);
+//   dispatch({
+//     type: "userUpdate",
+//     payload: {
+//       user: {
+//         ...user
+//       },
+//     },
+//   } satisfies UserUpdateAction);
+//   console.log('STATE:', counterState?.username);
+//   // console.log("render", counterId);
+//
+//   // const [, forceUpdate] = useReducer((x) => x + 1, 0)
+//   //
+//   // const lastStateRef = useRef<ReturnType<typeof selectCounter>>();
+//   //
+//   // useEffect(() => {
+//   //   const unsubscribe = store.subscribe(() => {
+//   //     const currentState = selectCounter(store.getState(), counterId);
+//   //     const lasState = selectCounter(store.getState(), counterId);
+//   //
+//   //     if(currentState !== lasState){
+//   //       forceUpdate();
+//   //     }
+//   //     lastStateRef.current = currentState;
+//   //   });
+//   //   return unsubscribe;
+//   // }, [])
+//   //
+//   // const counterState = selectCounter(store.getState(), counterId);
+// }
+
+
+export function SetUserInStore() {
+
   const dispatch = useDispatch();
-  console.log('qwe')
-  const counterState = useAppSelector((state) =>
-    state.user,
+  const userState = useAppSelector((state) =>
+    state.users);
+
+  console.log('user:',userState);
+  console.log("render");
+
+  const actions = bindActionCreators(
+    {
+      userUpdateAction
+    },
+    dispatch
+  )
+
+  return (
+    <>
+      <p>user:{userState?.email}</p>
+      <Button
+        onClick={() =>
+          actions.userUpdateAction({
+            email: "sashalexjr@gmail.com",
+            username: "sashalexjr",
+            avatarUrl: "test",
+            id: "1231414",
+            role: "USER",
+          })
+        }
+        type="button"
+      >
+        Обновить юзера
+      </Button>
+    </>
   );
-
-
-  dispatch({type: "userUpdate", payload: {user}})
-  console.log(counterState?.username)
-  // console.log("render", counterId);
 
   // const [, forceUpdate] = useReducer((x) => x + 1, 0)
   //
@@ -209,5 +270,4 @@ export function SetUserInStore(user: User) {
   // }, [])
   //
   // const counterState = selectCounter(store.getState(), counterId);
-
 }
