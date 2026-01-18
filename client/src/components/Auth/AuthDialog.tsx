@@ -22,11 +22,17 @@ export type AutoDialogModeType = "login" | "register" | "resetPassword"
 
 const AuthDialog = () => {
 
-  const [mode, setMode] = useState<AutoDialogModeType>("login");
-  const [stage, setStage] = useState<1 | 2 | 3>(1);
+  const [mode, setMode] = useState<AutoDialogModeType>("register");
+  const [stage, setStage] = useState<1 | 2 | 3>(3);
+  const [email, setEmail] = useState<string>("");
+
 
   const onChangeMode = (mode: AutoDialogModeType) =>{
     setMode(mode);
+  }
+
+  const onChangeEmail = (email: string) =>{
+    setEmail(email);
   }
 
   const onChangeStage = (stage: 1 | 2 | 3) => {
@@ -41,7 +47,7 @@ const AuthDialog = () => {
   return (
     <Dialog onOpenChange={(isOpen) => !isOpen && onCloseModal()}>
       <DialogTrigger asChild>
-        <Button className="bg-accent">Войти</Button>
+        <Button className="bg-accent px-8">Войти</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25 px-8">
         <DialogHeader>
@@ -69,7 +75,7 @@ const AuthDialog = () => {
             {mode === "resetPassword" && (
               <>Введите почту на которую был зарегистрирован аккаунт</>
             )}
-            {stage === 2 && <>Введите код отправленный на указанную почту</>}
+            {stage === 2 && <>Введите код, отправленный на адрес {email}. Если письмо не пришло, проверьте папку «Спам»</>}
           </DialogDescription>
         </DialogHeader>
         <AnimatePresence mode="wait">
@@ -97,6 +103,7 @@ const AuthDialog = () => {
                   exit={{ x: 20, opacity: 0 }}
                 >
                   <RegisterFormStageOne
+                    onChangeEmail={(email) => onChangeEmail(email)}
                     onChangeStage={(stage) => onChangeStage(stage)}
                   />
                 </motion.div>
@@ -108,6 +115,7 @@ const AuthDialog = () => {
                   exit={{ x: 20, opacity: 0 }}
                 >
                   <RegisterFormStageTwo
+                    email={email}
                     onChangeStage={(stage) => onChangeStage(stage)}
                   />
                 </motion.div>
@@ -120,6 +128,7 @@ const AuthDialog = () => {
                     exit={{ x: 20, opacity: 0 }}
                   >
                     <RegisterFormStageThree
+                      email={email}
                       onChangeStage={(stage) => onChangeStage(stage)}
                     />
                   </motion.div>

@@ -1,20 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import Button from "@/components/Button/Button";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Cancel01Icon, Menu01Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
-import Modal from "@/components/Modal/Modal";
-import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AuthDialog from "@/components/Auth/AuthDialog";
-
+import {useAppSelector} from "@/lib/store/store";
+import {authSlice} from "@/lib/store/auth/auth.slice";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
-
   const pathname = usePathname();
+
+  const user = useAppSelector((state) => state[authSlice.name].user);
+  const accessToken = useAppSelector((state) => state[authSlice.name].accessToken);
+
+  const isAuth = Boolean(accessToken) && Boolean(user); // или user?.id
 
   useEffect(() => {
     document.body.style.overflow = showMenu ? 'hidden' : '';
@@ -24,6 +27,10 @@ const Header = () => {
   useEffect(() => {
     setShowMenu(false);
   }, [pathname]);
+
+
+
+
 
   const isLanding = pathname === "/aboutUs";
 
@@ -71,12 +78,26 @@ const Header = () => {
               глобально
             </span>
           </Link>
-          <button className="md:hidden" onClick={() => setShowMenu(true)}>
-            <HugeiconsIcon
-              className={isLanding ? "text-white" : "text-black"}
-              icon={Menu01Icon}
-            />
-          </button>
+          <div className='flex items-center gap-3'>
+            {(isAuth && user) && (
+              <Link href={'/profile'} className="md:hidden">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage
+                    src={user.avatarUrl}
+                    alt={user.username}
+                  />
+                  <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>
+                </Avatar>
+              </Link>
+            )}
+            <button className="md:hidden" onClick={() => setShowMenu(true)}>
+              <HugeiconsIcon
+                className={isLanding ? "text-white" : "text-black"}
+                icon={Menu01Icon}
+              />
+            </button>
+          </div>
+
 
           <nav
             className={`md:block ${
@@ -137,7 +158,18 @@ const Header = () => {
                   </li>
                 ))}
                 <li>
-                  <AuthDialog/>
+                  {isAuth ? (
+                    <Link href={'/profile'}>
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={user.avatarUrl}
+                          alt={user.username}
+                        />
+                        <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>
+                      </Avatar>
+                    </Link>
+                  ) : <AuthDialog/>}
+
                 </li>
               </ul>
             </div>

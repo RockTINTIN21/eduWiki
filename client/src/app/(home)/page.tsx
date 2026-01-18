@@ -10,19 +10,27 @@ import { SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Card from "@/app/(home)/components/Card";
 import Image from "next/image";
-import { useEffect, useReducer, useRef } from "react";
+import {useEffect, useReducer, useRef, useState} from "react";
 import {
   AppState,
-  CounterId,
-  DecrementAction,
-  IncrementAction,
   store,
   useAppSelector,
-  User,
-} from "@/lib/store";
+} from "@/lib/store/store";
 import { useDispatch, useSelector } from "react-redux";
+import {apiFetch} from "@/lib/api";
 
 export default function Home() {
+
+  const [countryData, setCountryData] = useState<any>();
+
+  useEffect(() => {
+    // const fetchData = async() => {
+    //   const res = await apiFetch("/countries");
+    //   setCountryData(res)
+    // }
+    // fetchData();
+  }, []);
+
   return (
     <div className="text-[#111827] relative mx-4 md:w-[960px] md:mx-auto pt-20 flex flex-col gap-6 pb-12">
       {/*<Counter counterId="first"/>*/}
@@ -49,13 +57,50 @@ export default function Home() {
       <div>
         <h3 className="text-xl">Популярные страны</h3>
         <div className="md:grid md:grid-cols-4 gap-4 md:w-full pt-3 overflow-x-auto flex">
-          {/*<Card*/}
-          {/*  link={countryData[0].country_id}*/}
-          {/*  className={"md:col-span-2 md:aspect-2/1"}*/}
-          {/*  countryName={countryData[0].name}*/}
-          {/*  countryIcon={countryData[0].country_code}*/}
-          {/*  bgImage={countryData[0].bg_image}*/}
-          {/*/>*/}
+          {countryData && (
+            <>
+              <Card
+                link={countryData[0].id}
+                className={"md:col-span-2 md:aspect-2/1"}
+                countryName={countryData[0].name}
+                countryIcon={countryData[0].countryCode}
+                bgImage={countryData[0].bgImage}
+              />
+              <Card
+                link={countryData[1].id}
+                className={"md:col-span-2 md:aspect-2/1"}
+                countryName={countryData[1].name}
+                countryIcon={countryData[1].countryCode}
+                bgImage={countryData[1].bgImage}
+              />
+              <Card
+                link={countryData[2].id}
+                countryName={countryData[2].name}
+                countryIcon={countryData[2].countryCode}
+                bgImage={countryData[2].bgImage}
+              />
+              <Card
+                link={countryData[3].id}
+                countryName={countryData[3].name}
+                countryIcon={countryData[3].countryCode}
+                bgImage={countryData[3].bgImage}
+              />
+              <Card
+                link={countryData[4].id}
+                countryName={countryData[4].name}
+                countryIcon={countryData[4].countryCode}
+                bgImage={countryData[4].bgImage}
+              />
+              <Card
+                link={countryData[5].id}
+                countryName={countryData[5].name}
+                countryIcon={countryData[5].countryCode}
+                bgImage={countryData[5].bgImage}
+              />
+            </>
+
+          )}
+
 
           {/*<Card*/}
           {/*  link={countryData[1].country_id}*/}
@@ -183,49 +228,6 @@ export default function Home() {
   );
 }
 
-const selectCounter = (state: AppState, counterId: CounterId) =>
-  state.counters[counterId];
-
-export function Counter({counterId}: {counterId: CounterId}){
-
-  const dispatch = useDispatch();
-  const counterState = useAppSelector((state) => selectCounter(state, counterId));
-  console.log("render", counterId);
-
-  // const [, forceUpdate] = useReducer((x) => x + 1, 0)
-  //
-  // const lastStateRef = useRef<ReturnType<typeof selectCounter>>();
-  //
-  // useEffect(() => {
-  //   const unsubscribe = store.subscribe(() => {
-  //     const currentState = selectCounter(store.getState(), counterId);
-  //     const lasState = selectCounter(store.getState(), counterId);
-  //
-  //     if(currentState !== lasState){
-  //       forceUpdate();
-  //     }
-  //     lastStateRef.current = currentState;
-  //   });
-  //   return unsubscribe;
-  // }, [])
-  //
-  // const counterState = selectCounter(store.getState(), counterId);
-
-  return (
-    <>
-      <h3>count: {counterState?.counter}</h3>
-      <Button onClick={() =>
-        dispatch({type: "increment", payload: {counterId}} satisfies IncrementAction)}>
-        Increment
-      </Button>
-      <Button onClick={() =>
-        dispatch({type: "decrement", payload: {counterId}} satisfies DecrementAction)}>
-        Decrement
-      </Button>
-    </>
-
-  )
-}
 //
 // export function setUserInStore({ user }: {user: User}) {
 //   console.log("test");

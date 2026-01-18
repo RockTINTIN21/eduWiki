@@ -1,15 +1,24 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDTO, RegisterDTO } from './DTO/auth.dto';
-import { AuthRepo } from './auth.repo';
+import {
+  GenerateEmailOtpDTO,
+  LoginDTO,
+  RegisterDTO,
+  VerifyEmailOtpDTO,
+} from './DTO/auth.dto';
+import { AuthRepo } from './repo/auth.repo';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { StringValue } from 'ms';
+import ms, { StringValue } from 'ms';
+import { UsersService } from '../users/users.service';
+import { randomInt } from 'node:crypto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
@@ -17,54 +26,49 @@ export class AuthService {
     private readonly repo: AuthRepo,
     private readonly jwtService: JwtService,
     private configService: ConfigService,
+    private userService: UsersService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async login(dto: LoginDTO) {
-    const user = await this.repo.findByEmail(dto.email);
-    if (!user) {
-      throw new HttpException(
-        'Пользователь с такой почтой не найден',
-        HttpStatus.NOT_FOUND,
-      );
+    const isEmail = dto.login.includes('@');
+
+    const user = isEmail
+      ? await this.repo.findByEmail(dto.login)
+      : await this.repo.findByUsername(dto.login);
+
+    if (!user || !user.password || !user.id) {
+      throw new BadRequestException({
+        code: 'INVALID_PASSWORD',
+        field: 'password',
+      });
     }
 
     const passwordIsMatch = await bcrypt.compare(dto.password, user.password);
     if (!passwordIsMatch) {
-      throw new HttpException('Неверный пароль', HttpStatus.UNAUTHORIZED);
+      throw new BadRequestException({
+        code: 'INVALID_PASSWORD',
+        field: 'password',
+      });
     }
 
     const tokens = await this.getTokens(user.id);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return { tokens, user };
   }
 
   async register(dto: RegisterDTO) {
-    if (await this.repo.checkUsernameExists(dto.username)) {
-      throw new HttpException(
-        'Пользователь с таким ником уже существует',
-        HttpStatus.CONFLICT,
-      );
+    const otp = await this.repo.getVerificationOTP({ email: dto.email });
+    if (!otp || !otp.isActivated) {
+      throw new BadRequestException({
+        code: 'NOT_ACTIVATED_EMAIL',
+        field: 'email',
+      });
     }
-
-    if (await this.repo.checkEmailExists(dto.email)) {
-      throw new HttpException(
-        'Пользователь с такой почтой уже существует',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    if (dto.passwordConfirm !== dto.password) {
-      throw new HttpException('Пароли не совпадают', HttpStatus.BAD_REQUEST);
-    }
-
-    const hashPassword = await bcrypt.hash(dto.password, 10);
-
-    const res = await this.repo.createUser({
-      ...dto,
-      password: hashPassword,
-    });
-    const tokens = await this.getTokens(res.id);
-    await this.updateRefreshToken(res.id, tokens.refreshToken);
+    const user = await this.userService.createUser(dto);
+    const tokens = await this.getTokens(user.id);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    await this.repo.deleteVerificationOTPById({ id: otp.id });
     return tokens;
   }
 
@@ -73,23 +77,114 @@ export class AuthService {
   }
 
   async refreshAccessToken(userId: string, refreshToken: string) {
-    console.log('USERiD', userId);
-    const res = await this.repo.findRefreshTokenByUserId(userId);
-    if (!res) {
+    const user = await this.repo.findUserInfoByUserId(userId);
+    if (!user) {
       throw new UnauthorizedException('Refresh token not found');
     }
-    console.log('storedToken', res);
 
     const isValid = await bcrypt.compare(
       refreshToken,
-      res.refreshToken as string,
+      user.refreshToken as string,
     );
+
     if (!isValid) {
       throw new UnauthorizedException('Invalid refresh token');
     }
+
     const tokens = await this.getTokens(userId);
+
     await this.updateRefreshToken(userId, tokens.refreshToken);
-    return tokens;
+    return {
+      tokens: {
+        ...tokens,
+      },
+      user: {
+        id: user.id,
+        role: user.role.name,
+        email: user.email,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+      },
+    };
+  }
+
+  async checkUniqUsername(username: string) {
+    console.log('username', username);
+    const user = await this.repo.findByUsername(username);
+    console.log('USER:', user.id)
+    console.log(!user.id)
+    return {
+      available: !user.id,
+    };
+  }
+
+  async generateEmailOTP(dto: GenerateEmailOtpDTO) {
+    const user = await this.repo.findByEmail(dto.email);
+    console.log('user:', user);
+    if (user && user.id) {
+      throw new BadRequestException({
+        code: 'EMAIL_ALREADY_EXISTS',
+        field: 'email',
+      });
+    }
+    const otp = await this.repo.getVerificationOTP({ email: dto.email });
+    if (otp) {
+      await this.repo.deleteVerificationOTPById({ id: otp.id });
+    }
+    const length = 6;
+    const min = Math.pow(10, length - 1);
+    const max = Math.pow(10, length) - 1;
+    const code = randomInt(min, max).toString();
+    const hashCode = await this.hashData(code);
+    console.log('code:', code);
+    const ttl = this.configService.getOrThrow('OTP_EXPIRES_IN');
+    const ttlMs = ms(ttl);
+    const expirationTime = new Date(Date.now() + ttlMs);
+
+    await this.repo.generateEmailOTP({
+      email: dto.email,
+      hashedCode: hashCode,
+      expirationTime,
+    });
+
+    return this.mailerService.sendMail({
+      to: dto.email,
+      subject: 'Код подтверждения',
+      template: 'verification-code',
+      context: {
+        code,
+        expiresIn: '15 минут',
+      },
+    });
+  }
+
+  async verifyEmailOTP(dto: VerifyEmailOtpDTO) {
+    const otp = await this.repo.getVerificationOTP({ email: dto.email });
+    if (!otp) {
+      throw new BadRequestException({
+        code: 'EMAIL_NOT_EXISTS',
+        field: 'code',
+      });
+    }
+    console.log('OTP:', otp);
+    const isValid =
+      (await bcrypt.compare(dto.code, otp.code)) &&
+      !otp.isActivated &&
+      otp.expirationTime > new Date();
+
+    if (!isValid) {
+      throw new BadRequestException({
+        code: 'INVALID_CODE',
+        field: 'code',
+      });
+    }
+
+    await this.repo.updateStatusEmailOTP({
+      id: otp.id,
+      isActivated: true,
+    });
+
+    return isValid;
   }
 
   hashData(data: string) {

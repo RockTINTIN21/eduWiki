@@ -50,11 +50,16 @@ export class TicketsService {
   }
 
   async createTicket(payload: any, dto: CreateTicketDTO) {
-    const userRoles = await this.users.getUserRoles(payload.user.id as string);
+    // const userRoles = await this.users.getUserRoles(payload.user.id as string);
+    //
 
-    const isAdmin = userRoles.some(
-      ({ role }) => role.name === 'ADMIN' || role.name === 'OWNER',
-    );
+    const user = await this.users.findById(payload.user.id as string);
+
+    const isAdmin = user.role.name === 'ADMIN' || user.role.name === 'OWNER';
+
+    // const isAdmin = userRoles.some(
+    //   ({ role }) => role.name === 'ADMIN' || role.name === 'OWNER',
+    // );
 
     const handlerData: HandlerInput = {
       entityAction: dto.entityAction,
@@ -95,10 +100,10 @@ export class TicketsService {
   async updateTicket(payload: any, dto: UpdateTicketDTO, id: number) {
     const ticket = await this.repo.getTicket(id);
 
-    const userRoles = await this.users.getUserRoles(payload.user.id as string);
+    const user = await this.users.findById(payload.user.id as string);
 
-    const isModerator = userRoles.some(({ role }: { role: { name: string } }) =>
-      ['OWNER', 'ADMIN', 'MODERATOR'].includes(role.name),
+    const isModerator = ['OWNER', 'ADMIN', 'MODERATOR'].includes(
+      user.role.name,
     );
 
     if (ticket?.userId !== payload.user.id && !isModerator) {

@@ -37,8 +37,6 @@ describe('Auth', () => {
       .post('/auth/register')
       .send(registerData);
 
-    console.log(response.body);
-
     expect(response.status).toBe(201);
   });
 

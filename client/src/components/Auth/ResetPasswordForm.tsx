@@ -4,7 +4,7 @@ import { TextField } from "@/components/text-field";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { ApiError, apiFetch } from "@/lib/api";
+import { ApiErrorOld, apiFetch } from "@/lib/api";
 import { PasswordField } from "@/components/password-field";
 
 const ResetPasswordForm = () => {

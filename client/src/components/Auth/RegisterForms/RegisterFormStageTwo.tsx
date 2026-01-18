@@ -1,21 +1,22 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ApiError, apiFetch } from "@/lib/api";
-import { TextField } from "@/components/text-field";
+import {ApiError, apiFetch} from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { z } from "zod";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import * as React from "react";
+import {errorHandler} from "@/lib/errorHandler/errorHandler";
+import ResendOtpCode from "@/components/Auth/RegisterForms/ResendOTPCode";
 
 const RegisterFormStageOne = ({
   onChangeStage,
-}: {onChangeStage: (stage: 3) => void}) => {
+  email
+}: {onChangeStage: (stage: 3) => void, email: string}) => {
 
   const formSchema = z.object({
     code: z
@@ -33,21 +34,23 @@ const RegisterFormStageOne = ({
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('DATA', data)
-    onChangeStage(3);
-    // try{
-    //   const res = await apiFetch<{ user: any; accessToken?: string }>(
-    //     "/auth/register",
-    //     {
-    //       method: "POST",
-    //       json: data,
-    //     },
-    //   );
-    //   console.log('RES:',res)
-    // }catch(e){
-    //   if(e instanceof ApiError)
-    //     form.setError('code', {message: 'Неверный код'})
-    // }
+    const formattedData = {
+      code: data.code,
+      email: email
+    }
+    try{
+      await apiFetch(
+        "/auth/verify",
+        {
+          method: "POST",
+          json: formattedData,
+        },
+      );
+      onChangeStage(3);
+    }catch(e){
+      if(e instanceof ApiError)
+        form.setError(e.field, {message: errorHandler[e.code]})
+    }
   }
 
   return (
@@ -62,22 +65,23 @@ const RegisterFormStageOne = ({
         render={({ field, fieldState }) => (
           <>
             <InputOTP
+
               maxLength={6}
               containerClassName="flex justify-center"
               {...field}
             >
               <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={0} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={1} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={2} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={3} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={4} />
+                <InputOTPSlot aria-invalid={!!fieldState.error?.message} index={5} />
               </InputOTPGroup>
             </InputOTP>
-            <div className="h-3">
+            <div className="pt-0">
               {fieldState.error && (
-                <span className="px-6 text-sm color text-destructive">
+                <span className="px-8 text-sm color text-destructive">
                   {fieldState.error.message}
                 </span>
               )}
@@ -94,6 +98,17 @@ const RegisterFormStageOne = ({
         {form.formState.isSubmitting && <Spinner />}
         Продолжить
       </Button>
+
+      <div className="relative pb-2 py-2">
+        <div className="h-px w-full bg-[#E0E5F2] z-10 absolute"></div>
+        <div className="w-full text-center z-40 absolute -translate-y-1/2">
+          <span className="text-[#AFAFAF] w-full text-center  px-5 bg-white ">
+                  или
+          </span>
+        </div>
+      </div>
+      <ResendOtpCode email={email}/>
+
     </form>
   );
 };

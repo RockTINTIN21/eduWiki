@@ -1,20 +1,29 @@
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  ThunkAction,
+  UnknownAction,
+} from "@reduxjs/toolkit";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { userReducer } from "@/components/Auth/auth.slice";
 import { countersReducer } from "@/components/Counter/counter.slice";
+import { authSlice } from "@/lib/store/auth/auth.slice";
 
 
-const reducer = combineReducers({
-  users: userReducer,
-  counters: countersReducer,
-});
+const extraArgument = {
+  // api,
+}
 
 export const store = configureStore({
-  reducer: reducer,
-})
+  reducer: {
+    [authSlice.name]: authSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ thunk: { extraArgument } }),
+});
 
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export type AppThunk<R = void> = ThunkAction<R, AppState, typeof extraArgument, UnknownAction>
 
 export const useAppSelector = useSelector.withTypes<AppState>();
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();

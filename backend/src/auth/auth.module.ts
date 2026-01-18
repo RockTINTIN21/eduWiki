@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PrismaService } from '../prisma.service';
-import { AuthRepo } from './auth.repo';
+import { AuthRepo } from './repo/auth.repo';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy } from './strategies/accessToken.stategy';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';

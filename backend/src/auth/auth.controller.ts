@@ -2,13 +2,19 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDTO, RegisterDTO } from './DTO/auth.dto';
+import {
+  GenerateEmailOtpDTO,
+  LoginDTO,
+  RegisterDTO,
+  VerifyEmailOtpDTO,
+} from './DTO/auth.dto';
 import { AccessTokenGuard } from './guard/accessToken.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import type { Response, Request } from 'express';
@@ -23,25 +29,46 @@ export class AuthController {
     @Body() dto: LoginDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const tokens = await this.authService.login(dto);
-    res.cookie('refresh_token', tokens.refreshToken, {
+    const data = await this.authService.login(dto);
+    console.log('DATA:', data);
+    res.cookie('refresh_token', data.tokens.refreshToken, {
       httpOnly: true,
       secure: false,
     });
 
-    return tokens.accessToken;
+    return {
+      accessToken: data.tokens.accessToken,
+      user: data.user,
+    };
   }
 
-  @Post('/register')
-  register(@Body() dto: RegisterDTO) {
-    return this.authService.register(dto);
+  @Post('register')
+  async register(
+    @Body() dto: RegisterDTO,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.authService.register(dto);
+    res.cookie('refresh_token', tokens.refreshToken, {
+      httpOnly: true,
+      secure: false,
+    });
+    return tokens.accessToken;
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('logout')
-  logout(@GetUser('id') userId: string) {
-    console.log('USERId')
-    return this.authService.logout(userId);
+  async logout(@GetUser('id') userId: string, @Res() res: Response) {
+    await this.authService.logout(userId);
+    res.cookie('refresh_token', '', {
+      httpOnly: true,
+      secure: false,
+    });
+    return res.json({ success: true });
+  }
+
+  @Get('check-username/:username')
+  async checkUsername(@Param('username') username: string) {
+    return this.authService.checkUniqUsername(username);
   }
 
   @UseGuards(RefreshTokenGuard)
@@ -54,11 +81,24 @@ export class AuthController {
       id: string;
       refreshToken: string;
     };
-    const tokens = await this.authService.refreshAccessToken(id, refreshToken);
-    res.cookie('refresh_token', tokens.refreshToken, {
+    const data = await this.authService.refreshAccessToken(id, refreshToken);
+    res.cookie('refresh_token', data.tokens.refreshToken, {
       httpOnly: true,
       secure: false,
     });
-    return tokens.accessToken;
+    return {
+      accessToken: data.tokens.accessToken,
+      user: data.user,
+    };
+  }
+
+  @Post('/verification-otp')
+  generateEmailVerification(@Body() dto: GenerateEmailOtpDTO) {
+    return this.authService.generateEmailOTP(dto);
+  }
+
+  @Post('/verify')
+  verifyEmailCode(@Body() dto: VerifyEmailOtpDTO) {
+    return this.authService.verifyEmailOTP(dto);
   }
 }

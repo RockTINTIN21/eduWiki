@@ -19,7 +19,7 @@ const Card = ({
   title
 }: CardProps) => {
 
-  console.log('bgImage:', bgImage);
+
 
   return (
     <div className={`${className ? className : ""} flex-none md:flex-auto`}>

@@ -64,11 +64,13 @@ model User {
   isActivated  Boolean      @default(false) @map("is_activated")
   createdAt    DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?    @default(now()) @map("updated_at") @db.Timestamp(6)
-  refreshToken String?
+  refreshToken String?      @map("refresh_token")
   reviews      Review[]
   tickets      Ticket[]
   universities University[]
-  user_roles   userRoles[]
+  roleId       Int          @map("role_id")
+
+  role Role @relation(fields: [roleId], references: [id])
 
   @@map("users")
 }
@@ -213,20 +215,24 @@ model UniversityReview {
   @@map("universities_review")
 }
 
-model roles {
-  id         Int         @id @default(autoincrement())
-  name       String      @db.VarChar(50)
-  user_roles userRoles[]
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  users User[]
+
+  @@map("roles")
 }
 
-model userRoles {
-  userId String @map("user_id") @db.Uuid
-  roleId Int    @default(autoincrement()) @map("role_id")
-  role   roles  @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users  User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model VerificationCode {
+  id             Int      @id() @default(autoincrement())
+  code           String
+  email          String   @unique
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  expirationTime DateTime @map("expiration_time") @db.Timestamp(6)
+  isActivated    Boolean  @default(false) @map("is_activated")
 
-  @@id([userId, roleId])
-  @@map("user_roles")
+  @@map("verification_codes")
 }
 
 enum EntityTypeEnum {

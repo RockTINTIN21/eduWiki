@@ -1,42 +1,34 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
+  Length,
+  MinLength,
 } from 'class-validator';
 
 export class LoginDTO {
   @IsString()
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  login: string;
 
   @IsString()
   @IsNotEmpty()
-  @IsStrongPassword(
-    {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minSymbols: 1,
-      minNumbers: 1,
-    },
-    {
-      message:
-        'Password must be at least 8 characters long and ' +
-        'contain at least one uppercase letter, one lowercase letter, ' +
-        'one number, and one symbol.',
-    },
-  )
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
   password: string;
 }
 
 export class RegisterDTO {
+  @IsOptional()
+
+
+
   @IsNotEmpty({ message: 'Username is required' })
   @IsString()
   username: string;
 
-  @IsNotEmpty({ message: 'Email is required' })
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -60,4 +52,20 @@ export class RegisterDTO {
 
   @IsString()
   passwordConfirm: string;
+}
+
+export class GenerateEmailOtpDTO {
+  @IsString()
+  @IsEmail()
+  email: string;
+}
+
+export class VerifyEmailOtpDTO {
+  @IsString()
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @Length(6)
+  code: string;
 }

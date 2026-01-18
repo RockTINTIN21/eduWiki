@@ -83,7 +83,7 @@ export default class CountriesRepo {
         },
         requirements: {
           create: {
-            ...data.information,
+            ...data.requirements,
           },
         },
       },

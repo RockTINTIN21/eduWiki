@@ -1,43 +1,46 @@
-import { Controller, useForm } from "react-hook-form";
+import {Controller, FieldPath, useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ApiError, apiFetch } from "@/lib/api";
+import {ApiError, ApiErrorOld, apiFetch} from "@/lib/api";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { z } from "zod";
+import {errorHandler} from "@/lib/errorHandler/errorHandler";
+
+interface RegisterFormStageOneProps {
+  onChangeStage: (stage: 2) => void,
+  onChangeEmail: (email: string) => void,
+}
 
 const RegisterFormStageOne = ({
   onChangeStage,
-}: {onChangeStage: (stage: 2) => void}) => {
+  onChangeEmail,
+}: RegisterFormStageOneProps) => {
 
   const formSchema = z.object({
     email: z
       .email("Некорректный формат почты"),
   });
 
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-    },
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('DATA', data)
-    onChangeStage(2)
     try{
-      const res = await apiFetch<{ user: any; accessToken?: string }>(
-        "/auth/register",
+      await apiFetch(
+        "/auth/verification-otp",
         {
           method: "POST",
           json: data,
         },
       );
-      console.log('RES:',res)
+      onChangeStage(2);
+      onChangeEmail(data.email);
     }catch(e){
-      if(e instanceof ApiError)
-        form.setError('email', {message: 'Такой почты не существует'})
+      if(e instanceof ApiError){
+        form.setError(e.field, {message: errorHandler[e.code]})
+      }
     }
   }
 

@@ -1,6 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { UpdateUserDTO } from './DTO/users.dto';
-import { UsersRepo } from './users.repo';
+import { UsersRepo } from './repo/users.repo';
+import { RegisterDTO } from '../auth/DTO/auth.dto';
+import { CreateUserRepoInput } from './repo/users.repo.types';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -10,9 +18,9 @@ export class UsersService {
     return this.repo.findAll();
   }
 
-  async getUserRoles(id: string) {
-    return this.repo.getUserRoles(id);
-  }
+  // async getUserRoles(id: string) {
+  //   return this.repo.getUserRoles(id);
+  // }
 
   async findById(id: string) {
     const res = await this.repo.findById(id);
@@ -31,7 +39,6 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    console.log('email', email);
     const res = await this.repo.findByEmail(email);
     if (!res) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
@@ -44,6 +51,33 @@ export class UsersService {
     if (res) {
       return this.repo.updateUser(id, dto);
     }
+  }
+
+  async createUser(dto: RegisterDTO) {
+    if (await this.repo.checkUsernameExists(dto.username)) {
+      throw new BadRequestException({
+        code: 'USERNAME_ALREADY_EXISTS',
+        field: 'username',
+      });
+    }
+
+    if (await this.repo.checkEmailExists(dto.email)) {
+      throw new BadRequestException({
+        code: 'EMAIL_ALREADY_EXISTS',
+        field: 'email',
+      });
+    }
+    if (dto.passwordConfirm !== dto.password) {
+      throw new HttpException('Пароли не совпадают', HttpStatus.BAD_REQUEST);
+    }
+    const hashPassword = await bcrypt.hash(dto.password, 10);
+    const data: CreateUserRepoInput = {
+      ...dto,
+      password: hashPassword,
+      role: 'USER',
+    };
+
+    return this.repo.createUser(data);
   }
 
   async deleteUser(id: string) {
