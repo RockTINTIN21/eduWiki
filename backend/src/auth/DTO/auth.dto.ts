@@ -20,8 +20,8 @@ export class LoginDTO {
 }
 
 export class RegisterDTO {
-  @IsOptional()
-
+  // @IsOptional()
+  // avatar: File;
 
 
   @IsNotEmpty({ message: 'Username is required' })
@@ -49,9 +49,9 @@ export class RegisterDTO {
     },
   )
   password: string;
-
-  @IsString()
-  passwordConfirm: string;
+  //
+  // @IsString()
+  // passwordConfirm: string;
 }
 
 export class GenerateEmailOtpDTO {

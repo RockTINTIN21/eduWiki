@@ -1,12 +1,17 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Post,
   Req,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -19,6 +24,7 @@ import { AccessTokenGuard } from './guard/accessToken.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import type { Response, Request } from 'express';
 import { RefreshTokenGuard } from './guard/refreshToken.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -43,16 +49,36 @@ export class AuthController {
   }
 
   @Post('register')
+  @UseInterceptors(FileInterceptor('avatar'))
   async register(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
+          new FileTypeValidator({
+            fileType: /^image\/(jpeg|png)$/,
+            skipMagicNumbersValidation: true,
+          }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    avatar: Express.Multer.File,
     @Body() dto: RegisterDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const tokens = await this.authService.register(dto);
+    const tokens = await this.authService.register(dto, avatar);
     res.cookie('refresh_token', tokens.refreshToken, {
       httpOnly: true,
       secure: false,
     });
     return tokens.accessToken;
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('avatar'))
+  uploadFile(@UploadedFile() avatar: Express.Multer.File) {
+    console.log('avatar:', avatar);
   }
 
   @UseGuards(AccessTokenGuard)

@@ -9,6 +9,7 @@ import { UsersRepo } from './repo/users.repo';
 import { RegisterDTO } from '../auth/DTO/auth.dto';
 import { CreateUserRepoInput } from './repo/users.repo.types';
 import * as bcrypt from 'bcrypt';
+import { CreateUserInputService } from './users.types';
 
 @Injectable()
 export class UsersService {
@@ -53,31 +54,30 @@ export class UsersService {
     }
   }
 
-  async createUser(dto: RegisterDTO) {
-    if (await this.repo.checkUsernameExists(dto.username)) {
+  async createUser(data: CreateUserInputService) {
+    if (await this.repo.checkUsernameExists(data.username)) {
       throw new BadRequestException({
         code: 'USERNAME_ALREADY_EXISTS',
         field: 'username',
       });
     }
 
-    if (await this.repo.checkEmailExists(dto.email)) {
+    if (await this.repo.checkEmailExists(data.email)) {
       throw new BadRequestException({
         code: 'EMAIL_ALREADY_EXISTS',
         field: 'email',
       });
     }
-    if (dto.passwordConfirm !== dto.password) {
-      throw new HttpException('Пароли не совпадают', HttpStatus.BAD_REQUEST);
-    }
-    const hashPassword = await bcrypt.hash(dto.password, 10);
-    const data: CreateUserRepoInput = {
-      ...dto,
+
+    console.log('data:', data);
+    const hashPassword = await bcrypt.hash(data.password, 10);
+
+    return this.repo.createUser({
+      ...data,
       password: hashPassword,
       role: 'USER',
-    };
-
-    return this.repo.createUser(data);
+      avatarUrl: data.avatar ? `avatars/${data.avatar.filename}` : undefined,
+    });
   }
 
   async deleteUser(id: string) {

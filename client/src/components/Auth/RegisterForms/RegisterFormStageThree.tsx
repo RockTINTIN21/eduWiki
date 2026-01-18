@@ -2,7 +2,7 @@
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ApiErrorOld, apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -14,10 +14,12 @@ import {PencilEdit02Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useMemo, useState} from "react";
 import {useDebounce} from "use-debounce";
 import RegisterPassword from "@/components/Auth/RegisterForms/RegisterPassword";
+import {toast} from "sonner";
 
 const RegisterFormStageOne = ({
-  email
-}: {onChangeStage: (stage: 2) => void, email: string}) => {
+  email,
+  onClose,
+}: {email: string, onClose: () => void}) => {
 
   const [usernameValue, setUsernameValue] = useState("");
   const [debouncedValue] = useDebounce(usernameValue, 500);
@@ -33,14 +35,8 @@ const RegisterFormStageOne = ({
     path: ["confirmPassword"],
   });
 
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      confirmPassword: "",
-    },
     mode: "onChange",
     reValidateMode: "onChange",
   });
@@ -48,30 +44,24 @@ const RegisterFormStageOne = ({
   const avatarFile = form.watch("avatar");
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('DATA', data)
-    const formattedData = {
-      ...data,
-      email: email
+
+    const formData = new FormData();
+    if(data.avatar) {
+      formData.append("avatar", data.avatar)
     }
-    console.log('DATA:', data)
-    // const formData = new FormData();
-    // formData.append("avatar", data.avatar)
-    // try{
-    //   const res = await apiFetch(
-    //     "/auth/register",
-    //     {
-    //       method: "POST",
-    //       json: formattedData,
-    //     },
-    //   );
-    //   console.log('RES:',res)
-    // }catch(e){
-    //   if(e instanceof ApiErrorOld){
-    //     console.log(e)
-    //     form.setError('username', {message: 'Имя пользователя уже занято'})
-    //   }
-    //
-    // }
+    formData.append("email", email)
+    formData.append("password", data.password)
+    formData.append("username", data.username)
+
+    await apiFetch(
+      "/auth/register",
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+    toast.success('Вы успешно зарегистрированы', {position: 'top-center'});
+    onClose()
   }
 
   const handleInputChange = (event: any) => {
@@ -97,22 +87,21 @@ const RegisterFormStageOne = ({
     if(!res.available){
       form.setError('username', {message: 'Имя пользователя уже занято'})
     }else{
-      console.log('clear')
       form.clearErrors('username');
     }
     setLoading(false);
   }
   
-  // const previewUrl = useMemo(() => {
-  //   if (!avatarFile) return null;
-  //   return URL.createObjectURL(avatarFile);
-  // }, [avatarFile]);
-  //
-  // useEffect(() => {
-  //   return () => {
-  //     if (previewUrl) URL.revokeObjectURL(previewUrl);
-  //   };
-  // }, [previewUrl]);
+  const previewUrl = useMemo(() => {
+    if (!avatarFile) return null;
+    return URL.createObjectURL(avatarFile);
+  }, [avatarFile]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   return (
     <form
@@ -120,13 +109,13 @@ const RegisterFormStageOne = ({
       id="register"
       className="space-y-4"
     >
-      {/*<Avatar className="w-20 h-20 ms-auto me-auto">*/}
-      {/*  <AvatarImage*/}
-      {/*    src={previewUrl ?? ''}*/}
-      {/*    alt={'qwe'}*/}
-      {/*  />*/}
-      {/*  <AvatarFallback className='text-white'>CN</AvatarFallback>*/}
-      {/*</Avatar>*/}
+      <Avatar className="w-20 h-20 ms-auto me-auto">
+        <AvatarImage
+          src={previewUrl ?? ''}
+          alt={'qwe'}
+        />
+        <AvatarFallback className='text-white'>CN</AvatarFallback>
+      </Avatar>
 
       <Controller
         name="avatar"
@@ -141,6 +130,20 @@ const RegisterFormStageOne = ({
                 </span>
               </Button>
             </label>
+
+            <Input
+              id="picture"
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onBlur={field.onBlur}
+              name={field.name}
+              ref={field.ref}
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                field.onChange(file);
+              }}
+            />
 
             <Input
               id="picture"
@@ -174,7 +177,6 @@ const RegisterFormStageOne = ({
             }}
 
             loading={loading}
-            disabled={loading}
             value={field.value}
             id={field.name}
             name={field.name}

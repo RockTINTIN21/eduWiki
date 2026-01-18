@@ -10,6 +10,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { getMailConfig } from './configs/mail.config';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Module({
   imports: [

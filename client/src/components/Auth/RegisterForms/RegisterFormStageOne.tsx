@@ -1,6 +1,6 @@
-import {Controller, FieldPath, useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {ApiError, ApiErrorOld, apiFetch} from "@/lib/api";
+import {ApiError, apiFetch} from "@/lib/api";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";

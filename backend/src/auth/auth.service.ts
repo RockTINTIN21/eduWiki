@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -57,7 +55,7 @@ export class AuthService {
     return { tokens, user };
   }
 
-  async register(dto: RegisterDTO) {
+  async register(dto: RegisterDTO, avatar?: Express.Multer.File) {
     const otp = await this.repo.getVerificationOTP({ email: dto.email });
     if (!otp || !otp.isActivated) {
       throw new BadRequestException({
@@ -65,7 +63,10 @@ export class AuthService {
         field: 'email',
       });
     }
-    const user = await this.userService.createUser(dto);
+    const user = await this.userService.createUser({
+      ...dto,
+      avatar: avatar,
+    });
     const tokens = await this.getTokens(user.id);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     await this.repo.deleteVerificationOTPById({ id: otp.id });
@@ -109,10 +110,7 @@ export class AuthService {
   }
 
   async checkUniqUsername(username: string) {
-    console.log('username', username);
     const user = await this.repo.findByUsername(username);
-    console.log('USER:', user.id)
-    console.log(!user.id)
     return {
       available: !user.id,
     };

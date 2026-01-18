@@ -18,9 +18,6 @@ const Card = ({
   link,
   title
 }: CardProps) => {
-
-
-
   return (
     <div className={`${className ? className : ""} flex-none md:flex-auto`}>
       <div className={`overflow-hidden rounded-2xl relative md:h-full`}>

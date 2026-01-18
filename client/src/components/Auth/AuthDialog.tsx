@@ -21,11 +21,25 @@ import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
 export type AutoDialogModeType = "login" | "register" | "resetPassword"
 
 const AuthDialog = () => {
+  const [open, setOpen] = useState(false);
 
-  const [mode, setMode] = useState<AutoDialogModeType>("register");
-  const [stage, setStage] = useState<1 | 2 | 3>(3);
+  const [mode, setMode] = useState<AutoDialogModeType>("login");
+  const [stage, setStage] = useState<1 | 2 | 3>(1);
   const [email, setEmail] = useState<string>("");
 
+  const onCloseModal = () => {
+    setMode("login");
+    setStage(1);
+    setEmail("");
+    setOpen(false);
+  };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      onCloseModal();
+    }
+    setOpen(isOpen);
+  };
 
   const onChangeMode = (mode: AutoDialogModeType) =>{
     setMode(mode);
@@ -39,17 +53,14 @@ const AuthDialog = () => {
     setStage(stage);
   };
 
-  const onCloseModal = () => {
-    setMode("login");
-    setStage(1)
-  }
+
 
   return (
-    <Dialog onOpenChange={(isOpen) => !isOpen && onCloseModal()}>
+    <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogTrigger asChild>
         <Button className="bg-accent px-8">Войти</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-106.25 px-8">
+      <DialogContent className="md:max-w-106.25 sm:w-full flex flex-col justify-start md:justify-center rounded-none max-w-full  px-8 h-full md:h-auto md:rounded-4xl">
         <DialogHeader>
           <DialogTitle className={"text-center text-2xl font-medium!"}>
             {mode === "login" && "Вход"}
@@ -129,7 +140,7 @@ const AuthDialog = () => {
                   >
                     <RegisterFormStageThree
                       email={email}
-                      onChangeStage={(stage) => onChangeStage(stage)}
+                      onClose={onCloseModal}
                     />
                   </motion.div>
                 )

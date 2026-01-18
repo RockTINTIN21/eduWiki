@@ -29,9 +29,6 @@ const Header = () => {
   }, [pathname]);
 
 
-
-
-
   const isLanding = pathname === "/aboutUs";
 
   const links = [
@@ -83,7 +80,7 @@ const Header = () => {
               <Link href={'/profile'} className="md:hidden">
                 <Avatar className="w-10 h-10">
                   <AvatarImage
-                    src={user.avatarUrl}
+                      src={`http://localhost:3000/uploads/${user.avatarUrl}`}
                     alt={user.username}
                   />
                   <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>
@@ -158,11 +155,11 @@ const Header = () => {
                   </li>
                 ))}
                 <li>
-                  {isAuth ? (
+                  {(isAuth && user) ? (
                     <Link href={'/profile'}>
-                      <Avatar className="w-10 h-10">
+                      <Avatar className="w-10 h-10 text-white">
                         <AvatarImage
-                          src={user.avatarUrl}
+                            src={`http://localhost:3000/uploads/${user.avatarUrl}`}
                           alt={user.username}
                         />
                         <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>

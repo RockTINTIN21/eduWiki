@@ -184,9 +184,30 @@ export async function apiFetch<T>(
   init?: RequestInit & { json?: unknown },
 ): Promise<T> {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  const headers = new Headers(init?.headers);
+  // console.log('HEADERS:', headers);
+  // console.log('body:', init?.body)
+  // console.log('json:', init?.json)
+  // if (!init?.headers) {
+  //   console.log('В хедерс ниче нет')
+  //   headers.set("content-type", "application/json");
+  // }else{
+  //   console.log('headers:', init?.headers);
+  // }
+  //
+  // if(init?.body){
+  //   console.log('Это бади', init?.body);
+  // }
+
+  if(init?.json){
+    headers.set("content-type", "application/json");
+    // console.log('Это json', init?.json)
+  }
+
   const res = await fetch(`${baseUrl}${path}`, {
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(init?.json),
+    headers: headers ? headers : {},
+    body: init?.body ? init.body : JSON.stringify(init?.json),
     credentials: "include",
     ...init,
   })
