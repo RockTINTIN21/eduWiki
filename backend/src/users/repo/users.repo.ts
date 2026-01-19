@@ -114,6 +114,13 @@ export class UsersRepo {
     await this.prisma.user.delete({ where: { id } });
   }
 
+  async updateUserPassword(data: { id: string; password: string }) {
+    await this.prisma.user.update({
+      where: { id: data.id },
+      data: { password: data.password },
+    });
+  }
+
   // getUserRoles(id: string) {
   //   return this.prisma.userRoles.findMany({
   //     where: { userId: id },

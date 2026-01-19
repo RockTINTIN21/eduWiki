@@ -231,6 +231,7 @@ model VerificationCode {
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   expirationTime DateTime @map("expiration_time") @db.Timestamp(6)
   isActivated    Boolean  @default(false) @map("is_activated")
+  type           Type
 
   @@map("verification_codes")
 }
@@ -245,4 +246,10 @@ enum EntityActionEnum {
   CREATE
   UPDATE
   DELETE
+}
+
+enum Type {
+  REGISTRATION
+  PASSWORD_RESET
+  EMAIL_CHANGE
 }

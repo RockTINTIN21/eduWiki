@@ -73,36 +73,5 @@ export class AuthRepo {
     });
   }
 
-  async generateEmailOTP(data: CreateVerificationCodeRepoInput) {
-    return this.prisma.verificationCode.create({
-      data: {
-        email: data.email,
-        code: data.hashedCode,
-        expirationTime: data.expirationTime,
-      },
-    });
-  }
 
-  async getVerificationOTP(data: { email: string }) {
-    return this.prisma.verificationCode.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-  }
-
-  async deleteVerificationOTPById(data: { id: number }) {
-    return this.prisma.verificationCode.delete({
-      where: { id: data.id },
-    });
-  }
-
-  async updateStatusEmailOTP(data: { id: number; isActivated: boolean }) {
-    return this.prisma.verificationCode.update({
-      where: { id: data.id },
-      data: {
-        isActivated: data.isActivated,
-      },
-    });
-  }
 }

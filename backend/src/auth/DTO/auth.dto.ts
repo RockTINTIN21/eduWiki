@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -22,7 +23,6 @@ export class LoginDTO {
 export class RegisterDTO {
   // @IsOptional()
   // avatar: File;
-
 
   @IsNotEmpty({ message: 'Username is required' })
   @IsString()
@@ -49,23 +49,15 @@ export class RegisterDTO {
     },
   )
   password: string;
-  //
-  // @IsString()
-  // passwordConfirm: string;
 }
 
-export class GenerateEmailOtpDTO {
+export class ResetPasswordDTO {
   @IsString()
-  @IsEmail()
-  email: string;
-}
-
-export class VerifyEmailOtpDTO {
-  @IsString()
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
   @IsString()
-  @Length(6)
-  code: string;
+  @IsNotEmpty()
+  password: string;
 }

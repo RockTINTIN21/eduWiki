@@ -3,20 +3,14 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  GenerateEmailOtpDTO,
-  LoginDTO,
-  RegisterDTO,
-  VerifyEmailOtpDTO,
-} from './DTO/auth.dto';
+import { LoginDTO, RegisterDTO, ResetPasswordDTO } from './DTO/auth.dto';
 import { AuthRepo } from './repo/auth.repo';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import ms, { StringValue } from 'ms';
+import { StringValue } from 'ms';
 import { UsersService } from '../users/users.service';
-import { randomInt } from 'node:crypto';
-import { MailerService } from '@nestjs-modules/mailer';
+import { OtpService } from '../otp/otp.service';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +19,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private configService: ConfigService,
     private userService: UsersService,
-    private readonly mailerService: MailerService,
+    private otpService: OtpService,
   ) {}
 
   async login(dto: LoginDTO) {
@@ -56,21 +50,46 @@ export class AuthService {
   }
 
   async register(dto: RegisterDTO, avatar?: Express.Multer.File) {
-    const otp = await this.repo.getVerificationOTP({ email: dto.email });
+    const otp = await this.otpService.getVerificationOTP({
+      email: dto.email,
+      type: 'REGISTRATION',
+    });
+
     if (!otp || !otp.isActivated) {
       throw new BadRequestException({
         code: 'NOT_ACTIVATED_EMAIL',
         field: 'email',
       });
     }
+
     const user = await this.userService.createUser({
       ...dto,
       avatar: avatar,
     });
+
     const tokens = await this.getTokens(user.id);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    await this.repo.deleteVerificationOTPById({ id: otp.id });
+    await this.otpService.deleteVerificationOTPById({ id: otp.id });
     return tokens;
+  }
+
+  async resetPassword(dto: ResetPasswordDTO) {
+    const otp = await this.otpService.getVerificationOTP({
+      email: dto.email,
+      type: 'PASSWORD_RESET',
+    });
+
+    if (!otp || !otp.isActivated) {
+      throw new BadRequestException({
+        code: 'NOT_ACTIVATED_EMAIL',
+        field: 'email',
+      });
+    }
+
+    return this.userService.updateUserPassword({
+      email: dto.email,
+      password: dto.password,
+    });
   }
 
   async logout(userId: string) {
@@ -114,75 +133,6 @@ export class AuthService {
     return {
       available: !user.id,
     };
-  }
-
-  async generateEmailOTP(dto: GenerateEmailOtpDTO) {
-    const user = await this.repo.findByEmail(dto.email);
-    console.log('user:', user);
-    if (user && user.id) {
-      throw new BadRequestException({
-        code: 'EMAIL_ALREADY_EXISTS',
-        field: 'email',
-      });
-    }
-    const otp = await this.repo.getVerificationOTP({ email: dto.email });
-    if (otp) {
-      await this.repo.deleteVerificationOTPById({ id: otp.id });
-    }
-    const length = 6;
-    const min = Math.pow(10, length - 1);
-    const max = Math.pow(10, length) - 1;
-    const code = randomInt(min, max).toString();
-    const hashCode = await this.hashData(code);
-    console.log('code:', code);
-    const ttl = this.configService.getOrThrow('OTP_EXPIRES_IN');
-    const ttlMs = ms(ttl);
-    const expirationTime = new Date(Date.now() + ttlMs);
-
-    await this.repo.generateEmailOTP({
-      email: dto.email,
-      hashedCode: hashCode,
-      expirationTime,
-    });
-
-    return this.mailerService.sendMail({
-      to: dto.email,
-      subject: 'Код подтверждения',
-      template: 'verification-code',
-      context: {
-        code,
-        expiresIn: '15 минут',
-      },
-    });
-  }
-
-  async verifyEmailOTP(dto: VerifyEmailOtpDTO) {
-    const otp = await this.repo.getVerificationOTP({ email: dto.email });
-    if (!otp) {
-      throw new BadRequestException({
-        code: 'EMAIL_NOT_EXISTS',
-        field: 'code',
-      });
-    }
-    console.log('OTP:', otp);
-    const isValid =
-      (await bcrypt.compare(dto.code, otp.code)) &&
-      !otp.isActivated &&
-      otp.expirationTime > new Date();
-
-    if (!isValid) {
-      throw new BadRequestException({
-        code: 'INVALID_CODE',
-        field: 'code',
-      });
-    }
-
-    await this.repo.updateStatusEmailOTP({
-      id: otp.id,
-      isActivated: true,
-    });
-
-    return isValid;
   }
 
   hashData(data: string) {

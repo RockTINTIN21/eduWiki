@@ -1,4 +1,6 @@
-import {Controller, FieldPath, useForm} from "react-hook-form";
+"use client";
+
+import {Controller, useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/text-field";
 import { z } from "zod";
@@ -16,6 +18,7 @@ const LoginForm = ({
 }: {
   onChangeMode: (mode: AutoDialogModeType) => void;
 }) => {
+
   const dispatch = useAppDispatch();
 
   const formSchema = z.object({
@@ -29,7 +32,6 @@ const LoginForm = ({
       login: "",
       password: "",
     }
-
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
@@ -82,13 +84,15 @@ const LoginForm = ({
           />
         )}
       />
+
       <button
         type={"button"}
-        onClick={() => onChangeMode("resetPassword")}
+        onClick={() => onChangeMode("PASSWORD_RESET")}
         className="text-[#2B48D4] font-medium text-sm"
       >
         Забыли пароль?
       </button>
+
       <Button
         type="submit"
         disabled={form.formState.isSubmitting || !form.formState.isValid}

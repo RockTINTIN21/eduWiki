@@ -6,16 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { z } from "zod";
 import {errorHandler} from "@/lib/errorHandler/errorHandler";
+import {AutoDialogModeType, ConfirmStep} from "@/components/Auth/AuthDialog";
 
-interface RegisterFormStageOneProps {
-  onChangeStage: (stage: 2) => void,
-  onChangeEmail: (email: string) => void,
+interface ConfirmEmailStageOneProps {
+  onChangeEmail: (email: string) => void;
+  type: AutoDialogModeType
 }
 
-const RegisterFormStageOne = ({
-  onChangeStage,
-  onChangeEmail,
-}: RegisterFormStageOneProps) => {
+const ConfirmEmailStageOne = ({onChangeEmail, type}: ConfirmEmailStageOneProps) => {
 
   const formSchema = z.object({
     email: z
@@ -24,18 +22,23 @@ const RegisterFormStageOne = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    }
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try{
       await apiFetch(
-        "/auth/verification-otp",
+        "/otp/verification-otp",
         {
           method: "POST",
-          json: data,
+          json: {
+            email: data.email,
+            type: type
+          },
         },
       );
-      onChangeStage(2);
       onChangeEmail(data.email);
     }catch(e){
       if(e instanceof ApiError){
@@ -79,4 +82,4 @@ const RegisterFormStageOne = ({
   );
 };
 
-export default RegisterFormStageOne;
+export default ConfirmEmailStageOne;

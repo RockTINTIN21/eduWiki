@@ -22,7 +22,7 @@ interface ValidationCustomFormProps {
   disabled?: boolean;
 }
 
-const CustomPasswordInput= 
+const CustomPasswordInput=
   (
     {
       watch,
@@ -36,7 +36,7 @@ const CustomPasswordInput=
 
     }:ValidationCustomFormProps,
   ) => {
-  
+
     const [isTouched, setIsTouched] = useState<boolean>(false);
 
     const watchedPassword = watch(namePassword);
@@ -45,7 +45,7 @@ const CustomPasswordInput=
       hasLetter: false,
       hasDigit: false,
     });
-    
+
     useEffect(() => {
       if(watchedPassword){
         setIsTouched(true);
@@ -65,7 +65,7 @@ const CustomPasswordInput=
         setIsTouched(false)
       }
     }, [watchedPassword]);
-    
+
     useEffect(() => {
       if(Object.values(passwordValidationState).every(Boolean) && isTouched){
         clearErrors(namePassword)
@@ -160,7 +160,7 @@ const CustomPasswordInput=
                       - Хотя бы 1 цифра
                     </span>
                   </div>
-                  
+
                 </div>
               </div>
             )}

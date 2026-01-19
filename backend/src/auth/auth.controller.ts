@@ -14,12 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  GenerateEmailOtpDTO,
-  LoginDTO,
-  RegisterDTO,
-  VerifyEmailOtpDTO,
-} from './DTO/auth.dto';
+import { LoginDTO, RegisterDTO, ResetPasswordDTO } from './DTO/auth.dto';
 import { AccessTokenGuard } from './guard/accessToken.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import type { Response, Request } from 'express';
@@ -75,12 +70,6 @@ export class AuthController {
     return tokens.accessToken;
   }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('avatar'))
-  uploadFile(@UploadedFile() avatar: Express.Multer.File) {
-    console.log('avatar:', avatar);
-  }
-
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   async logout(@GetUser('id') userId: string, @Res() res: Response) {
@@ -118,13 +107,8 @@ export class AuthController {
     };
   }
 
-  @Post('/verification-otp')
-  generateEmailVerification(@Body() dto: GenerateEmailOtpDTO) {
-    return this.authService.generateEmailOTP(dto);
-  }
-
-  @Post('/verify')
-  verifyEmailCode(@Body() dto: VerifyEmailOtpDTO) {
-    return this.authService.verifyEmailOTP(dto);
+  @Post('reset-password')
+  resetPassword(@Body() dto: ResetPasswordDTO) {
+    return this.authService.resetPassword(dto);
   }
 }

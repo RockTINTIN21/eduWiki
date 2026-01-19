@@ -12,8 +12,4 @@ export class UpdateUserDTO {
   @IsString()
   @IsOptional()
   avatarUrl?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  isActivated: boolean;
 }

@@ -12,6 +12,7 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { diskStorage } from 'multer';
     TicketsModule,
     ProgramsModule,
     UniversitiesModule,
+    OtpModule,
   ],
 })
 export class AppModule {}

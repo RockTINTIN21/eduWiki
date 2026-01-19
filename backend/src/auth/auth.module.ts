@@ -11,6 +11,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { randomUUID } from 'node:crypto';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { randomUUID } from 'node:crypto';
         },
       }),
     }),
+    OtpModule,
   ],
   controllers: [AuthController],
   providers: [

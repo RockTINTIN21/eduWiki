@@ -13,8 +13,8 @@ import {HugeiconsIcon} from "@hugeicons/react";
 import {PencilEdit02Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useMemo, useState} from "react";
 import {useDebounce} from "use-debounce";
-import RegisterPassword from "@/components/Auth/RegisterForms/RegisterPassword";
 import {toast} from "sonner";
+import RegisterPassword from "@/components/Auth/RegisterPassword";
 
 const RegisterFormStageOne = ({
   email,
@@ -39,6 +39,11 @@ const RegisterFormStageOne = ({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues: {
+      username: "",
+      password: "",
+      confirmPassword: "",
+    }
   });
 
   const avatarFile = form.watch("avatar");

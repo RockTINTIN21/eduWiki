@@ -11,12 +11,20 @@ import {
 } from "@/components/ui/input-otp";
 import * as React from "react";
 import {errorHandler} from "@/lib/errorHandler/errorHandler";
-import ResendOtpCode from "@/components/Auth/RegisterForms/ResendOTPCode";
+import ResendOtpCode from "@/components/Auth/ConfirmEmail/ResendOTPCode";
+import {AutoDialogModeType, ConfirmStep} from "@/components/Auth/AuthDialog";
 
-const RegisterFormStageOne = ({
-  onChangeStage,
-  email
-}: {onChangeStage: (stage: 3) => void, email: string}) => {
+interface RegisterFormStageTwoProps {
+  onChangeConfirmStep: (step: ConfirmStep) => void;
+  email: string;
+  type: AutoDialogModeType;
+}
+
+const RegisterFormStageTwo = ({
+  email,
+  type,
+  onChangeConfirmStep,
+}: RegisterFormStageTwoProps) => {
 
   const formSchema = z.object({
     code: z
@@ -24,7 +32,6 @@ const RegisterFormStageOne = ({
         message: "Код должен состоять из 6 цифр."
       })
   });
-
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,17 +43,18 @@ const RegisterFormStageOne = ({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     const formattedData = {
       code: data.code,
-      email: email
+      email: email,
+      type: type,
     }
     try{
       await apiFetch(
-        "/auth/verify",
+        "/otp/verify",
         {
           method: "POST",
           json: formattedData,
         },
       );
-      onChangeStage(3);
+      onChangeConfirmStep('AFTER_CONFIRM_FORM');
     }catch(e){
       if(e instanceof ApiError)
         form.setError(e.field, {message: errorHandler[e.code]})
@@ -107,10 +115,10 @@ const RegisterFormStageOne = ({
           </span>
         </div>
       </div>
-      <ResendOtpCode email={email}/>
+      <ResendOtpCode type={type} email={email}/>
 
     </form>
   );
 };
 
-export default RegisterFormStageOne;
+export default RegisterFormStageTwo;

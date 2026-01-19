@@ -6,34 +6,45 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { ApiErrorOld, apiFetch } from "@/lib/api";
 import { PasswordField } from "@/components/password-field";
+import RegisterPassword from "@/components/Auth/RegisterPassword";
+import {toast} from "sonner";
 
-const ResetPasswordForm = () => {
+const ResetPasswordStageTwo = ({
+  email,
+  onClose,
+}: {email: string, onClose: () => void}) => {
+
   const formSchema = z.object({
-    email: z.email("Некорректный формат почты"),
+    password: z.string(),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: "Пароли не совпадают",
+    path: ["confirmPassword"],
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
-      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log("DATA", data);
-    try {
-      const res = await apiFetch<{ user: any; accessToken?: string }>(
-        "/auth/login",
-        {
-          method: "POST",
-          json: data,
+    await apiFetch(
+      "/auth/reset-password",
+      {
+        method: "POST",
+        json: {
+          email: email,
+          password: data.password,
         },
-      );
-      console.log("RES:", res);
-    } catch (e) {
-      // if (e instanceof ApiError)
-      //   form.setError("password", { message: "Неправильный логин или пароль" });
-    }
+      },
+    );
+    onClose();
+    toast.success('Ваш пароль успешно сброшен', {position: 'top-center'});
   }
 
   return (
@@ -42,33 +53,24 @@ const ResetPasswordForm = () => {
       id="resetPassword"
       className="space-y-4"
     >
-      <Controller
-        name="email"
+      <RegisterPassword
         control={form.control}
-        render={({ field, fieldState }) => (
-          <TextField
-            {...field}
-            id={field.name}
-            name={field.name}
-            aria-invalid={!!fieldState.error?.message}
-            error={fieldState.error?.message}
-            height={48}
-            type="email"
-            title="Почта"
-          />
-        )}
+        clearErrors={form.clearErrors}
+        setError={form.setError}
+        watch={form.watch}
       />
+
       <Button
         type="submit"
         disabled={form.formState.isSubmitting || !form.formState.isValid}
         className="w-full"
-        form="login"
+        form="resetPassword"
       >
         {form.formState.isSubmitting && <Spinner />}
-        Продолжить
+        Сбросить пароль
       </Button>
     </form>
   );
 };
 
-export default ResetPasswordForm;
+export default ResetPasswordStageTwo;

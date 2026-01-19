@@ -13,24 +13,20 @@ import {
 import LoginForm from "@/components/Auth/LoginForm";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import RegisterFormStageOne from "@/components/Auth/RegisterForms/RegisterFormStageOne";
-import RegisterFormStageTwo from "@/components/Auth/RegisterForms/RegisterFormStageTwo";
-import RegisterFormStageThree from "@/components/Auth/RegisterForms/RegisterFormStageThree";
-import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
+import ConfirmEmail from "@/components/Auth/ConfirmEmail/ConfirmEmail";
 
-export type AutoDialogModeType = "login" | "register" | "resetPassword"
+export type AutoDialogModeType = "REGISTRATION" | "PASSWORD_RESET" | "LOGIN"
+export type ConfirmStep = "ENTER_EMAIL" | "ENTER_OTP" | "AFTER_CONFIRM_FORM";
 
 const AuthDialog = () => {
   const [open, setOpen] = useState(false);
 
-  const [mode, setMode] = useState<AutoDialogModeType>("login");
-  const [stage, setStage] = useState<1 | 2 | 3>(1);
-  const [email, setEmail] = useState<string>("");
+  const [mode, setMode] = useState<AutoDialogModeType>("LOGIN");
+  const [confirmStep, setConfirmStep] = useState<ConfirmStep>('ENTER_EMAIL')
 
   const onCloseModal = () => {
-    setMode("login");
-    setStage(1);
-    setEmail("");
+    setMode("LOGIN");
+    setConfirmStep("ENTER_EMAIL");
     setOpen(false);
   };
 
@@ -45,15 +41,9 @@ const AuthDialog = () => {
     setMode(mode);
   }
 
-  const onChangeEmail = (email: string) =>{
-    setEmail(email);
-  }
-
-  const onChangeStage = (stage: 1 | 2 | 3) => {
-    setStage(stage);
+  const onChangeConfirmStep = (step: ConfirmStep) => {
+    setConfirmStep(step);
   };
-
-
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
@@ -63,14 +53,14 @@ const AuthDialog = () => {
       <DialogContent className="md:max-w-106.25 sm:w-full flex flex-col justify-start md:justify-center rounded-none max-w-full  px-8 h-full md:h-auto md:rounded-4xl">
         <DialogHeader>
           <DialogTitle className={"text-center text-2xl font-medium!"}>
-            {mode === "login" && "Вход"}
-            {mode === "register" && "Регистрация"}
-            {mode === "resetPassword" && "Сброс пароля"}
+            {mode === "LOGIN" && "Вход"}
+            {mode === "REGISTRATION" && "Регистрация"}
+            {mode === "PASSWORD_RESET" && "Сброс пароля"}
           </DialogTitle>
           <DialogDescription
             className={"text-center font-medium text-[#5A5A5A]"}
           >
-            {(mode === "login" || (mode === "register" && stage === 1)) && (
+            {(mode === "LOGIN" || (mode === "REGISTRATION" && confirmStep === 'ENTER_EMAIL')) && (
               <>
                 Продолжая, вы соглашаетесь с{" "}
                 <Link className="text-link hover:underline" href="/">
@@ -83,14 +73,14 @@ const AuthDialog = () => {
                 .
               </>
             )}
-            {mode === "resetPassword" && (
+            {(mode === "PASSWORD_RESET" && confirmStep === "ENTER_EMAIL") && (
               <>Введите почту на которую был зарегистрирован аккаунт</>
             )}
-            {stage === 2 && <>Введите код, отправленный на адрес {email}. Если письмо не пришло, проверьте папку «Спам»</>}
+            {confirmStep === 'ENTER_OTP' && <>Введите код, отправленный на указанный адрес. Если письмо не пришло, проверьте папку «Спам»</>}
           </DialogDescription>
         </DialogHeader>
         <AnimatePresence mode="wait">
-          {mode === "login" ? (
+          {mode === "LOGIN" ? (
             <motion.div
               key="login"
               initial={{ opacity: 0, x: -20 }}
@@ -99,68 +89,24 @@ const AuthDialog = () => {
             >
               <LoginForm onChangeMode={(stage: AutoDialogModeType) => onChangeMode(stage)} />
             </motion.div>
-          ) : mode === "register" ? (
+          ) : (
             <motion.div
-              key="register"
+              key="confirmEmail"
               initial={{ opacity: 0, x: -20 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 20, opacity: 0 }}
             >
-              {stage === 1 ? (
-                <motion.div
-                  key="1"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 20, opacity: 0 }}
-                >
-                  <RegisterFormStageOne
-                    onChangeEmail={(email) => onChangeEmail(email)}
-                    onChangeStage={(stage) => onChangeStage(stage)}
-                  />
-                </motion.div>
-              ) : stage === 2 ? (
-                <motion.div
-                  key="2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 20, opacity: 0 }}
-                >
-                  <RegisterFormStageTwo
-                    email={email}
-                    onChangeStage={(stage) => onChangeStage(stage)}
-                  />
-                </motion.div>
-              ) : (
-                stage === 3 && (
-                  <motion.div
-                    key="3"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: 20, opacity: 0 }}
-                  >
-                    <RegisterFormStageThree
-                      email={email}
-                      onClose={onCloseModal}
-                    />
-                  </motion.div>
-                )
-              )}
+              <ConfirmEmail
+                confirmStep={confirmStep}
+                onClose={onCloseModal}
+                formAfterConfirm={mode}
+                onChangeConfirmStep={onChangeConfirmStep} />
             </motion.div>
-          ) : (
-            mode === "resetPassword" && (
-              <motion.div
-                key="resetPassword"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 20, opacity: 0 }}
-              >
-                <ResetPasswordForm />
-              </motion.div>
-            )
+
           )}
         </AnimatePresence>
 
-        {(mode === "login" || mode === "resetPassword" || stage === 1) && (
+        {(mode === "LOGIN" || (mode === "PASSWORD_RESET" && confirmStep === 'ENTER_EMAIL')) && (
           <>
             <div className="relative pb-2 py-2">
               <div className="h-px w-full bg-[#E0E5F2] z-10 absolute"></div>
@@ -173,13 +119,12 @@ const AuthDialog = () => {
             <Button
               onClick={() =>
                 setMode((prevState) =>
-                  prevState === "login" ? "register" : "login",
+                  prevState === "LOGIN" ? "REGISTRATION" : "LOGIN",
                 )
               }
               variant="secondary"
             >
-              {mode === "login"
-                ? "Зарегистрироваться"
+              {mode === "LOGIN" ? "Зарегистрироваться"
                 : "Войти в уже существующий аккаунт"}
             </Button>
           </>

@@ -6,8 +6,6 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDTO } from './DTO/users.dto';
 import { UsersRepo } from './repo/users.repo';
-import { RegisterDTO } from '../auth/DTO/auth.dto';
-import { CreateUserRepoInput } from './repo/users.repo.types';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInputService } from './users.types';
 
@@ -54,6 +52,17 @@ export class UsersService {
     }
   }
 
+  async updateUserPassword(data: { email: string; password: string }) {
+    const res = await this.repo.findByEmail(data.email);
+    const hashPassword = await bcrypt.hash(data.password, 10);
+    if (res && res.id) {
+      return await this.repo.updateUserPassword({
+        id: res.id,
+        password: hashPassword,
+      });
+    }
+  }
+
   async createUser(data: CreateUserInputService) {
     if (await this.repo.checkUsernameExists(data.username)) {
       throw new BadRequestException({
@@ -69,7 +78,6 @@ export class UsersService {
       });
     }
 
-    console.log('data:', data);
     const hashPassword = await bcrypt.hash(data.password, 10);
 
     return this.repo.createUser({
