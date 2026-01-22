@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import {Inter} from "next/font/google";
-import "./globals.css";
-import {ReactNode} from "react";
-import Header from "@/components/Header/Header";
+import React, {ReactNode} from 'react';
 import Footer from "@/components/Footer/Footer";
+import Header from "@/components/Header/Header";
+import {Toaster} from "@/components/ui/sonner";
+import {Inter} from "next/font/google";
+import {Metadata} from "next";
 import StoreProvider from "@/app/StoreProvider";
-import {Toaster} from "sonner";
+import "../globals.css";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -18,11 +18,8 @@ export const metadata: Metadata = {
   description: "О учёбе за границей",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+
+const UserLayout = ({children}: {children: ReactNode}) => {
   return (
     <html lang="ru">
       <body
@@ -37,4 +34,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default UserLayout;

@@ -8,7 +8,7 @@ import Anchor from "@/components/Anchor/Anchor";
 import Button from "@/components/Button/Button";
 import { SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Card from "@/app/(home)/components/Card";
+import Card from "@/app/(user)/components/Card";
 import Image from "next/image";
 import {useEffect, useReducer, useRef, useState} from "react";
 import {
