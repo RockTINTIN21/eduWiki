@@ -1,51 +1,51 @@
 .swiper-button-next-custom,
 .swiper-button-prev-custom {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    z-index: 40;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	z-index: 40;
 
-    background-color: #ffffff;
-    color: #000;
+	background-color: #ffffff;
+	color: #000;
 
-    box-shadow: 14px 17px 40px rgba(42, 42, 42, 0.2);
-    border-radius: 30px;
+	box-shadow: 14px 17px 40px rgba(42, 42, 42, 0.2);
+	border-radius: 30px;
 
-    transition:
-            background-color 0.2s ease,
-            color 0.2s ease,
-            opacity 0.2s ease;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		opacity 0.2s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .swiper-button-next-custom:hover,
-    .swiper-button-prev-custom:hover {
-        background-color: #1D4ED8;
-        color: #ffffff;
-    }
+	.swiper-button-next-custom:hover,
+	.swiper-button-prev-custom:hover {
+		background-color: #1d4ed8;
+		color: #ffffff;
+	}
 }
 
 .swiper-button-next-custom:active,
 .swiper-button-prev-custom:active {
-    background-color: #1D4ED8;
-    color: #ffffff;
+	background-color: #1d4ed8;
+	color: #ffffff;
 }
 
 .swiper-button-next-custom {
-    right: 10px;
+	right: 10px;
 }
 
 .swiper-button-prev-custom {
-    left: 10px;
+	left: 10px;
 }
 
-.swiper-button-disabled-custom{
-    display: none;
+.swiper-button-disabled-custom {
+	display: none;
 }

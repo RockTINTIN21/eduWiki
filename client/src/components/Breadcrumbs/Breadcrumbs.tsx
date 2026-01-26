@@ -1,9 +1,5 @@
 const Breadcrumbs = () => {
-  return (
-    <div>
-
-    </div>
-  );
+	return <div></div>;
 };
 
 export default Breadcrumbs;

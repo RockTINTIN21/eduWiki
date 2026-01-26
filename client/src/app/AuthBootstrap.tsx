@@ -1,16 +1,15 @@
 "use client";
 
-import {useAppDispatch, useAppSelector} from "@/lib/store/store";
-import {useEffect} from "react";
-import {fetchRefresh} from "@/components/Auth/fetch-auth";
-import {authSlice} from "@/lib/store/auth/auth.slice";
+import { useEffect } from "react";
+import { fetchRefresh } from "@/components/Auth/fetch-auth";
+import { useAppDispatch } from "@/lib/store/store";
 
 export default function AuthBootstrap() {
-  const dispatch = useAppDispatch();
+	const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchRefresh())
-  }, [dispatch]);
+	useEffect(() => {
+		dispatch(fetchRefresh());
+	}, [dispatch]);
 
-  return null;
+	return null;
 }
