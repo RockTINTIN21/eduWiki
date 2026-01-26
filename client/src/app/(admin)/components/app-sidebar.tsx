@@ -1,3 +1,5 @@
+"use client";
+
 import {Calendar, ChevronUp, Home, Inbox, Search, Settings, User2} from "lucide-react"
 
 import {
@@ -9,8 +11,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {useAppSelector} from "@/lib/store/store";
+import {authSlice} from "@/lib/store/auth/auth.slice";
+import {Skeleton} from "@/components/ui/skeleton";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {API_UPLOADS_URL} from "@/lib/api";
 
 const items = [
   {
@@ -58,6 +65,9 @@ const statisticsItems = [
 
 
 export function AppSidebar() {
+
+  const user = useAppSelector((state) => state[authSlice.name].user)
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -119,10 +129,37 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> Username
-                  <ChevronUp className="ml-auto" />
-                </SidebarMenuButton>
+                {user ?
+                  <SidebarMenuButton>
+                    <Avatar className="w-8 h-8 text-white">
+                      <AvatarImage
+                        src={`${API_UPLOADS_URL}/${user.avatarUrl}`}
+                        alt={user.username}
+                      />
+                      <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>
+                    </Avatar>
+
+                    {user.username}
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                  :
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-4 w-28" />
+                    </div>
+                  </div>
+                }
+
+                {/*<div className="flex items-center gap-4">*/}
+                {/*  <Skeleton className="h-12 w-12 rounded-full" />*/}
+                {/*  <div className="space-y-2">*/}
+                {/*    <Skeleton className="h-4 w-32" />*/}
+                {/*    <Skeleton className="h-4 w-28" />*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"

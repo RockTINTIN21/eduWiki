@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { ApiErrorOld, apiFetch } from "@/lib/api";
 import { PasswordField } from "@/components/password-field";
-import RegisterPassword from "@/components/Auth/RegisterPassword";
+import RegisterPassword from "@/components/Auth/Forms/RegisterPassword";
 import {toast} from "sonner";
+import {AUTH_ENDPOINTS} from "@/lib/api-endpoints/auth";
 
 const ResetPasswordStageTwo = ({
   email,
@@ -34,7 +35,7 @@ const ResetPasswordStageTwo = ({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     await apiFetch(
-      "/auth/reset-password",
+      AUTH_ENDPOINTS.resetPassword,
       {
         method: "POST",
         json: {

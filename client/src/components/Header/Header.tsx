@@ -9,6 +9,7 @@ import AuthDialog from "@/components/Auth/AuthDialog";
 import {useAppSelector} from "@/lib/store/store";
 import {authSlice} from "@/lib/store/auth/auth.slice";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {API_UPLOADS_URL} from "@/lib/api";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -80,7 +81,7 @@ const Header = () => {
               <Link href={'/profile'} className="md:hidden">
                 <Avatar className="w-10 h-10">
                   <AvatarImage
-                      src={`http://localhost:3000/uploads/${user.avatarUrl}`}
+                    src={`${API_UPLOADS_URL}/${user.avatarUrl}`}
                     alt={user.username}
                   />
                   <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>
@@ -142,13 +143,13 @@ const Header = () => {
                     className={`
                   transition duration-100 ease-in-out
                   ${
-                    pathname === link.link
-                      ? `underline underline-offset-5 ${isLanding ? "text-white" : "text-accent"}`
-                      : `underline-offset-5 hover:underline ${
-                          isLanding
-                            ? "text-gray-200 hover:text-white"
-                            : "text-black hover:text-accent"
-                        }`
+                  pathname === link.link
+                    ? `underline underline-offset-5 ${isLanding ? "text-white" : "text-accent"}`
+                    : `underline-offset-5 hover:underline ${
+                      isLanding
+                        ? "text-gray-200 hover:text-white"
+                        : "text-black hover:text-accent"
+                    }`
                   }`}
                   >
                     <Link href={link.link}>{link.title}</Link>
@@ -159,7 +160,7 @@ const Header = () => {
                     <Link href={'/profile'}>
                       <Avatar className="w-10 h-10 text-white">
                         <AvatarImage
-                            src={`http://localhost:3000/uploads/${user.avatarUrl}`}
+                          src={`${API_UPLOADS_URL}/${user.avatarUrl}`}
                           alt={user.username}
                         />
                         <AvatarFallback>{user.username[0] + user.username[1]}</AvatarFallback>

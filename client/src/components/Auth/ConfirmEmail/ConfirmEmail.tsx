@@ -3,11 +3,11 @@
 import React, {useEffect, useState} from "react";
 import ConfirmEmailStageOne from "@/components/Auth/ConfirmEmail/Forms/ConfirmEmailStageOne";
 import ConfirmEmailStageTwo from "@/components/Auth/ConfirmEmail/Forms/ConfirmEmailStageTwo";
-import RegisterForm from "@/components/Auth/RegisterForm";
-import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
+import RegisterForm from "@/components/Auth/Forms/RegisterForm";
+import ResetPasswordForm from "@/components/Auth/Forms/ResetPasswordForm";
 import {AutoDialogModeType, ConfirmStep} from "@/components/Auth/AuthDialog";
 import {AnimatePresence, motion} from "framer-motion";
-import LoginForm from "@/components/Auth/LoginForm";
+import LoginForm from "@/components/Auth/Forms/LoginForm";
 
 interface ConfirmEmailProps {
   formAfterConfirm: AutoDialogModeType;

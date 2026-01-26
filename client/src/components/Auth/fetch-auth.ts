@@ -2,10 +2,11 @@ import { apiFetch, apiGuardFetch} from "@/lib/api";
 import { authSlice, User } from "@/lib/store/auth/auth.slice";
 import { AppThunk } from "@/lib/store/store";
 import {AuthRefreshResponse} from "@/lib/store/auth/auth.type";
+import {AUTH_ENDPOINTS} from "@/lib/api-endpoints/auth";
 
 export const fetchRefresh = (): AppThunk => (dispatch, getState, {}) => {
   dispatch(authSlice.actions.fetchAuthPending());
-  apiGuardFetch<AuthRefreshResponse>("/auth/refresh", {
+  apiGuardFetch<AuthRefreshResponse>(AUTH_ENDPOINTS.refresh, {
     method: "GET",
   })
     .then((res)=>{
@@ -27,7 +28,7 @@ export const fetchLogin =
       dispatch(authSlice.actions.fetchAuthPending());
 
       try {
-        const res = await apiFetch<{accessToken: string, user: User}>("/auth/login", {
+        const res = await apiFetch<{accessToken: string, user: User}>(AUTH_ENDPOINTS.login, {
           method: "POST",
           json: data,
         });

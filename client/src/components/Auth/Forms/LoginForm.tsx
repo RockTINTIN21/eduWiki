@@ -11,7 +11,7 @@ import { AutoDialogModeType } from "@/components/Auth/AuthDialog";
 import {useAppDispatch} from "@/lib/store/store";
 import {fetchLogin} from "@/components/Auth/fetch-auth";
 import {ApiError} from "@/lib/api";
-import {errorHandler} from "@/lib/errorHandler/errorHandler";
+import {errorHandler} from "@/lib/error-handler/errorHandler";
 
 const LoginForm = ({
   onChangeMode,

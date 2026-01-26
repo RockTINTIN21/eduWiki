@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import LoginForm from "@/components/Auth/LoginForm";
+import LoginForm from "@/components/Auth/Forms/LoginForm";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import ConfirmEmail from "@/components/Auth/ConfirmEmail/ConfirmEmail";
@@ -124,8 +124,7 @@ const AuthDialog = () => {
               }
               variant="secondary"
             >
-              {mode === "LOGIN" ? "Зарегистрироваться"
-                : "Войти в уже существующий аккаунт"}
+              {mode === "LOGIN" ? "Зарегистрироваться" : "Войти в уже существующий аккаунт"}
             </Button>
           </>
         )}

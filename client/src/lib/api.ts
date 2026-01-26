@@ -1,7 +1,10 @@
 import {store, useAppSelector, useAppStore} from "@/lib/store/store";
 import {authSlice} from "@/lib/store/auth/auth.slice";
 import {toast} from "sonner";
-import {Code} from "@/lib/errorHandler/errorHandler";
+import {Code} from "@/lib/error-handler/errorHandler";
+
+export const API_UPLOADS_URL = process.env.NEXT_PUBLIC_API_URL + "/uploads";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 type ApiErrorPayload = {
   message?: string | string[];
@@ -90,7 +93,7 @@ export async function apiGuardFetch<T>(
   const state = store.getState();
   const token = authSlice.selectors.getAccessToken(state);
 
-  const res = await fetch(`${baseUrl}${path}`, {
+  const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -183,7 +186,6 @@ export async function apiFetch<T>(
   path: string,
   init?: RequestInit & { json?: unknown },
 ): Promise<T> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const headers = new Headers(init?.headers);
   // console.log('HEADERS:', headers);
@@ -205,7 +207,7 @@ export async function apiFetch<T>(
     // console.log('Это json', init?.json)
   }
 
-  const res = await fetch(`${baseUrl}${path}`, {
+  const res = await fetch(`${API_URL}${path}`, {
     headers: headers ? headers : {},
     body: init?.body ? init.body : JSON.stringify(init?.json),
     credentials: "include",

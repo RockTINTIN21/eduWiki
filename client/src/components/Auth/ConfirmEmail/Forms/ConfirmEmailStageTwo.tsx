@@ -10,7 +10,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import * as React from "react";
-import {errorHandler} from "@/lib/errorHandler/errorHandler";
+import {errorHandler} from "@/lib/error-handler/errorHandler";
 import ResendOtpCode from "@/components/Auth/ConfirmEmail/ResendOTPCode";
 import {AutoDialogModeType, ConfirmStep} from "@/components/Auth/AuthDialog";
 

@@ -14,7 +14,8 @@ import {PencilEdit02Icon} from "@hugeicons/core-free-icons";
 import {useEffect, useMemo, useState} from "react";
 import {useDebounce} from "use-debounce";
 import {toast} from "sonner";
-import RegisterPassword from "@/components/Auth/RegisterPassword";
+import RegisterPassword from "@/components/Auth/Forms/RegisterPassword";
+import {AUTH_ENDPOINTS} from "@/lib/api-endpoints/auth";
 
 const RegisterFormStageOne = ({
   email,
@@ -59,7 +60,7 @@ const RegisterFormStageOne = ({
     formData.append("username", data.username)
 
     await apiFetch(
-      "/auth/register",
+      AUTH_ENDPOINTS.register,
       {
         method: "POST",
         body: formData,

@@ -5,7 +5,7 @@ import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { z } from "zod";
-import {errorHandler} from "@/lib/errorHandler/errorHandler";
+import {errorHandler} from "@/lib/error-handler/errorHandler";
 import {AutoDialogModeType, ConfirmStep} from "@/components/Auth/AuthDialog";
 
 interface ConfirmEmailStageOneProps {
