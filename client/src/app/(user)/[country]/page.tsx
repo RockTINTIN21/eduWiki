@@ -8,9 +8,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
-import Button from "@/components/Button/Button";
-import GalleryCarousel from "@/components/GalleryCarousel/GalleryCarousel";
-import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
+import Button from "@/components/button";
+import GalleryCarousel from "@/components/gallery-carousel/GalleryCarousel";
+import SidebarNavigation from "@/components/sidebar-navigation";
 
 const navigationList = [
 	{ title: "О стране", id: 0 },

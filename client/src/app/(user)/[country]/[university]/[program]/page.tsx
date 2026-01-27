@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
-import SidebarNavigation from "@/components/SidebarNavigation/SidebarNavigation";
-import Tabs from "@/components/Tabs/Tabs";
+import SidebarNavigation from "@/components/sidebar-navigation";
+import Tabs from "@/components/tabs";
 
 const navigationList = [
 	{ title: "О программе", id: 0 },

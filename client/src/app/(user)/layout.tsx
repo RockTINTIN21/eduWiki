@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import StoreProvider from "@/app/providers/StoreProvider";
-import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
 import { Toaster } from "@/components/ui/sonner";
 import "../globals.css";
 

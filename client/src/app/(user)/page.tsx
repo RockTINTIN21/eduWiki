@@ -8,9 +8,9 @@ import { SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Card from "@/components/Card";
-import Anchor from "@/components/Anchor/Anchor";
-import Button from "@/components/Button/Button";
+import Card from "@/components/card";
+import Anchor from "@/components/ui/anchor";
+import Button from "@/components/button";
 
 export default function Home() {
 	const [countryData, setCountryData] = useState<any>();

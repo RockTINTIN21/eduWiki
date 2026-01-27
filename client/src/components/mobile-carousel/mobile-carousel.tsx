@@ -1,12 +1,11 @@
 "use client";
-import "./MobuleCarousel.css";
+import "./mobile-carousel.css";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import PromoCard, {
-	type PromoCardProps,
-} from "@/app/aboutUs/components/PromoCard";
+
 import "swiper/css";
 import "swiper/css/pagination";
+import PromoCard, { type PromoCardProps } from "@/components/promo-card";
 
 interface MobileCarouselProps {
 	data: PromoCardProps[];

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "@/components/Button/Button";
+import Button from "@/components/button";
 import "swiper/css";
 import "swiper/css/pagination";
 import { headers } from "next/headers";
@@ -7,15 +7,15 @@ import { headers } from "next/headers";
 import "swiper/css";
 import "swiper/css/pagination";
 import { HugeiconsIcon } from "@hugeicons/react";
-import MobileCarousel from "@/app/(user)/aboutUs/components/MobileCarousel/MobileCarousel";
-import PromoCard from "@/app/(user)/aboutUs/components/PromoCard";
+import MobileCarousel from "@/components/mobile-carousel/mobile-carousel";
+import PromoCard from "@/components/promo-card";
 import {
 	aboutUs,
 	ourAbilities,
 	shortCards,
 	statistics,
-} from "@/app/(user)/aboutUs/components/promoData";
-import Anchor from "@/components/Anchor/Anchor";
+} from "@/app/(user)/aboutUs/promoData";
+import Anchor from "@/components/ui/anchor";
 
 export default async function Home() {
 	const headersList = await headers();

@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode, useState } from "react";
-import Button from "@/components/Button/Button";
+import Button from "@/components/button";
 
 interface TabsProps {
 	items: {
