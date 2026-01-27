@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/pagination";
-import PromoCard, { type PromoCardProps } from "@/components/promo-card";
+import PromoCard, { type PromoCardProps } from "@/components/ui/promo-card";
 
 interface MobileCarouselProps {
 	data: PromoCardProps[];

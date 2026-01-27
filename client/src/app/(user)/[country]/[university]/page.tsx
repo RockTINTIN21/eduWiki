@@ -3,12 +3,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Accordion from "@/components/accordion";
+import Accordion from "@/components/ui/accordion";
 import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import Button from "@/components/button";
-import GalleryCarousel from "@/components/gallery-carousel/GalleryCarousel";
-import SidebarNavigation from "@/components/sidebar-navigation";
-import Tabs from "@/components/tabs";
+import GalleryCarousel from "@/components/ui/gallery-carousel/GalleryCarousel";
+import SidebarNavigation from "@/components/ui/sidebar-navigation";
+import Tabs from "@/components/ui/tabs";
 
 const navigationList = [
 	{ title: "О университете", id: 0 },

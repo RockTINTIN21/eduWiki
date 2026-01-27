@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
 
-import { TextField } from "@/components/text-field";
+import { TextField } from "@/components/ui/text-field";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

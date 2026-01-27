@@ -11,7 +11,7 @@ import {
 	type UseFormClearErrors,
 	type UseFormSetError,
 } from "react-hook-form";
-import { PasswordField } from "@/components/password-field";
+import { PasswordField } from "@/components/ui/password-field";
 
 interface PasswordFormValues {
 	password: string;

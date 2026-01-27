@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { PasswordField } from "@/components/password-field";
-import { TextField } from "@/components/text-field";
+import { PasswordField } from "@/components/ui/password-field";
+import { TextField } from "@/components/ui/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchLogin } from "@/features/auth/api/auth.requests";

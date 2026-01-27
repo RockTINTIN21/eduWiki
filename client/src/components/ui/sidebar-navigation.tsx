@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Button from "@/components/button";
+import {Button} from "@/components/ui/button";
+
 
 interface SidebarNavigation {
 	navigationList: {
@@ -96,7 +97,7 @@ const SidebarNavigation = ({ navigationList }: SidebarNavigation) => {
 						)}
 
 						<Button
-							variant={currentId === item.id ? "primary" : "secondary"}
+							variant={currentId === item.id ? "default" : "outline"}
 							onClick={() => goToBlockHandler(item.id)}
 							className="md:w-full min-w-[120px] px-7"
 							size="sm"

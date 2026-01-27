@@ -7,10 +7,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
-import Button from "@/components/button";
-import GalleryCarousel from "@/components/gallery-carousel/GalleryCarousel";
-import SidebarNavigation from "@/components/sidebar-navigation";
+
+import GalleryCarousel from "@/components/ui/gallery-carousel/GalleryCarousel";
+import SidebarNavigation from "@/components/ui/sidebar-navigation";
+import {Button} from "@/components/ui/button";
 
 const navigationList = [
 	{ title: "О стране", id: 0 },
@@ -126,7 +126,7 @@ const Page = async ({ params }: PageProps) => {
 
 	return (
 		<div className="mx-4 md:w-[960px] md:mx-auto py-14 mt-4">
-			<Breadcrumbs />
+			{/*<Breadcrumbs />*/}
 			<div className="flex gap-3 flex-col md:flex-row relative">
 				<SidebarNavigation navigationList={navigationList} />
 

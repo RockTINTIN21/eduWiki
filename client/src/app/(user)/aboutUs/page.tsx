@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "@/components/button";
+
 import "swiper/css";
 import "swiper/css/pagination";
 import { headers } from "next/headers";
@@ -7,8 +7,6 @@ import { headers } from "next/headers";
 import "swiper/css";
 import "swiper/css/pagination";
 import { HugeiconsIcon } from "@hugeicons/react";
-import MobileCarousel from "@/components/mobile-carousel/mobile-carousel";
-import PromoCard from "@/components/promo-card";
 import {
 	aboutUs,
 	ourAbilities,
@@ -16,6 +14,9 @@ import {
 	statistics,
 } from "@/app/(user)/aboutUs/promoData";
 import Anchor from "@/components/ui/anchor";
+import { Button } from "@/components/ui/button";
+import MobileCarousel from "@/components/ui/mobile-carousel/mobile-carousel";
+import PromoCard from "@/components/ui/promo-card";
 
 export default async function Home() {
 	const headersList = await headers();
@@ -61,7 +62,7 @@ export default async function Home() {
 								height={10}
 							/>
 						</Button>
-						<Button className="w-full md:w-max md:px-12" variant="border">
+						<Button className="w-full md:w-max md:px-12" variant="outline">
 							Начать поиск
 						</Button>
 					</div>

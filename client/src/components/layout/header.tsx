@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
 "use client";
 
 import { Cancel01Icon, Menu01Icon } from "@hugeicons/core-free-icons";
@@ -66,7 +65,7 @@ const Header = () => {
 				}`}
 			>
 				<Link
-					href="/public"
+					href="/"
 					className={`flex items-center gap-3 ${isLanding ? "text-white" : "text-accent"}`}
 				>
 					<h3 className="font-medium text-2xl !mb-1">EduWiki</h3>
@@ -116,7 +115,7 @@ const Header = () => {
 					>
 						<div className="md:hidden flex justify-between">
 							<Link
-								href={"/public"}
+								href={"/"}
 								className={`flex justify-center gap-3  ${isLanding ? "text-white" : "text-accent"} `}
 							>
 								<h3 className="font-medium text-2xl">EduWiki</h3>
