@@ -6,20 +6,19 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import AuthDialog from "@/components/Auth/AuthDialog";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { slice } from "@/features/auth/model/slice";
+import AuthDialog from "@/features/auth/ui/AuthDialog";
 import { API_UPLOADS_URL } from "@/lib/api";
-import { authSlice } from "@/lib/store/auth/auth.slice";
 import { useAppSelector } from "@/lib/store/store";
 
 const Header = () => {
 	const [showMenu, setShowMenu] = useState(false);
 	const pathname = usePathname();
 
-	const user = useAppSelector((state) => state[authSlice.name].user);
-	const accessToken = useAppSelector(
-		(state) => state[authSlice.name].accessToken,
-	);
+	const user = useAppSelector((state) => state[slice.name].user);
+	const accessToken = useAppSelector((state) => state[slice.name].accessToken);
 
 	const isAuth = Boolean(accessToken) && Boolean(user); // или user?.id
 
@@ -67,7 +66,7 @@ const Header = () => {
 				}`}
 			>
 				<Link
-					href="/"
+					href="/public"
 					className={`flex items-center gap-3 ${isLanding ? "text-white" : "text-accent"}`}
 				>
 					<h3 className="font-medium text-2xl !mb-1">EduWiki</h3>
@@ -117,7 +116,7 @@ const Header = () => {
 					>
 						<div className="md:hidden flex justify-between">
 							<Link
-								href={"/"}
+								href={"/public"}
 								className={`flex justify-center gap-3  ${isLanding ? "text-white" : "text-accent"} `}
 							>
 								<h3 className="font-medium text-2xl">EduWiki</h3>

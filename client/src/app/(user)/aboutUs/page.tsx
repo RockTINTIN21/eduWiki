@@ -3,17 +3,18 @@ import Button from "@/components/Button/Button";
 import "swiper/css";
 import "swiper/css/pagination";
 import { headers } from "next/headers";
-import PromoCard from "@/app/aboutUs/components/PromoCard";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import { HugeiconsIcon } from "@hugeicons/react";
+import MobileCarousel from "@/app/(user)/aboutUs/components/MobileCarousel/MobileCarousel";
+import PromoCard from "@/app/(user)/aboutUs/components/PromoCard";
 import {
 	aboutUs,
 	ourAbilities,
 	shortCards,
 	statistics,
-} from "@/app/aboutUs/components/promoData";
-import "swiper/css";
-import "swiper/css/pagination";
-import { HugeiconsIcon } from "@hugeicons/react";
-import MobileCarousel from "@/app/aboutUs/components/MobileCarousel/MobileCarousel";
+} from "@/app/(user)/aboutUs/components/promoData";
 import Anchor from "@/components/Anchor/Anchor";
 
 export default async function Home() {
@@ -123,7 +124,7 @@ export default async function Home() {
 										</div>
 										<Image
 											className="hidden md:block min-h-[150px]"
-											src={"/images/promo/" + card.icon}
+											src={`/images/promo/${card.icon}`}
 											width={150}
 											height={150}
 											alt={card.title}

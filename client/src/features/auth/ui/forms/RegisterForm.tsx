@@ -8,16 +8,17 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
-import RegisterPassword from "@/components/Auth/Forms/RegisterPassword";
+
 import { TextField } from "@/components/text-field";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
+import RegisterPassword from "@/features/auth/ui/forms/RegisterPassword";
 import { apiFetch } from "@/lib/api";
-import { AUTH_ENDPOINTS } from "@/lib/api-endpoints/auth";
 
-const RegisterFormStageOne = ({
+const RegisterForm = ({
 	email,
 	onClose,
 }: {
@@ -219,4 +220,4 @@ const RegisterFormStageOne = ({
 	);
 };
 
-export default RegisterFormStageOne;
+export default RegisterForm;

@@ -1,26 +1,26 @@
+import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
+import { slice, type User } from "@/features/auth/model/slice";
+import type { AuthRefreshResponse } from "@/features/auth/model/types";
 import { apiFetch, apiGuardFetch } from "@/lib/api";
-import { AUTH_ENDPOINTS } from "@/lib/api-endpoints/auth";
-import { authSlice, type User } from "@/lib/store/auth/auth.slice";
-import type { AuthRefreshResponse } from "@/lib/store/auth/auth.type";
 import type { AppThunk } from "@/lib/store/store";
 
 export const fetchRefresh =
 	(): AppThunk =>
 	(dispatch, getState, {}) => {
-		dispatch(authSlice.actions.fetchAuthPending());
+		dispatch(slice.actions.fetchAuthPending());
 		apiGuardFetch<AuthRefreshResponse>(AUTH_ENDPOINTS.refresh, {
 			method: "GET",
 		})
 			.then((res) => {
 				dispatch(
-					authSlice.actions.fetchAuthSuccess({
+					slice.actions.fetchAuthSuccess({
 						accessToken: res.accessToken,
 						user: res.user,
 					}),
 				);
 			})
 			.catch(() => {
-				dispatch(authSlice.actions.fetchAuthFailed());
+				dispatch(slice.actions.fetchAuthFailed());
 
 				// throw new Error("Cannot find refresh token", error)
 			});
@@ -29,7 +29,7 @@ export const fetchRefresh =
 export const fetchLogin =
 	(data: any): AppThunk<Promise<void>> =>
 	async (dispatch) => {
-		dispatch(authSlice.actions.fetchAuthPending());
+		dispatch(slice.actions.fetchAuthPending());
 
 		try {
 			const res = await apiFetch<{ accessToken: string; user: User }>(
@@ -41,13 +41,13 @@ export const fetchLogin =
 			);
 
 			dispatch(
-				authSlice.actions.fetchAuthSuccess({
+				slice.actions.fetchAuthSuccess({
 					accessToken: res.accessToken,
 					user: res.user,
 				}),
 			);
 		} catch (e) {
-			dispatch(authSlice.actions.fetchAuthFailed());
+			dispatch(slice.actions.fetchAuthFailed());
 			throw e;
 		}
 	};

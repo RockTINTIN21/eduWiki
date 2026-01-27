@@ -1,12 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import type {
-	AutoDialogModeType,
-	ConfirmStep,
-} from "@/components/Auth/AuthDialog";
-import ResendOtpCode from "@/components/Auth/ConfirmEmail/ResendOTPCode";
+
 import { Button } from "@/components/ui/button";
 import {
 	InputOTP,
@@ -14,8 +9,13 @@ import {
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Spinner } from "@/components/ui/spinner";
+import { errorMessages } from "@/features/auth/lib/error-messages";
+import type {
+	AutoDialogModeType,
+	ConfirmStep,
+} from "@/features/auth/ui/AuthDialog";
+import ResendOtpCode from "@/features/auth/ui/confirm-email/ResendOTPCode";
 import { ApiError, apiFetch } from "@/lib/api";
-import { errorHandler } from "@/lib/error-handler/errorHandler";
 
 interface RegisterFormStageTwoProps {
 	onChangeConfirmStep: (step: ConfirmStep) => void;
@@ -55,7 +55,7 @@ const RegisterFormStageTwo = ({
 			onChangeConfirmStep("AFTER_CONFIRM_FORM");
 		} catch (e) {
 			if (e instanceof ApiError)
-				form.setError(e.field, { message: errorHandler[e.code] });
+				form.setError(e.field, { message: errorMessages[e.code] });
 		}
 	}
 

@@ -2,9 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import React, { useState } from "react";
-import ConfirmEmail from "@/components/Auth/ConfirmEmail/ConfirmEmail";
-import LoginForm from "@/components/Auth/Forms/LoginForm";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -14,6 +12,9 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import ConfirmEmail from "@/features/auth/ui/confirm-email/ConfirmEmail";
+import LoginForm from "@/features/auth/ui/forms/LoginForm";
+
 
 export type AutoDialogModeType = "REGISTRATION" | "PASSWORD_RESET" | "LOGIN";
 export type ConfirmStep = "ENTER_EMAIL" | "ENTER_OTP" | "AFTER_CONFIRM_FORM";
@@ -64,11 +65,11 @@ const AuthDialog = () => {
 							(mode === "REGISTRATION" && confirmStep === "ENTER_EMAIL")) && (
 							<>
 								Продолжая, вы соглашаетесь с{" "}
-								<Link className="text-link hover:underline" href="/">
+								<Link className="text-link hover:underline" href="/public">
 									Политикой конфиденциальности
 								</Link>{" "}
 								и{" "}
-								<Link className="text-link hover:underline" href="/">
+								<Link className="text-link hover:underline" href="/public">
 									Пользовательским соглашением
 								</Link>
 								.

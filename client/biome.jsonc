@@ -22,7 +22,8 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noSuspiciousSemicolonInJsx": "error"
+				"noSuspiciousSemicolonInJsx": "error",
+                "noArrayIndexKey": "off"
 			}
 		}
 	},

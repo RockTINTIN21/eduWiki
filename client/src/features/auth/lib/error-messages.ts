@@ -5,7 +5,7 @@ export enum Code {
 	EMAIL_NOT_EXISTS = "EMAIL_NOT_EXISTS",
 }
 
-export const errorHandler = {
+export const errorMessages = {
 	[Code.EMAIL_ALREADY_EXISTS]: "Почта уже используется",
 	[Code.INVALID_PASSWORD]: "Неправильный логин или пароль",
 	[Code.INVALID_CODE]: "Неправильный код",

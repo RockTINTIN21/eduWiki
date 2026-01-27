@@ -3,14 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import type { AutoDialogModeType } from "@/components/Auth/AuthDialog";
-import { fetchLogin } from "@/components/Auth/fetch-auth";
 import { PasswordField } from "@/components/password-field";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { fetchLogin } from "@/features/auth/api/auth.requests";
+import { errorMessages } from "@/features/auth/lib/error-messages";
+import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
 import { ApiError } from "@/lib/api";
-import { errorHandler } from "@/lib/error-handler/errorHandler";
 import { useAppDispatch } from "@/lib/store/store";
 
 const LoginForm = ({
@@ -38,7 +38,7 @@ const LoginForm = ({
 			await dispatch(fetchLogin(data));
 		} catch (e) {
 			if (e instanceof ApiError) {
-				form.setError(e.field, { message: errorHandler[e.code] });
+				form.setError(e.field, { message: errorMessages[e.code] });
 			}
 		}
 	}

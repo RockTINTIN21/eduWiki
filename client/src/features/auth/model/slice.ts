@@ -25,7 +25,7 @@ const initialAuthState: AuthState = {
 	fetchAuthStatus: "idle",
 };
 
-export const authSlice = createSlice({
+export const slice = createSlice({
 	name: "auth",
 	initialState: initialAuthState,
 	selectors: {

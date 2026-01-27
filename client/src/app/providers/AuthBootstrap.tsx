@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { fetchRefresh } from "@/components/Auth/fetch-auth";
+import { fetchRefresh } from "@/features/auth/api/auth.requests";
 import { useAppDispatch } from "@/lib/store/store";
 
 export default function AuthBootstrap() {

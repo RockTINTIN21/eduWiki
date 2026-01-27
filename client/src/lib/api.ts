@@ -1,6 +1,6 @@
 import { toast } from "sonner";
-import type { Code } from "@/lib/error-handler/errorHandler";
-import { authSlice } from "@/lib/store/auth/auth.slice";
+import type { Code } from "@/features/auth/lib/error-messages";
+import { slice } from "@/features/auth/model/slice";
 import { store, useAppSelector, useAppStore } from "@/lib/store/store";
 
 export const API_UPLOADS_URL = process.env.NEXT_PUBLIC_API_URL + "/uploads";
@@ -90,7 +90,7 @@ export async function apiGuardFetch<T>(
 	}
 
 	const state = store.getState();
-	const token = authSlice.selectors.getAccessToken(state);
+	const token = slice.selectors.getAccessToken(state);
 
 	const res = await fetch(`${API_URL}${path}`, {
 		...init,

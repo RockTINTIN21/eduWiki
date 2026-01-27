@@ -1,15 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-	type AutoDialogModeType,
-	ConfirmStep,
-} from "@/components/Auth/AuthDialog";
+
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { errorMessages } from "@/features/auth/lib/error-messages";
+import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
 import { ApiError, apiFetch } from "@/lib/api";
-import { errorHandler } from "@/lib/error-handler/errorHandler";
 
 interface ConfirmEmailStageOneProps {
 	onChangeEmail: (email: string) => void;
@@ -43,7 +41,7 @@ const ConfirmEmailStageOne = ({
 			onChangeEmail(data.email);
 		} catch (e) {
 			if (e instanceof ApiError) {
-				form.setError(e.field, { message: errorHandler[e.code] });
+				form.setError(e.field, { message: errorMessages[e.code] });
 			}
 		}
 	}

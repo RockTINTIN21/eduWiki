@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { API_UPLOADS_URL } from "@/lib/api";
-import { authSlice } from "@/lib/store/auth/auth.slice";
+import { slice } from "@/features/auth/model/slice";
 import { useAppSelector } from "@/lib/store/store";
 
 const items = [
@@ -77,7 +77,7 @@ const statisticsItems = [
 ];
 
 export function AppSidebar() {
-	const user = useAppSelector((state) => state[authSlice.name].user);
+	const user = useAppSelector((state) => state[slice.name].user);
 
 	return (
 		<Sidebar>

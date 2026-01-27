@@ -1,16 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import RegisterPassword from "@/components/Auth/Forms/RegisterPassword";
-import { PasswordField } from "@/components/password-field";
-import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { ApiErrorOld, apiFetch } from "@/lib/api";
-import { AUTH_ENDPOINTS } from "@/lib/api-endpoints/auth";
+import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
+import RegisterPassword from "@/features/auth/ui/forms/RegisterPassword";
+import { apiFetch } from "@/lib/api";
 
-const ResetPasswordStageTwo = ({
+const ResetPasswordForm = ({
 	email,
 	onClose,
 }: {
@@ -75,4 +73,4 @@ const ResetPasswordStageTwo = ({
 	);
 };
 
-export default ResetPasswordStageTwo;
+export default ResetPasswordForm;

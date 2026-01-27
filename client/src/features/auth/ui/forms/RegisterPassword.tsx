@@ -29,7 +29,7 @@ interface ValidationCustomFormProps {
 	disabled?: boolean;
 }
 
-const CustomPasswordInput = ({
+const RegisterPassword = ({
 	watch,
 	control,
 	setError,
@@ -193,4 +193,4 @@ const CustomPasswordInput = ({
 	);
 };
 
-export default CustomPasswordInput;
+export default RegisterPassword;

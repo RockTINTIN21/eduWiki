@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
-import { AppSidebar } from "@/app/(admin)/components/app-sidebar";
-import StoreProvider from "@/app/StoreProvider";
+import { AppSidebar } from "@/components/app-sidebar";
+import StoreProvider from "@/app/providers/StoreProvider";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import "../globals.css";
 

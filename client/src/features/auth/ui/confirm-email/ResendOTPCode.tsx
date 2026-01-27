@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { AutoDialogModeType } from "@/components/Auth/AuthDialog";
 import { Button } from "@/components/ui/button";
+import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
 import { apiFetch } from "@/lib/api";
 
 const ResendOtpCode = ({

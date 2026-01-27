@@ -4,7 +4,7 @@ import {
 	type UnknownAction,
 } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { authSlice } from "@/lib/store/auth/auth.slice";
+import { slice } from "@/features/auth/model/slice";
 
 const extraArgument = {
 	// api,
@@ -12,7 +12,7 @@ const extraArgument = {
 
 export const store = configureStore({
 	reducer: {
-		[authSlice.name]: authSlice.reducer,
+		[slice.name]: slice.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({ thunk: { extraArgument } }),
