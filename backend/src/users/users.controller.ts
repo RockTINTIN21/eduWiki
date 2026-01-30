@@ -10,12 +10,15 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDTO } from './DTO/users.dto';
 import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
+import { Roles } from '../auth/roles/roles.decorator';
+import { RoleGuard } from '../auth/guard/role.guard';
 
 @Controller('users')
-@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard, RoleGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles('ADMIN')
   @Get('')
   findAll() {
     return this.usersService.findAll();

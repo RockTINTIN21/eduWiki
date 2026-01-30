@@ -68,7 +68,9 @@ export class AuthRepo {
         username: true,
         email: true,
         avatarUrl: true,
-        role: true,
+        role: {
+          select: { name: true },
+        },
       },
     });
   }

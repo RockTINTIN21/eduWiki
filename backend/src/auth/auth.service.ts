@@ -29,7 +29,7 @@ export class AuthService {
       ? await this.repo.findByEmail(dto.login)
       : await this.repo.findByUsername(dto.login);
 
-    if (!user || !user.password || !user.id) {
+    if (!user || !user.password || !user.id || !user.role) {
       throw new BadRequestException({
         code: 'INVALID_PASSWORD',
         field: 'password',
@@ -44,7 +44,7 @@ export class AuthService {
       });
     }
 
-    const tokens = await this.getTokens(user.id);
+    const tokens = await this.getTokens(user.id, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return { tokens, user };
   }
@@ -67,7 +67,7 @@ export class AuthService {
       avatar: avatar,
     });
 
-    const tokens = await this.getTokens(user.id);
+    const tokens = await this.getTokens(user.id, 'USER');
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     await this.otpService.deleteVerificationOTPById({ id: otp.id });
     return tokens;
@@ -111,7 +111,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const tokens = await this.getTokens(userId);
+    const tokens = await this.getTokens(userId, user.role.name);
 
     await this.updateRefreshToken(userId, tokens.refreshToken);
     return {
@@ -144,7 +144,7 @@ export class AuthService {
     await this.repo.updateRefreshToken(userId, hashedRefreshToken);
   }
 
-  async getTokens(userId: string) {
+  async getTokens(userId: string, role: string) {
     const accessSecret =
       this.configService.getOrThrow<string>('JWT_ACCESS_SECRET');
     const refreshSecret =
@@ -157,7 +157,9 @@ export class AuthService {
       'JWT_REFRESH_EXPIRATION',
     );
 
-    const payload = { id: userId };
+    console.log('ROLE:', role)
+
+    const payload = { id: userId, role: role };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
