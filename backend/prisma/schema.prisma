@@ -56,19 +56,20 @@ model CountryRequirements {
 }
 
 model User {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String       @unique @db.VarChar(50)
-  email        String       @unique @db.VarChar(255)
-  password     String       @db.VarChar(255)
-  avatarUrl    String?      @map("avatar_url") @db.VarChar(255)
-  isActivated  Boolean      @default(false) @map("is_activated")
-  createdAt    DateTime?    @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime?    @default(now()) @map("updated_at") @db.Timestamp(6)
-  refreshToken String?      @map("refresh_token")
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username     String         @unique @db.VarChar(50)
+  email        String         @unique @db.VarChar(255)
+  password     String         @db.VarChar(255)
+  avatarUrl    String?        @map("avatar_url") @db.VarChar(255)
+  isActivated  Boolean        @default(false) @map("is_activated")
+  createdAt    DateTime?      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime?      @default(now()) @map("updated_at") @db.Timestamp(6)
+  refreshToken String?        @map("refresh_token")
+  status       UserStatusEnum @default(ACTIVE)
   reviews      Review[]
   tickets      Ticket[]
   universities University[]
-  roleId       Int          @map("role_id")
+  roleId       Int            @map("role_id")
 
   role Role @relation(fields: [roleId], references: [id])
 
@@ -234,6 +235,12 @@ model VerificationCode {
   type           Type
 
   @@map("verification_codes")
+}
+
+enum UserStatusEnum {
+  ACTIVE
+  BLOCK
+  DELETE
 }
 
 enum EntityTypeEnum {

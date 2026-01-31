@@ -7,8 +7,24 @@ import { CreateUserRepoInput } from './users.repo.types';
 export class UsersRepo {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.user.findMany();
+  async findAll() {
+    const users = await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        status: true,
+        role: {
+          select: { name: true },
+        },
+        createdAt: true,
+      },
+    });
+
+    return users.map((user) => ({
+      ...user,
+      role: user.role.name,
+    }));
   }
 
   async findById(id: string) {

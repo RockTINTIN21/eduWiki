@@ -18,7 +18,7 @@ import { RoleGuard } from '../auth/guard/role.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'OWNER')
   @Get('')
   findAll() {
     return this.usersService.findAll();
