@@ -31,14 +31,18 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const data = await this.authService.login(dto);
-    console.log('DATA:', data);
+
     res.cookie('refresh_token', data.tokens.refreshToken, {
       httpOnly: true,
       secure: false,
     });
 
+    res.cookie('access_token', data.tokens.accessToken, {
+      httpOnly: true,
+      secure: false,
+    });
+
     return {
-      accessToken: data.tokens.accessToken,
       user: data.user,
     };
   }
@@ -67,6 +71,12 @@ export class AuthController {
       httpOnly: true,
       secure: false,
     });
+
+    res.cookie('access_token', tokens.accessToken, {
+      httpOnly: true,
+      secure: false,
+    });
+
     return tokens.accessToken;
   }
 
@@ -75,6 +85,10 @@ export class AuthController {
   async logout(@GetUser('id') userId: string, @Res() res: Response) {
     await this.authService.logout(userId);
     res.cookie('refresh_token', '', {
+      httpOnly: true,
+      secure: false,
+    });
+    res.cookie('access_token', '', {
       httpOnly: true,
       secure: false,
     });
@@ -101,8 +115,11 @@ export class AuthController {
       httpOnly: true,
       secure: false,
     });
+    res.cookie('access_token', data.tokens.accessToken, {
+      httpOnly: true,
+      secure: false,
+    });
     return {
-      accessToken: data.tokens.accessToken,
       user: data.user,
     };
   }
