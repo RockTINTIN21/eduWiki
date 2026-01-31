@@ -1,7 +1,8 @@
 "use client";
 
 import { type ReactNode, useState } from "react";
-import Button from "@/components/button";
+import {Button} from "@/components/ui/button";
+
 
 interface TabsProps {
 	items: {
@@ -21,7 +22,7 @@ const Tabs = ({ items }: TabsProps) => {
 					<Button
 						className="px-4 w-full"
 						key={tab.key}
-						variant={activeTab === tab.key ? "primary" : "secondary"}
+						variant={activeTab === tab.key ? "default" : "secondary"}
 						onClick={() => setActiveTab(tab.key)}
 					>
 						{tab.label}

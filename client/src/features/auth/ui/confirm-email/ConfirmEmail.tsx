@@ -34,7 +34,7 @@ const ConfirmEmail = ({
 		if (email) {
 			onChangeConfirmStep("ENTER_OTP");
 		}
-	}, [email, onChangeConfirmStep]);
+	}, [email]);
 
 	const form =
 		formAfterConfirm === "REGISTRATION" ? (
@@ -74,7 +74,7 @@ const ConfirmEmail = ({
 				)
 			) : (
 				<motion.div
-					key="enterEmail"
+					key="form"
 					initial={{ opacity: 0, x: -20 }}
 					animate={{ x: 0, opacity: 1 }}
 					exit={{ x: 20, opacity: 0 }}

@@ -93,7 +93,7 @@ export default async function Home() {
 						<p className="text-lg pt-2">Узнайте больше о проекте</p>
 
 						<div className="flex flex-col gap-4 md:flex-row pt-6">
-							<div className="bg-accent rounded-4xl p-8 md:w-1/2 relative">
+							<div className="bg-primary rounded-4xl p-8 md:w-1/2 relative">
 								<h3 className="font-medium text-2xl pb-2">О проекте</h3>
 								<p className="leading-6 text-lg md:w-8/12">
 									Сервис помогает гражданам РФ планировать путь для переезда
@@ -162,8 +162,8 @@ export default async function Home() {
 			<div className="flex flex-col gap-12 pb-12 bg-black mx-4 md:w-[1260px] md:mx-auto pt-6">
 				<div className="bg-[#0A0A0A] rounded-2xl p-8 flex gap-8 flex-col justify-center items-center">
 					<h1 className="text-4xl font-medium md:w-4/12 text-center">
-						Вступайте в <b className="text-accent">ряды </b>
-						нашего <b className="text-accent">сообщества</b>
+						Вступайте в <b className="text-primary">ряды </b>
+						нашего <b className="text-primary">сообщества</b>
 					</h1>
 					<Button className="w-full md:w-max md:px-12 flex gap-2 items-center justify-center">
 						Зарегистрироваться

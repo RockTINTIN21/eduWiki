@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import type { Code } from "@/features/auth/lib/error-messages";
 import { slice } from "@/features/auth/model/slice";
-import { store, useAppSelector, useAppStore } from "@/lib/store/store";
+import { store } from "@/lib/store/store";
 
 export const API_UPLOADS_URL = process.env.NEXT_PUBLIC_API_URL + "/uploads";
 export const API_URL = process.env.NEXT_PUBLIC_API_URL + "/api";
@@ -90,13 +90,9 @@ export async function apiGuardFetch<T>(
 	}
 
 	const state = store.getState();
-	const token = slice.selectors.getAccessToken(state);
-
+  console.log('state:', state)
 	const res = await fetch(`${API_URL}${path}`, {
 		...init,
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
 		body,
 		credentials: "include",
 	});
@@ -142,23 +138,9 @@ export async function apiFetch<T>(
 	init?: RequestInit & { json?: unknown },
 ): Promise<T> {
 	const headers = new Headers(init?.headers);
-	// console.log('HEADERS:', headers);
-	// console.log('body:', init?.body)
-	// console.log('json:', init?.json)
-	// if (!init?.headers) {
-	//   console.log('В хедерс ниче нет')
-	//   headers.set("content-type", "application/json");
-	// }else{
-	//   console.log('headers:', init?.headers);
-	// }
-	//
-	// if(init?.body){
-	//   console.log('Это бади', init?.body);
-	// }
 
 	if (init?.json) {
 		headers.set("content-type", "application/json");
-		// console.log('Это json', init?.json)
 	}
 
 	const res = await fetch(`${API_URL}${path}`, {

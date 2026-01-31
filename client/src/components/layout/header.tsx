@@ -17,9 +17,8 @@ const Header = () => {
 	const pathname = usePathname();
 
 	const user = useAppSelector((state) => state[slice.name].user);
-	const accessToken = useAppSelector((state) => state[slice.name].accessToken);
 
-	const isAuth = Boolean(accessToken) && Boolean(user); // или user?.id
+	const isAuth = Boolean(user); // или user?.id
 
 	useEffect(() => {
 		document.body.style.overflow = showMenu ? "hidden" : "";
@@ -66,11 +65,11 @@ const Header = () => {
 			>
 				<Link
 					href="/"
-					className={`flex items-center gap-3 ${isLanding ? "text-white" : "text-accent"}`}
+					className={`flex items-center gap-3 ${isLanding ? "text-white" : "text-primary"}`}
 				>
 					<h3 className="font-medium text-2xl !mb-1">EduWiki</h3>
 					<span
-						className={`border-s ps-2 text-sm leading-4 ${isLanding ? "border-l-white" : "border-l-accent"}`}
+						className={`border-s ps-2 text-sm leading-4 ${isLanding ? "border-l-white" : "border-l-primary"}`}
 					>
 						Учись
 						<br />
@@ -152,7 +151,7 @@ const Header = () => {
 										: `underline-offset-5 hover:underline ${
 												isLanding
 													? "text-gray-200 hover:text-white"
-													: "text-black hover:text-accent"
+													: "text-black hover:text-primary"
 											}`
 								}`}
 								>

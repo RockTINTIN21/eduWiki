@@ -1,4 +1,7 @@
 const nextConfig = {
+  experimental: {
+    authInterrupts: true,
+  },
 	images: {
 		remotePatterns: [
 			{

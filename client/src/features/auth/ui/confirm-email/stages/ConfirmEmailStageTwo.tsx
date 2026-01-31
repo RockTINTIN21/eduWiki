@@ -52,6 +52,7 @@ const RegisterFormStageTwo = ({
 				method: "POST",
 				json: formattedData,
 			});
+      console.log('vizov')
 			onChangeConfirmStep("AFTER_CONFIRM_FORM");
 		} catch (e) {
 			if (e instanceof ApiError)

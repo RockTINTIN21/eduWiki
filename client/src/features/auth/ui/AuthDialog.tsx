@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -46,10 +46,14 @@ const AuthDialog = () => {
 		setConfirmStep(step);
 	};
 
+  useEffect(() => {
+    console.log('confirmStep', confirmStep);
+  }, [confirmStep])
+
 	return (
 		<Dialog onOpenChange={handleOpenChange} open={open}>
 			<DialogTrigger asChild>
-				<Button className="bg-accent px-8">Войти</Button>
+				<Button className="px-8">Войти</Button>
 			</DialogTrigger>
 			<DialogContent className="md:max-w-106.25 sm:w-full flex flex-col justify-start md:justify-center rounded-none max-w-full  px-8 h-full md:h-auto md:rounded-4xl">
 				<DialogHeader>

@@ -14,7 +14,6 @@ export const fetchRefresh =
 			.then((res) => {
 				dispatch(
 					slice.actions.fetchAuthSuccess({
-						accessToken: res.accessToken,
 						user: res.user,
 					}),
 				);
@@ -22,7 +21,6 @@ export const fetchRefresh =
 			.catch(() => {
 				dispatch(slice.actions.fetchAuthFailed());
 
-				// throw new Error("Cannot find refresh token", error)
 			});
 	};
 
@@ -32,7 +30,7 @@ export const fetchLogin =
 		dispatch(slice.actions.fetchAuthPending());
 
 		try {
-			const res = await apiFetch<{ accessToken: string; user: User }>(
+			const res = await apiFetch<{ user: User }>(
 				AUTH_ENDPOINTS.login,
 				{
 					method: "POST",
@@ -42,7 +40,6 @@ export const fetchLogin =
 
 			dispatch(
 				slice.actions.fetchAuthSuccess({
-					accessToken: res.accessToken,
 					user: res.user,
 				}),
 			);

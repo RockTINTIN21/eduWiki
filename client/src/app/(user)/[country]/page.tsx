@@ -7,10 +7,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
+import { Button } from "@/components/ui/button";
 import GalleryCarousel from "@/components/ui/gallery-carousel/GalleryCarousel";
 import SidebarNavigation from "@/components/ui/sidebar-navigation";
-import {Button} from "@/components/ui/button";
 
 const navigationList = [
 	{ title: "О стране", id: 0 },
