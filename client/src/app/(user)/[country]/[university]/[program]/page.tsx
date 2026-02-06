@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 import SidebarNavigation from "@/components/ui/sidebar-navigation";
 import Tabs from "@/components/ui/tabs";
 
@@ -91,7 +90,6 @@ export const metadata: Metadata = {
 const Page = () => {
 	return (
 		<div className="mx-4 md:w-[960px] md:mx-auto py-14 mt-4">
-			<Breadcrumbs />
 			<div className="flex gap-3 flex-col md:flex-row relative">
 				<SidebarNavigation navigationList={navigationList} />
 

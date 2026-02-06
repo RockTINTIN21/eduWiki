@@ -13,28 +13,36 @@ export async function middleware(request: NextRequest) {
 }
 
 async function adminMiddleware(request: NextRequest) {
-	const JWT_ACCESS_SECRET = new TextEncoder().encode(
-		process.env.JWT_ACCESS_SECRET,
-	);
+  try{
+    const JWT_ACCESS_SECRET = new TextEncoder().encode(
+      process.env.JWT_ACCESS_SECRET,
+    );
 
-	if (!JWT_ACCESS_SECRET) {
-		throw new Error("JWT_ACCESS_SECRET DOES NOT EXISTS");
-	}
+    if (!JWT_ACCESS_SECRET) {
+      throw new Error("JWT_ACCESS_SECRET DOES NOT EXISTS");
+    }
 
-	const accessToken = request.cookies.get("access_token")?.value;
+    const accessToken = request.cookies.get("access_token")?.value;
 
-	if (!accessToken) {
-		throw new Error("ACCESS_TOKEN DOES NOT EXISTS");
-	}
+    if (!accessToken) {
+      throw new Error("ACCESS_TOKEN DOES NOT EXISTS");
+    }
 
-	const { payload } = await jwtVerify<Payload>(accessToken, JWT_ACCESS_SECRET);
+    const { payload } = await jwtVerify<Payload>(accessToken, JWT_ACCESS_SECRET);
 
-	if (payload.role === "USER") {
-		console.log("ERROR");
-		return NextResponse.redirect(new URL("/forbidden", request.url));
-	}
+    if (payload.role === "USER") {
+      return NextResponse.redirect(new URL("/forbidden", request.url));
+    }
+  }catch  {
+    return NextResponse.redirect(new URL("/forbidden", request.url));
+  }
 
-	console.log("payload:", payload);
+
+
+
+
+
+
 }
 
 export const config = {

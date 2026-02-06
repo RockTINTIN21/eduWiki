@@ -15,7 +15,7 @@ import {
 const items = [
 	{
 		title: "Главная",
-		url: "dashboard",
+		url: "/admin",
 		icon: Home,
 	},
 ];
@@ -38,7 +38,7 @@ const administrationItems = [
 	},
 	{
 		title: "Пользователи",
-		url: "users",
+		url: "admin/users",
 		icon: Users,
 	},
 	{

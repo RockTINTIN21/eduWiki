@@ -1,30 +1,45 @@
 import { PrismaService } from '../../prisma.service';
 import { UpdateUserDTO } from '../DTO/users.dto';
 import { Injectable } from '@nestjs/common';
-import { CreateUserRepoInput } from './users.repo.types';
+import { CreateUserRepoInput, GetUsersRepoInput } from './users.repo.types';
 
 @Injectable()
 export class UsersRepo {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    const users = await this.prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        status: true,
-        role: {
-          select: { name: true },
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<[GetUsersRepoInput[], number]> {
+    console.log('PAGE:', page);
+    console.log('LIMIT:', limit);
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          status: true,
+          role: {
+            select: { name: true },
+          },
+          createdAt: true,
         },
-        createdAt: true,
-      },
-    });
+        orderBy: {
+          username: 'desc',
+        },
+      }),
+      this.prisma.user.count(),
+    ]);
 
-    return users.map((user) => ({
+    const users = data.map((user) => ({
       ...user,
       role: user.role.name,
     }));
+
+    return [users, total];
   }
 
   async findById(id: string) {

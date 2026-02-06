@@ -13,8 +13,18 @@ import { CreateUserInputService } from './users.types';
 export class UsersService {
   constructor(private readonly repo: UsersRepo) {}
 
-  findAll() {
-    return this.repo.findAll();
+  async findAll(page: number, limit: number) {
+    const [data, total] = await this.repo.findAll(page, limit);
+
+    return {
+      data: data,
+      meta: {
+        page: page,
+        limit: limit,
+        total: total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   // async getUserRoles(id: string) {
