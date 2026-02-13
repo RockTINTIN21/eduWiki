@@ -1,46 +1,65 @@
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import {
+	Roles,
+	Statuses,
+	type Users,
+} from "@/features/users-table/model/types";
 
+const statusesMapper = {
+	[Statuses.ACTIVE]: "Активна",
+	[Statuses.BLOCK]: "Заблокирована",
+};
 
-export type Users = {
-  index: number;
-  id: string;
-  username: string;
-  email: string;
-  role: "USER" | "MODERATOR" | "ADMIN" | "OWNER";
-  dateOfRegistration: number;
-  status: string;
-}
+const rolesMapper = {
+	[Roles.OWNER]: "Владелец",
+	[Roles.ADMIN]: "Администратор",
+	[Roles.MODERATOR]: "Модератор",
+	[Roles.USER]: "Пользователь",
+};
 
 export const columns: ColumnDef<Users>[] = [
-  {
-    header: '#',
-    cell: ({ row, table }) => {
-      const { pageIndex, pageSize } = table.getState().pagination;
-      return pageIndex * pageSize + row.index + 1;
-    },
-  },
-  {
-    accessorKey: "username",
-    header: "Имя пользователя",
-  },
-  {
-    accessorKey: "email",
-    header: "Почта",
-  },
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "status",
-    header: "Статус",
-  },
-  {
-    accessorKey: "role",
-    header: "Роль",
-  },
-  {
-    accessorKey: "dateOfRegistration",
-    header: "Дата регистрации",
-  },
-]
+	{
+		header: "#",
+		cell: ({ row, table }) => {
+			const { pageIndex, pageSize } = table.getState().pagination;
+			return pageIndex * pageSize + row.index + 1;
+		},
+	},
+	{
+		accessorKey: "username",
+		header: "Имя пользователя",
+	},
+	{
+		accessorKey: "email",
+		header: "Почта",
+	},
+	{
+		accessorKey: "id",
+		header: "ID",
+	},
+	{
+		accessorKey: "status",
+		header: "Статус",
+		cell: ({ row }) => {
+			return (
+				<div className="rounded-full border text-center w-max px-4 py-0.5 flex gap-2 items-center justify-center">
+					<div
+						className={`w-2 h-2 rounded-full ${row.original.status === "ACTIVE" ? "bg-green-600 animate-pulse" : "bg-red-600"}`}
+					/>
+					{statusesMapper[row.original.status] || 'Не указана'}
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: "role",
+		header: "Роль",
+		cell: ({ row }) => rolesMapper[row.original.role] || 'Не указана',
+	},
+	{
+		accessorKey: "createdAt",
+		header: "Дата регистрации",
+		cell: ({ row }) => format(new Date(row.original.createdAt), "dd.MM.yyyy в HH:MM") || "Отсутствует",
+	},
+];
