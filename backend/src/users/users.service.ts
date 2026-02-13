@@ -7,14 +7,33 @@ import {
 import { UpdateUserDTO } from './DTO/users.dto';
 import { UsersRepo } from './repo/users.repo';
 import * as bcrypt from 'bcrypt';
-import { CreateUserInputService } from './users.types';
+import { CreateUserInputService } from './types/users.types';
+import { GetUsersInput } from './types/users.types';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly repo: UsersRepo) {}
 
-  async findAll(page: number, limit: number) {
-    const [data, total] = await this.repo.findAll(page, limit);
+  async findAll({ page, limit, label, value }: GetUsersInput) {
+    const allowed = [
+      'createdAt',
+      'email',
+      'username',
+      'id',
+      'status',
+      'role',
+    ];
+
+    if (label && value && !allowed.includes(label)) {
+      throw new HttpException('Label doesnt have a correct type', 400);
+    }
+
+    const [data, total] = await this.repo.findAll({
+      page,
+      limit,
+      label,
+      value,
+    });
 
     return {
       data: data,
@@ -22,7 +41,7 @@ export class UsersService {
         page: page,
         limit: limit,
         total: total,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil(total / (limit ?? 25)),
       },
     };
   }

@@ -13,12 +13,12 @@ export class ProgramsService {
   //   return this.repo.getProgram(id);
   // }
   //
-  // createProgram(dto: CreateProgramDTO) {
-  //   return this.repo.createProgram(dto);
+  // createProgram(DTO: CreateProgramDTO) {
+  //   return this.repo.createProgram(DTO);
   // }
   //
-  // updateProgram(dto: UpdateProgramDTO) {
-  //   return this.repo.updateProgram(dto);
+  // updateProgram(DTO: UpdateProgramDTO) {
+  //   return this.repo.updateProgram(DTO);
   // }
   //
   // deleteProgram(id: string) {

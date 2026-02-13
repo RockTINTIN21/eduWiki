@@ -2,36 +2,57 @@ import { PrismaService } from '../../prisma.service';
 import { UpdateUserDTO } from '../DTO/users.dto';
 import { Injectable } from '@nestjs/common';
 import { CreateUserRepoInput, GetUsersRepoInput } from './users.repo.types';
+import { GetUsersInput, SearchLabelsTypes } from '../types/users.types';
+import { UserStatusEnum } from '@prisma/client';
 
 @Injectable()
 export class UsersRepo {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(
-    page: number,
-    limit: number,
-  ): Promise<[GetUsersRepoInput[], number]> {
-    console.log('PAGE:', page);
-    console.log('LIMIT:', limit);
+  async findAll(params: GetUsersInput): Promise<[GetUsersRepoInput[], number]> {
+    const { limit, page, value, label } = params;
+
+    const searchParam = (label: SearchLabelsTypes, value: string) => {
+      switch (label) {
+        case 'createdAt': {
+          const date = new Date(value);
+          date.setUTCHours(0, 0, 0, 0);
+          const nextDate = new Date(value);
+          nextDate.setDate(date.getDate() + 1);
+          return {
+            createdAt: {
+              gte: date.toISOString(),
+              lte: nextDate.toISOString(),
+            },
+          };
+        }
+        case 'status':
+          return { status: value as UserStatusEnum };
+        case 'role':
+          return { role: { name: value } };
+        default:
+          return { [label]: value };
+      }
+    };
+
+    const where = label && value ? searchParam(label, value) : undefined;
+
     const [data, total] = await this.prisma.$transaction([
       this.prisma.user.findMany({
-        skip: (page - 1) * limit,
+        skip: ((page ?? 1) - 1) * (limit ?? 25),
         take: limit,
+        where,
+        orderBy: { username: 'desc' },
         select: {
           id: true,
           email: true,
           username: true,
           status: true,
-          role: {
-            select: { name: true },
-          },
+          role: { select: { name: true } },
           createdAt: true,
         },
-        orderBy: {
-          username: 'desc',
-        },
       }),
-      this.prisma.user.count(),
+      this.prisma.user.count({ where }),
     ]);
 
     const users = data.map((user) => ({

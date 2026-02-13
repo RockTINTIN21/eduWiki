@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
-import { CreateTicketDTO, UpdateTicketDTO } from './dto/tickets.dto';
+import { CreateTicketDTO, UpdateTicketDTO } from './DTO/tickets.dto';
 import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 
 @Controller('tickets')

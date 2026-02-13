@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TicketsRepo } from './repo/tickets.repo';
-import { CreateTicketDTO, UpdateTicketDTO } from './dto/tickets.dto';
+import { CreateTicketDTO, UpdateTicketDTO } from './DTO/tickets.dto';
 import { CountriesService } from '../countries/countries.service';
 import { HandlerInput } from './types/tickets.entity';
 import { CountryBusinessRules } from '../countries/rules/country.business-rules';

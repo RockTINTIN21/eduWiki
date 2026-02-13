@@ -36,7 +36,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.dto.ts'],
+    files: ['**/*.DTO.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-call': 'off',
     },

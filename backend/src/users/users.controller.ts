@@ -13,6 +13,7 @@ import { UpdateUserDTO } from './DTO/users.dto';
 import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 import { Roles } from '../auth/roles/roles.decorator';
 import { RoleGuard } from '../auth/guard/role.guard';
+import { SearchLabelsTypes } from './types/users.types';
 
 @Controller('users')
 @UseGuards(AccessTokenGuard, RoleGuard)
@@ -21,8 +22,13 @@ export class UsersController {
 
   @Roles('ADMIN', 'OWNER')
   @Get('')
-  findAll(@Query('page') page: number, @Query('limit') limit: number) {
-    return this.usersService.findAll(page, limit);
+  findAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('label') label: SearchLabelsTypes,
+    @Query('value') value: string,
+  ) {
+    return this.usersService.findAll({ page, limit, label, value });
   }
 
   @Get('byId/:id')
