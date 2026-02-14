@@ -9,9 +9,8 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import {
 	Table,
 	TableBody,
@@ -29,11 +28,6 @@ import Search from "@/features/users-table/ui/search";
 import { apiGuardFetch } from "@/lib/api";
 
 export function DataTable() {
-	const renders = useRef(0);
-
-	renders.current = renders.current + 1;
-	console.log("Компонент ререндерится!", renders.current);
-
 	const [sorting, setSorting] = useState<SortingState>([]);
 
 	const params = useSearchParams();
@@ -46,11 +40,12 @@ export function DataTable() {
 
 	useEffect(() => {
 		const filter = Array.from(params.entries())[0];
-		if (filter && filter[0] && filter[1]) {
-			getUsers(filter[0], filter[1]);
-		} else {
-			getUsers();
-		}
+
+    if (filter && (filter[0] && filter[1])) {
+      getUsers(filter[0], filter[1]);
+    }else if (!filter) {
+      getUsers()
+    }
 	}, [params, rows, currentPage]);
 
 	const getUsers = (label?: string, value?: string) => {
@@ -61,7 +56,7 @@ export function DataTable() {
 				setData(res.data);
 				setMeta(res.meta);
 			})
-			.catch((err) => toast.error(err.message));
+			.catch((err) => toast.error(err.message, { position: "top-center" }));
 	};
 
 	useEffect(() => {

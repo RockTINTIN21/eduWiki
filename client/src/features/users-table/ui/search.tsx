@@ -23,45 +23,53 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { SearchValueType } from "./data-table";
+import type {SearchValueType} from "@/features/users-table/model/types";
 
 const Search = () => {
   const searchParams = useSearchParams();
+  const firstEntry = Array.from(searchParams.entries())[0];
+  const initialType = firstEntry?.[0] as SearchValueType ?? "email";
+  const initialValue = firstEntry?.[1] ?? "";
 
-	const [searchValue, setSearchValue] = useState<string>("");
-	const [searchValueType, setSearchValueType] = useState<SearchValueType>("email");
+  const [searchValue, setSearchValue] = useState(initialValue);
+	const [searchType, setSearchType] = useState<SearchValueType>(initialType);
 	const [date, setDate] = useState<Date>();
 
 	const pathname = usePathname();
 	const { replace } = useRouter();
 
-	const [debouncedValue] = useDebounce(searchValue, (searchValueType === "email" || searchValueType === "id" || searchValueType === "username") ? 500 : 0);
+	const [debouncedValue] = useDebounce(searchValue, (searchType === "email" || searchType === "id" || searchType === "username") ? 500 : 0);
 
-	useEffect(() => {
-    if(searchValue)
-      setSearchValue("");
-    if(date)
-      setDate(undefined);
-	}, [searchValueType]);
 
-	useEffect(() => {
-		let params = new URLSearchParams(searchParams);
-		if (debouncedValue || date) {
-      if (debouncedValue)
-        params.set(searchValueType, String(debouncedValue));
-      if (date)
-        params.set(searchValueType, date.toString());
-		} else {
-			params = new URLSearchParams();
-		}
-		replace(`${pathname}?${params.toString()}`);
-	}, [debouncedValue, searchValueType, date]);
+  const setParams = () => {
+    const params = new URLSearchParams(searchParams);
+    if (debouncedValue || date) {
+      if (debouncedValue) params.set(searchType, String(debouncedValue));
+      if (date) params.set(searchType, date.toString());
+      const newQuery = params.toString();
+      const currentQuery = searchParams.toString();
+      if (newQuery !== currentQuery) {
+        replace(`${pathname}?${newQuery}`);
+      }
+    }
+
+    if(!debouncedValue && params.toString()) replace(`${pathname}`);
+  }
+
+  useEffect(() => {
+    setParams();
+  }, [debouncedValue]);
+
+  const clearParams = () => {
+    if (searchValue) setSearchValue("");
+    if (date) setDate(undefined);
+  }
 
 	return (
 		<div className="flex items-center py-4 gap-5">
 			<Field orientation="vertical">
 				<FieldLabel htmlFor="select-rows-per-page">Поиск</FieldLabel>
-				{searchValueType === "role" ? (
+				{searchType === "role" ? (
 					<Select
 						onValueChange={(value: string) => setSearchValue(value)}
 						value={searchValue}
@@ -79,7 +87,7 @@ const Search = () => {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-				) : searchValueType === "status" ? (
+				) : searchType === "status" ? (
 					<Select
 						onValueChange={(value: string) => setSearchValue(value)}
 						value={searchValue}
@@ -95,7 +103,7 @@ const Search = () => {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-				) : searchValueType === "createdAt" ? (
+				) : searchType === "createdAt" ? (
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button
@@ -122,14 +130,6 @@ const Search = () => {
 						</PopoverContent>
 					</Popover>
 				) : (
-					// <Input
-					//   className="px-6"
-					//   placeholder="Начните искать"
-					//   value={(table.getColumn(searchValueType)?.getFilterValue() as string) ?? ""}
-					//   onChange={(event) =>
-					//     table.getColumn(searchValueType)?.setFilterValue(event.target.value)
-					//   }
-					// />
 					<Input
 						className="px-6"
 						placeholder="Начните искать"
@@ -143,8 +143,11 @@ const Search = () => {
 				<FieldLabel htmlFor="select-rows-per-page">Фильтр поиска</FieldLabel>
 				<Select
 					defaultValue="email"
-					onValueChange={(value: SearchValueType) => setSearchValueType(value)}
-					value={searchValueType}
+					onValueChange={(value: SearchValueType) => {
+            setSearchType(value)
+            clearParams()
+          }}
+					value={searchType}
 				>
 					<SelectTrigger className="px-6" id="select-rows-per-page">
 						<SelectValue />

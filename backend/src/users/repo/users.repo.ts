@@ -31,7 +31,12 @@ export class UsersRepo {
         case 'role':
           return { role: { name: value } };
         default:
-          return { [label]: value };
+          return {
+            [label]: {
+              contains: value,
+              mode: 'insensitive',
+            },
+          };
       }
     };
 

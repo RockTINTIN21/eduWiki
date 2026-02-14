@@ -89,8 +89,8 @@ export async function apiGuardFetch<T>(
 		body = JSON.stringify(init.json);
 	}
 
-	const state = store.getState();
-  console.log('state:', state)
+	// const state = store.getState();
+  // console.log('state:', state)
 	const res = await fetch(`${API_URL}${path}`, {
 		...init,
 		body,
