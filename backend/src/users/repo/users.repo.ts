@@ -30,6 +30,8 @@ export class UsersRepo {
           return { status: value as UserStatusEnum };
         case 'role':
           return { role: { name: value } };
+        case 'id':
+          return { id: value };
         default:
           return {
             [label]: {

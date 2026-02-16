@@ -11,11 +11,13 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -38,23 +40,27 @@ export function DataTable() {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [meta, setMeta] = useState<Meta>();
 
+	const [loading, setLoading] = useState<boolean>(true);
+
 	useEffect(() => {
 		const filter = Array.from(params.entries())[0];
 
-    if (filter && (filter[0] && filter[1])) {
-      getUsers(filter[0], filter[1]);
-    }else if (!filter) {
-      getUsers()
-    }
+		if (filter && filter[0] && filter[1]) {
+			getUsers(filter[0], filter[1]);
+		} else if (!filter) {
+			getUsers();
+		}
 	}, [params, rows, currentPage]);
 
 	const getUsers = (label?: string, value?: string) => {
+		setLoading(true);
 		apiGuardFetch<{ data: Users[]; meta: Meta }>(
 			`${USERS_ENDPOINTS.getAllUsers}?page=${currentPage}&limit=${rows}${label && value ? `&label=${label}&value=${value}` : ""}`,
 		)
 			.then((res) => {
 				setData(res.data);
 				setMeta(res.meta);
+				setLoading(false);
 			})
 			.catch((err) => toast.error(err.message, { position: "top-center" }));
 	};
@@ -70,10 +76,11 @@ export function DataTable() {
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		onSortingChange: setSorting,
+
 		manualPagination: true,
+
 		state: {
 			sorting,
-
 			pagination: {
 				pageIndex: currentPage - 1,
 				pageSize: rows,
@@ -92,13 +99,12 @@ export function DataTable() {
 
 			<div className="overflow-hidden rounded-md border">
 				<Table>
-					<TableCaption>Список пользователей EduWiki</TableCaption>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead key={header.id} colSpan={header.colSpan} style={{ width: `${header.getSize()}px` }}>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -112,7 +118,21 @@ export function DataTable() {
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{loading ? (
+							Array(10)
+								.fill({})
+								.map((_, i) => (
+									<TableRow key={i}>
+										{Array(7)
+											.fill({})
+											.map((_, k) => (
+												<TableCell key={k} className="h-11">
+													<Skeleton className="w-full h-4" />
+												</TableCell>
+											))}
+									</TableRow>
+								))
+						) : table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -139,6 +159,22 @@ export function DataTable() {
 							</TableRow>
 						)}
 					</TableBody>
+					<TableFooter>
+						{loading ? (
+							<TableRow>
+								<TableCell colSpan={8}>
+									<Spinner />
+								</TableCell>
+							</TableRow>
+						) : (
+							<TableRow>
+								<TableCell colSpan={1}>Найдено: </TableCell>
+								<TableCell className="text-start" colSpan={7}>
+									{meta?.total}
+								</TableCell>
+							</TableRow>
+						)}
+					</TableFooter>
 				</Table>
 				<PaginationTable
 					meta={meta}

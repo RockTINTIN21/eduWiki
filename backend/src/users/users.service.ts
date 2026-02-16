@@ -9,23 +9,29 @@ import { UsersRepo } from './repo/users.repo';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInputService } from './types/users.types';
 import { GetUsersInput } from './types/users.types';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly repo: UsersRepo) {}
 
   async findAll({ page, limit, label, value }: GetUsersInput) {
-    const allowed = [
-      'createdAt',
-      'email',
-      'username',
-      'id',
-      'status',
-      'role',
-    ];
+    const allowed = ['createdAt', 'email', 'username', 'id', 'status', 'role'];
 
     if (label && value && !allowed.includes(label)) {
       throw new HttpException('Label doesnt have a correct type', 400);
+    }
+
+    if (label === 'id' && !isUUID(value)) {
+      return {
+        data: [],
+        meta: {
+          page: page,
+          limit: limit,
+          total: 0,
+          totalPages: 0,
+        },
+      };
     }
 
     const [data, total] = await this.repo.findAll({

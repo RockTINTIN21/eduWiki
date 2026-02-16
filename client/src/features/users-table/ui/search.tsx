@@ -31,15 +31,14 @@ const Search = () => {
   const initialType = firstEntry?.[0] as SearchValueType ?? "email";
   const initialValue = firstEntry?.[1] ?? "";
 
-  const [searchValue, setSearchValue] = useState(initialValue);
+  const [searchValue, setSearchValue] = useState(initialType !== 'createdAt' ? initialValue : "");
 	const [searchType, setSearchType] = useState<SearchValueType>(initialType);
-	const [date, setDate] = useState<Date>();
+	const [date, setDate] = useState<Date | undefined>(initialType === 'createdAt' ? new Date(initialValue) : undefined);
 
 	const pathname = usePathname();
 	const { replace } = useRouter();
 
-	const [debouncedValue] = useDebounce(searchValue, (searchType === "email" || searchType === "id" || searchType === "username") ? 500 : 0);
-
+	const [debouncedValue] = useDebounce(searchValue, ["email", "id", "username"].includes(searchType) ? 500 : 0);
 
   const setParams = () => {
     const params = new URLSearchParams(searchParams);
@@ -53,12 +52,12 @@ const Search = () => {
       }
     }
 
-    if(!debouncedValue && params.toString()) replace(`${pathname}`);
+    if((!debouncedValue && !date) && params.toString()) replace(`${pathname}`);
   }
 
   useEffect(() => {
     setParams();
-  }, [debouncedValue]);
+  }, [debouncedValue, date]);
 
   const clearParams = () => {
     if (searchValue) setSearchValue("");
@@ -66,7 +65,7 @@ const Search = () => {
   }
 
 	return (
-		<div className="flex items-center py-4 gap-5">
+		<div className="py-4 flex flex-col-reverse md:flex-row gap-5 md:items-center">
 			<Field orientation="vertical">
 				<FieldLabel htmlFor="select-rows-per-page">Поиск</FieldLabel>
 				{searchType === "role" ? (
@@ -111,11 +110,9 @@ const Search = () => {
 								data-empty={!date}
 								className="data-[empty=true]:text-muted-foreground w-[212px] justify-between text-left font-normal"
 							>
-								{date ? (
-									format(date, "PPP", { locale: ru })
-								) : (
-									<span className="px-2">Выберите дату</span>
-								)}
+                <span className='px-2'>
+                  {date ? format(date, "PPP", { locale: ru }) : "Выберите дату"}
+                  </span>
 								<ChevronDownIcon />
 							</Button>
 						</PopoverTrigger>
@@ -139,7 +136,7 @@ const Search = () => {
 				)}
 			</Field>
 
-			<Field orientation="vertical" className="max-w-52 min-w-52">
+			<Field orientation="vertical" className="md:w-52">
 				<FieldLabel htmlFor="select-rows-per-page">Фильтр поиска</FieldLabel>
 				<Select
 					defaultValue="email"

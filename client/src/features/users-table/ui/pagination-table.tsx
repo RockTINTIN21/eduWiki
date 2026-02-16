@@ -49,11 +49,11 @@ const PaginationTable = ({
   }
 
 	return (
-    <div className="flex items-center justify-end space-x-2 py-4">
+    <div className="flex items-center ps-4 space-x-2 py-4">
       {meta && (
-        <div className="flex gap-3 items-center">
-          <Field orientation="horizontal" className=" h-4">
-            <FieldLabel htmlFor="select-rows-per-page">
+        <div className="flex w-full justify-between gap-3 items-center">
+          <Field orientation="horizontal" className="h-4 w-max">
+            <FieldLabel htmlFor="select-rows-per-page" className='whitespace-nowrap'>
               Кол-во строк
             </FieldLabel>
             <Select
@@ -68,7 +68,7 @@ const PaginationTable = ({
               >
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent align="start">
+              <SelectContent position="popper" align="start">
                 <SelectGroup>
                   <SelectItem value="10">10</SelectItem>
                   <SelectItem value="25">25</SelectItem>
@@ -79,7 +79,7 @@ const PaginationTable = ({
             </Select>
           </Field>
           <Pagination>
-            <PaginationContent>
+            <PaginationContent className='ms-auto'>
               <PaginationItem>
                 <PaginationPrevious
                   onClick={() => onCurrentPageChange(Math.max(1, currentPage - 1))}

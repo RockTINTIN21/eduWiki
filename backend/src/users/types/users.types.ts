@@ -1,4 +1,5 @@
 export type SearchLabelsTypes =
+  | 'id'
   | 'createdAt'
   | 'email'
   | 'username'
