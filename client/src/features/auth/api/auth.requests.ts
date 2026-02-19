@@ -1,7 +1,7 @@
 import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
 import { slice, type User } from "@/features/auth/model/slice";
 import type { AuthRefreshResponse } from "@/features/auth/model/types";
-import { apiFetch, apiGuardFetch } from "@/lib/api";
+import { apiFetch, apiGuardFetch } from "@/lib/api/api";
 import type { AppThunk } from "@/lib/store/store";
 
 export const fetchRefresh =

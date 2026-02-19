@@ -68,6 +68,7 @@ export default class CountriesRepo {
     return this.prisma.country.create({
       data: {
         name: data.name,
+        ruName: data.ruName,
         countryCode: data.countryCode,
         bgImage: data.bgImage,
         information: {

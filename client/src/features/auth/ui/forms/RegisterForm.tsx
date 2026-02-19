@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
 import RegisterPassword from "@/features/auth/ui/forms/RegisterPassword";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/api/api";
 
 const RegisterForm = ({
 	email,

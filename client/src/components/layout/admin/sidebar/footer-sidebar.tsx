@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { slice } from "@/features/auth/model/slice";
-import { API_UPLOADS_URL, apiGuardFetch } from "@/lib/api";
+import { API_UPLOADS_URL, apiGuardFetch } from "@/lib/api/api";
 import { useAppDispatch, useAppSelector } from "@/lib/store/store";
 
 const FooterSidebar = () => {

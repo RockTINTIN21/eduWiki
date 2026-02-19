@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { errorMessages } from "@/features/auth/lib/error-messages";
 import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
-import { ApiError, apiFetch } from "@/lib/api";
+import { ApiError, apiFetch } from "@/lib/api/api";
 
 interface ConfirmEmailStageOneProps {
 	onChangeEmail: (email: string) => void;

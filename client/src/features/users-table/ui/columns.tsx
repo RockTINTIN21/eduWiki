@@ -73,7 +73,7 @@ export const columns: ColumnDef<Users>[] = [
 		id: "actions",
 		cell: ({ row }) => (
       <div className='flex justify-end pe-5'>
-        <Link href={`/u/${row.original.username}`}>
+        <Link href={`/user/${row.original.username}`}>
           <ExternalLink
             className="cursor-pointer"
             size={16}

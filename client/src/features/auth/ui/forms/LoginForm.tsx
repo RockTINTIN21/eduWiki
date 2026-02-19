@@ -10,7 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { fetchLogin } from "@/features/auth/api/auth.requests";
 import { errorMessages } from "@/features/auth/lib/error-messages";
 import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api/api";
 import { useAppDispatch } from "@/lib/store/store";
 
 const LoginForm = ({

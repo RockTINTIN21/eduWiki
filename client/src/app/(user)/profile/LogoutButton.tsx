@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { apiGuardFetch } from "@/lib/api";
+import { apiGuardFetch } from "@/lib/api/api";
 import { slice } from "@/features/auth/model/slice";
 import { useAppDispatch } from "@/lib/store/store";
 

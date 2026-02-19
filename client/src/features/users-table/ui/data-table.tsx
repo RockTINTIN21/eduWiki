@@ -27,7 +27,7 @@ import type { Meta, Users } from "@/features/users-table/model/types";
 import { columns } from "@/features/users-table/ui/columns";
 import PaginationTable from "@/features/users-table/ui/pagination-table";
 import Search from "@/features/users-table/ui/search";
-import { apiGuardFetch } from "@/lib/api";
+import { apiGuardFetch } from "@/lib/api/api";
 
 export function DataTable() {
 	const [sorting, setSorting] = useState<SortingState>([]);

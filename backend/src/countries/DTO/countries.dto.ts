@@ -50,6 +50,9 @@ export class CreateCountryDto {
   name: string;
 
   @IsString()
+  ruName: string;
+
+  @IsString()
   @Length(2, 2)
   countryCode: string;
 

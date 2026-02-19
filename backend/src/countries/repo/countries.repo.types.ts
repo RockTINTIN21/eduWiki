@@ -1,6 +1,7 @@
 export type CreateCountryRepoInput = {
   name: string;
   countryCode: string;
+  ruName: string;
   bgImage: string;
   information?: {
     capital?: string;

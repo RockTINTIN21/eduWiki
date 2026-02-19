@@ -16,10 +16,10 @@ import { RoleGuard } from '../auth/guard/role.guard';
 import { SearchLabelsTypes } from './types/users.types';
 
 @Controller('users')
-@UseGuards(AccessTokenGuard, RoleGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Roles('ADMIN', 'OWNER')
   @Get('')
   findAll(
@@ -36,6 +36,8 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
+  @UseGuards(AccessTokenGuard, RoleGuard)
+  @Roles('ADMIN', 'OWNER')
   @Get('byUsername/:username')
   findByUsername(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
@@ -46,13 +48,20 @@ export class UsersController {
     return this.usersService.findByEmail(email);
   }
 
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Patch('/:id')
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
     await this.usersService.updateUser(id, dto);
   }
 
+  @UseGuards(AccessTokenGuard, RoleGuard)
   @Delete('/:id')
   async deleteUser(@Param('id') id: string) {
     await this.usersService.deleteUser(id);
+  }
+
+  @Get(':username')
+  getPublicProfile(@Param('username') username: string) {
+    return this.usersService.getPublicProfile(username);
   }
 }

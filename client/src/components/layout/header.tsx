@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { slice } from "@/features/auth/model/slice";
 import AuthDialog from "@/features/auth/ui/AuthDialog";
-import { API_UPLOADS_URL } from "@/lib/api";
+import { API_UPLOADS_URL } from "@/lib/api/api";
 import { useAppSelector } from "@/lib/store/store";
 
 const Header = () => {

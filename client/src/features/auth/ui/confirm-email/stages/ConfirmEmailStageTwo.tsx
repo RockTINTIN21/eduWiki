@@ -15,7 +15,7 @@ import type {
 	ConfirmStep,
 } from "@/features/auth/ui/AuthDialog";
 import ResendOtpCode from "@/features/auth/ui/confirm-email/ResendOTPCode";
-import { ApiError, apiFetch } from "@/lib/api";
+import { ApiError, apiFetch } from "@/lib/api/api";
 
 interface RegisterFormStageTwoProps {
 	onChangeConfirmStep: (step: ConfirmStep) => void;

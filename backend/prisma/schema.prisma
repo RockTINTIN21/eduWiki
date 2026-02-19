@@ -8,16 +8,17 @@ datasource db {
 
 model Country {
   name         String               @unique
+  ruName       String               @unique @map("ru_name")
   countryCode  String               @unique @map("country_code")
-  bgImage      String               @map("bg_image")
+  bgImage      String?              @map("bg_image")
   createdAt    DateTime?            @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime?            @default(now()) @map("updated_at") @db.Timestamp(6)
   id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   description  String?
   information  CountryInformation?
   requirements CountryRequirements?
-  reviews      CountryReview[]
   universities University[]
+  reviews      Review[]
 
   @@map("country")
 }
@@ -130,8 +131,8 @@ model University {
   creator      User?                   @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
   information  UniversityInformation?
   requirements UniversityRequirements?
-  reviews      UniversityReview[]
   fields       UniversityField[]
+  reviews      Review[]
 
   @@map("universities")
 }
@@ -181,39 +182,21 @@ model UniversityProgram {
   @@map("university_programs")
 }
 
-model CountryReview {
-  countryId String  @map("country_id") @db.Uuid
-  reviewId  String  @map("review_id") @db.Uuid
-  country   Country @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  review    Review  @relation(fields: [reviewId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([countryId, reviewId])
-  @@map("country_review")
-}
-
 model Review {
-  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId        String?            @map("user_id") @db.Uuid
-  createdAt     DateTime?          @default(now()) @map("created_at") @db.Timestamp(6)
-  content       String?
-  isRecommended Boolean?           @map("is_recommended")
-  recommended   Int?
-  unrecommended Int?
-  countries     CountryReview[]
-  user          User?              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  universities  UniversityReview[]
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String      @map("user_id") @db.Uuid
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  text         String?
+  type         ReviewEnum
+  likes        Int?
+  dislikes     Int?
+  countryId    String      @map("country_id") @db.Uuid
+  universityId String?     @map("university_id") @db.Uuid
+  user         User?       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  country      Country     @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  university   University? @relation(fields: [universityId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("reviews")
-}
-
-model UniversityReview {
-  universityId String     @map("university_id") @db.Uuid
-  reviewId     String     @map("review_id") @db.Uuid
-  review       Review     @relation(fields: [reviewId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([universityId, reviewId])
-  @@map("universities_review")
 }
 
 model Role {
@@ -226,13 +209,13 @@ model Role {
 }
 
 model VerificationCode {
-  id             Int      @id() @default(autoincrement())
+  id             Int                  @id() @default(autoincrement())
   code           String
-  email          String   @unique
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  expirationTime DateTime @map("expiration_time") @db.Timestamp(6)
-  isActivated    Boolean  @default(false) @map("is_activated")
-  type           Type
+  email          String               @unique
+  createdAt      DateTime             @default(now()) @map("created_at") @db.Timestamp(6)
+  expirationTime DateTime             @map("expiration_time") @db.Timestamp(6)
+  isActivated    Boolean              @default(false) @map("is_activated")
+  type           VerificationCodeEnum
 
   @@map("verification_codes")
 }
@@ -255,8 +238,14 @@ enum EntityActionEnum {
   DELETE
 }
 
-enum Type {
+enum VerificationCodeEnum {
   REGISTRATION
   PASSWORD_RESET
   EMAIL_CHANGE
+}
+
+enum ReviewEnum {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }

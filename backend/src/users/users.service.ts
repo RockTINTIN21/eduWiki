@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { UpdateUserDTO } from './DTO/users.dto';
 import { UsersRepo } from './repo/users.repo';
@@ -65,10 +66,28 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
+    console.log('findByUsername', username);
     const res = await this.repo.findByUsername(username);
+    console.log('findByUsernameRes:', res);
     if (!res) {
-      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+      });
     }
+
+    return res;
+  }
+
+  async getPublicProfile(username: string) {
+    console.log('findByUsername', username);
+    const res = await this.repo.getPublicProfile(username);
+    console.log('findByUsernameRes:', res);
+    if (!res) {
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+      });
+    }
+
     return res;
   }
 
@@ -77,7 +96,12 @@ export class UsersService {
     if (!res) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
-    return res;
+    return {
+      email: res.email,
+      username: res.username,
+      id: res.id,
+      avatarUrl: res.avatarUrl,
+    };
   }
 
   async updateUser(id: string, dto: UpdateUserDTO) {
