@@ -11,10 +11,16 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserInputService } from './types/users.types';
 import { GetUsersInput } from './types/users.types';
 import { isUUID } from 'class-validator';
+import { ReviewEnum } from '@prisma/client';
+import { PrismaService } from '../prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly repo: UsersRepo) {}
+  constructor(
+    private readonly repo: UsersRepo,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async findAll({ page, limit, label, value }: GetUsersInput) {
     const allowed = ['createdAt', 'email', 'username', 'id', 'status', 'role'];
@@ -66,9 +72,8 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
-    console.log('findByUsername', username);
     const res = await this.repo.findByUsername(username);
-    console.log('findByUsernameRes:', res);
+
     if (!res) {
       throw new NotFoundException({
         code: 'NOT_FOUND',
@@ -78,17 +83,48 @@ export class UsersService {
     return res;
   }
 
-  async getPublicProfile(username: string) {
-    console.log('findByUsername', username);
-    const res = await this.repo.getPublicProfile(username);
-    console.log('findByUsernameRes:', res);
-    if (!res) {
+  async getPublicProfile(username: string, token: string | undefined) {
+    const user = await this.repo.getPublicProfile(username);
+
+    const isOwner = (userId: string, token?: string) => {
+      if (!token) return false;
+
+      const decoded = this.jwtService.decode(token);
+
+      if (!decoded) return false;
+
+      return decoded.id === userId;
+    };
+
+    if (!user) {
       throw new NotFoundException({
         code: 'NOT_FOUND',
       });
     }
 
-    return res;
+    const reviews = await this.repo.getUserReviews(user.id);
+
+    const stats = {
+      countReviews: reviews.length,
+      countNeutral: reviews.filter(
+        (review) => review.type === ReviewEnum.NEUTRAL,
+      ).length,
+      countNegative: reviews.filter(
+        (review) => review.type === ReviewEnum.NEGATIVE,
+      ).length,
+      countPositive: reviews.filter(
+        (review) => review.type === ReviewEnum.POSITIVE,
+      ).length,
+    };
+
+    return {
+      user: {
+        ...user,
+        stats: stats,
+        isOwner: isOwner(user.id, token),
+      },
+      reviews,
+    };
   }
 
   async findByEmail(email: string) {

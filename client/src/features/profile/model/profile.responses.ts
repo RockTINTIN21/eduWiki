@@ -7,6 +7,7 @@ export interface ProfileResponse {
     username: string;
     avatarUrl: string;
     stats: UserStats;
+    isOwner: boolean;
   };
   reviews: {
     type: ReviewTypeEnum;

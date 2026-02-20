@@ -36,6 +36,8 @@ export async function apiGuardFetch<T>(
 
 	const headers = new Headers(init?.headers);
 
+  console.log('HEADERS:', headers);
+
 	let body = init?.body;
 	if (init && "json" in init) {
 		headers.set("Content-Type", "application/json");

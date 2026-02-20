@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Query,
+  Query, Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -14,6 +14,8 @@ import { AccessTokenGuard } from '../auth/guard/accessToken.guard';
 import { Roles } from '../auth/roles/roles.decorator';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { SearchLabelsTypes } from './types/users.types';
+import type { Request } from 'express';
+import { RefreshTokenGuard } from '../auth/guard/refreshToken.guard';
 
 @Controller('users')
 export class UsersController {
@@ -61,7 +63,8 @@ export class UsersController {
   }
 
   @Get(':username')
-  getPublicProfile(@Param('username') username: string) {
-    return this.usersService.getPublicProfile(username);
+  getPublicProfile(@Req() req: Request, @Param('username') username: string) {
+    const token: string | undefined = req.cookies['access_token'];
+    return this.usersService.getPublicProfile(username, token);
   }
 }

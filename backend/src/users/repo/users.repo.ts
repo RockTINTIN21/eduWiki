@@ -108,24 +108,9 @@ export class UsersRepo {
     });
   }
 
-  async getPublicProfile(username: string) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        username: {
-          equals: username,
-          mode: 'insensitive',
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        avatarUrl: true,
-      },
-    });
-
+  async getUserReviews(id: string) {
     const reviews = await this.prisma.review.findMany({
-      where: { userId: user?.id },
+      where: { userId: id },
       select: {
         type: true,
         text: true,
@@ -139,15 +124,27 @@ export class UsersRepo {
       },
     });
 
-    const formattedReviews = reviews.map((review) => ({
+    return reviews.map((review) => ({
       ...review,
       ...(review.university && { university: review.university.name }),
     }));
+  }
 
-    return {
-      user,
-      reviews: formattedReviews,
-    };
+  async getPublicProfile(username: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatarUrl: true,
+      },
+    });
   }
 
   async checkUsernameExists(username: string): Promise<boolean> {

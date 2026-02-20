@@ -1,5 +1,6 @@
 export type UserStats = {
   countReviews: number;
-  countFavorites: number;
-  countLikes: number;
+  countNeutral: number;
+  countPositive: number;
+  countNegative: number;
 }

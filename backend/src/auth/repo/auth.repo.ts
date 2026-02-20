@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
-import { CreateVerificationCodeRepoInput } from './auth.repo.types';
 
 @Injectable()
 export class AuthRepo {

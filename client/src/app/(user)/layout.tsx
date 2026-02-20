@@ -28,7 +28,7 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
 					<Toaster />
 					<Header />
 					<main className="flex-1">{children}</main>
-					<Footer />
+					{/*<Footer />*/}
 				</StoreProvider>
 			</body>
 		</html>

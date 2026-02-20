@@ -4,6 +4,7 @@ import type { ComponentType, ReactElement } from "react";
 import type { ProfileReviewHeaderProps } from "@/components/ui/review-card/profile-review-card-header";
 import type { ReviewHeaderProps } from "@/components/ui/review-card/review-card-header";
 import { ReviewTypeEnum } from "@/lib/types";
+import ReviewCardLikes from "@/components/ui/review-card/review-card-likes";
 
 interface ReviewCardProps {
   id: string;
@@ -12,14 +13,22 @@ interface ReviewCardProps {
   likes: number;
   dislikes: number;
   text: string;
-  
+  isOwnCard: boolean;
+
 	children:
 		| ReactElement<ProfileReviewHeaderProps>
 		| ReactElement<ReviewHeaderProps>;
 }
 
-const ReviewCard = ({id, type, createdAt, dislikes, likes, text ,
-	children,
+const ReviewCard = ({
+    id,
+    type,
+    createdAt,
+    dislikes,
+    likes,
+    text,
+    isOwnCard,
+    children,
 }: ReviewCardProps) => {
 	const reviewBgColorMap = {
 		[ReviewTypeEnum.NEGATIVE]: "bg-[#FF0000]/8",
@@ -42,20 +51,7 @@ const ReviewCard = ({id, type, createdAt, dislikes, likes, text ,
 				</span>
 			</div>
 			<p className="pt-3">{text}</p>
-			<div className="pt-2 flex justify-end gap-4">
-				<button
-					type={"button"}
-					className={"bg-[#000000]/5 rounded-full text-[#00A81F] px-4 py-1"}
-				>
-					Полезно <b className="font-medium text-[#5A5A5A] ps-1">{likes}</b>
-				</button>
-				<button
-					type={"button"}
-					className={"bg-[#000000]/5 rounded-full text-[#C6363C] px-4 py-1"}
-				>
-					Нет <b className="font-medium text-[#5A5A5A] ps-1">{dislikes}</b>
-				</button>
-			</div>
+      <ReviewCardLikes dislikes={dislikes} likes={likes} id={id} isOwnCard={isOwnCard} />
 		</div>
 	);
 };
