@@ -24,12 +24,12 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
 			<body
 				className={`${inter.variable} antialiased bg-white min-h-screen flex flex-col`}
 			>
-				<StoreProvider>
-					<Toaster />
-					<Header />
-					<main className="flex-1">{children}</main>
-					{/*<Footer />*/}
-				</StoreProvider>
+      <Toaster />
+      <StoreProvider>
+        <Header />
+        <main className="flex-1">{children}</main>
+        {/*<Footer />*/}
+      </StoreProvider>
 			</body>
 		</html>
 	);

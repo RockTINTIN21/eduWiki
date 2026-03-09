@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { slice } from "@/features/auth/model/slice";
-import { API_UPLOADS_URL, apiGuardFetch } from "@/lib/api/api";
+import { API_UPLOADS_URL } from "@/lib/constants";
 import { useAppDispatch, useAppSelector } from "@/lib/store/store";
 
 const FooterSidebar = () => {
@@ -37,13 +37,9 @@ const FooterSidebar = () => {
 	const router = useRouter();
 
 	const logout = async () => {
-		await apiGuardFetch("/auth/logout", {
-			method: "POST",
-		});
-
 		dispatch(slice.actions.logout());
 
-    router.replace("/");
+		router.replace("/");
 	};
 
 	return (

@@ -30,18 +30,22 @@ export class AuthService {
       : await this.repo.findByUsername(dto.login);
 
     if (!user || !user.password || !user.id || !user.role) {
-      throw new BadRequestException({
-        code: 'INVALID_PASSWORD',
-        field: 'password',
-      });
+      throw new BadRequestException([
+        {
+          code: 'INVALID_PASSWORD',
+          field: 'password',
+        },
+      ]);
     }
 
     const passwordIsMatch = await bcrypt.compare(dto.password, user.password);
     if (!passwordIsMatch) {
-      throw new BadRequestException({
-        code: 'INVALID_PASSWORD',
-        field: 'password',
-      });
+      throw new BadRequestException([
+        {
+          code: 'INVALID_PASSWORD',
+          field: 'password',
+        },
+      ]);
     }
 
     const tokens = await this.getTokens(user.id, user.role);
@@ -56,10 +60,12 @@ export class AuthService {
     });
 
     if (!otp || !otp.isActivated) {
-      throw new BadRequestException({
-        code: 'NOT_ACTIVATED_EMAIL',
-        field: 'email',
-      });
+      throw new BadRequestException([
+        {
+          code: 'NOT_ACTIVATED_EMAIL',
+          field: 'email',
+        },
+      ]);
     }
 
     const user = await this.userService.createUser({
@@ -80,10 +86,12 @@ export class AuthService {
     });
 
     if (!otp || !otp.isActivated) {
-      throw new BadRequestException({
-        code: 'NOT_ACTIVATED_EMAIL',
-        field: 'email',
-      });
+      throw new BadRequestException([
+        {
+          code: 'NOT_ACTIVATED_EMAIL',
+          field: 'email',
+        },
+      ]);
     }
 
     return this.userService.updateUserPassword({
@@ -98,6 +106,7 @@ export class AuthService {
 
   async refreshAccessToken(userId: string, refreshToken: string) {
     const user = await this.repo.findUserInfoByUserId(userId);
+
     if (!user) {
       throw new UnauthorizedException('Refresh token not found');
     }
@@ -114,18 +123,12 @@ export class AuthService {
     const tokens = await this.getTokens(userId, user.role.name);
 
     await this.updateRefreshToken(userId, tokens.refreshToken);
-    return {
-      tokens: {
-        ...tokens,
-      },
-      user: {
-        id: user.id,
-        role: user.role.name,
-        email: user.email,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
-      },
-    };
+
+    // if (isValid) {
+    //   throw new UnauthorizedException();
+    // }
+
+    return tokens;
   }
 
   async checkUniqUsername(username: string) {
@@ -157,7 +160,7 @@ export class AuthService {
       'JWT_REFRESH_EXPIRATION',
     );
 
-    console.log('ROLE:', role)
+    console.log('ROLE:', role);
 
     const payload = { id: userId, role: role };
 

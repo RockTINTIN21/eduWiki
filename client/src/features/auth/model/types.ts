@@ -7,3 +7,13 @@ export type AuthRefreshResponse = {
 		avatarUrl: string;
 	};
 };
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  avatarUrl: string;
+  role: "USER" | "MODERATOR" | "ADMIN" | "OWNER";
+  dateOfRegistration: number;
+  status: string;
+}

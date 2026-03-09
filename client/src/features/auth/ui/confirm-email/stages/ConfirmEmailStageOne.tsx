@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { TextField } from "@/components/ui/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { errorMessages } from "@/features/auth/lib/error-messages";
+import { TextField } from "@/components/ui/text-field";
+
 import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
-import { ApiError, apiFetch } from "@/lib/api/api";
+import { errorMessages } from "@/lib/api/error-messages";
+import { ApiError, http } from "@/lib/api/http";
 
 interface ConfirmEmailStageOneProps {
 	onChangeEmail: (email: string) => void;
@@ -31,8 +31,7 @@ const ConfirmEmailStageOne = ({
 
 	async function onSubmit(data: z.infer<typeof formSchema>) {
 		try {
-			await apiFetch("/otp/verification-otp", {
-				method: "POST",
+			await http.post("/otp/verification-otp", {
 				json: {
 					email: data.email,
 					type: type,
@@ -40,8 +39,8 @@ const ConfirmEmailStageOne = ({
 			});
 			onChangeEmail(data.email);
 		} catch (e) {
-			if (e instanceof ApiError) {
-				form.setError(e.field, { message: errorMessages[e.code] });
+			if (e instanceof ApiError && e.errors) {
+				form.setError(e.errors[0].field, { message: errorMessages[e.code] });
 			}
 		}
 	}

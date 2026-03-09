@@ -55,7 +55,7 @@ export class TicketsService {
 
     const user = await this.users.findById(payload.user.id as string);
 
-    const isAdmin = user.role.name === 'ADMIN' || user.role.name === 'OWNER';
+    const isAdmin = user.role === 'ADMIN' || user.role === 'OWNER';
 
     // const isAdmin = userRoles.some(
     //   ({ role }) => role.name === 'ADMIN' || role.name === 'OWNER',
@@ -102,44 +102,44 @@ export class TicketsService {
 
     const user = await this.users.findById(payload.user.id as string);
 
-    const isModerator = ['OWNER', 'ADMIN', 'MODERATOR'].includes(
-      user.role.name,
-    );
+    if (user.role) {
+      const isModerator = ['OWNER', 'ADMIN', 'MODERATOR'].includes(user?.role);
 
-    if (ticket?.userId !== payload.user.id && !isModerator) {
-      throw new HttpException(
-        'You dont have permission to update this ticket',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    if (dto.status) {
-      if (isModerator) {
-        const ticket = await this.repo.updateTicket({
-          id: id,
-          reviewedBy: payload.user.id,
-          payload: dto.payload,
-          statusName: dto.status,
-        });
-        if (dto.status === 'APPROVED' && ticket.payload) {
-          return this.updateEntityByTicket({
-            entityType: ticket.entityType,
-            entityAction: ticket.entityAction,
-            entityId: ticket.entityId || undefined,
-            payload: ticket.payload as object,
-          });
-        }
-      } else {
+      if (ticket?.userId !== payload.user.id && !isModerator) {
         throw new HttpException(
-          'You dont have permission to update status ticket',
+          'You dont have permission to update this ticket',
           HttpStatus.FORBIDDEN,
         );
       }
-    } else {
-      return this.repo.updateTicket({
-        id: id,
-        payload: dto.payload,
-      });
+
+      if (dto.status) {
+        if (isModerator) {
+          const ticket = await this.repo.updateTicket({
+            id: id,
+            reviewedBy: payload.user.id,
+            payload: dto.payload,
+            statusName: dto.status,
+          });
+          if (dto.status === 'APPROVED' && ticket.payload) {
+            return this.updateEntityByTicket({
+              entityType: ticket.entityType,
+              entityAction: ticket.entityAction,
+              entityId: ticket.entityId || undefined,
+              payload: ticket.payload as object,
+            });
+          }
+        } else {
+          throw new HttpException(
+            'You dont have permission to update status ticket',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      } else {
+        return this.repo.updateTicket({
+          id: id,
+          payload: dto.payload,
+        });
+      }
     }
   }
 

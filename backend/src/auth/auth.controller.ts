@@ -30,6 +30,7 @@ export class AuthController {
     @Body() dto: LoginDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
+
     const data = await this.authService.login(dto);
 
     res.cookie('refresh_token', data.tokens.refreshToken, {
@@ -43,7 +44,7 @@ export class AuthController {
     });
 
     return {
-      user: data.user,
+      ...data.user,
     };
   }
 
@@ -84,14 +85,8 @@ export class AuthController {
   @Post('logout')
   async logout(@GetUser('id') userId: string, @Res() res: Response) {
     await this.authService.logout(userId);
-    res.cookie('refresh_token', '', {
-      httpOnly: true,
-      secure: false,
-    });
-    res.cookie('access_token', '', {
-      httpOnly: true,
-      secure: false,
-    });
+    res.clearCookie('refresh_token');
+    res.clearCookie('access_token');
     return res.json({ success: true });
   }
 
@@ -110,18 +105,26 @@ export class AuthController {
       id: string;
       refreshToken: string;
     };
-    const data = await this.authService.refreshAccessToken(id, refreshToken);
-    res.cookie('refresh_token', data.tokens.refreshToken, {
-      httpOnly: true,
-      secure: false,
-    });
-    res.cookie('access_token', data.tokens.accessToken, {
-      httpOnly: true,
-      secure: false,
-    });
-    return {
-      user: data.user,
-    };
+
+    try {
+      const data = await this.authService.refreshAccessToken(id, refreshToken);
+      res.cookie('refresh_token', data.refreshToken, {
+        httpOnly: true,
+        secure: false,
+      });
+      res.cookie('access_token', data.accessToken, {
+        httpOnly: true,
+        secure: false,
+      });
+      return {};
+    } catch (err) {
+      console.log('ERROR:', err);
+      if (err.status === 401) {
+        res.clearCookie('refresh_token');
+        res.clearCookie('access_token');
+      }
+    }
+    return {};
   }
 
   @Post('reset-password')

@@ -117,7 +117,7 @@ const Page = async ({ params }: PageProps) => {
 
 	const { country } = await params;
 	const countryData: CountryData = await getData();
-	console.log("DATA:", countryData);
+
 
 	const metadata: Metadata = {
 		title: countryData.name,

@@ -1,23 +1,15 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { User } from "@/features/auth/model/types";
 
-export type User = {
-	id: string;
-	username: string;
-	email: string;
-	avatarUrl: string;
-	role: "USER" | "MODERATOR" | "ADMIN" | "OWNER";
-  dateOfRegistration: number;
-  status: string;
-} | null;
+export type StateUser = User | null;
 
 export type AuthState = {
-	user: User;
-
+	user: StateUser;
 	fetchAuthStatus: "idle" | "pending" | "success" | "failed";
 };
 
 export type SessionPayload = {
-	user: User;
+	user: StateUser;
 };
 
 const initialAuthState: AuthState = {

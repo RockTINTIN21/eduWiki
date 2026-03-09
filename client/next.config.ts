@@ -1,15 +1,16 @@
 const nextConfig = {
-  experimental: {
-    authInterrupts: true,
-  },
-	images: {
-		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "**",
-			},
-		],
-	},
+    experimental: {
+        authInterrupts: true,
+    },
+
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+        ],
+    },
 
 };
 

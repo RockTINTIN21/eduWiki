@@ -27,9 +27,10 @@ import type { Meta, Users } from "@/features/users-table/model/types";
 import { columns } from "@/features/users-table/ui/columns";
 import PaginationTable from "@/features/users-table/ui/pagination-table";
 import Search from "@/features/users-table/ui/search";
-import { apiGuardFetch } from "@/lib/api/api";
+import {ApiError, http} from "@/lib/api/http";
 
 export function DataTable() {
+
 	const [sorting, setSorting] = useState<SortingState>([]);
 
 	const params = useSearchParams();
@@ -52,22 +53,34 @@ export function DataTable() {
 		}
 	}, [params, rows, currentPage]);
 
-	const getUsers = (label?: string, value?: string) => {
+	const getUsers = async (label?: string, value?: string) => {
 		setLoading(true);
-		apiGuardFetch<{ data: Users[]; meta: Meta }>(
-			`${USERS_ENDPOINTS.getAllUsers}?page=${currentPage}&limit=${rows}${label && value ? `&label=${label}&value=${value}` : ""}`,
-		)
-			.then((res) => {
-				setData(res.data);
-				setMeta(res.meta);
-				setLoading(false);
-			})
-			.catch((err) => toast.error(err.message, { position: "top-center" }));
+
+		try {
+			const res = await http.get<{ data: Users[]; meta: Meta }>(
+				`${USERS_ENDPOINTS.getAllUsers}?page=${currentPage}&limit=${rows}${label && value ? `&label=${label}&value=${value}` : ""}`,
+			);
+			setData(res.data);
+			setMeta(res.meta);
+			setLoading(false);
+		} catch (err) {
+      if (err instanceof ApiError) {
+        toast.error(err.message, { position: "top-center" });
+      }
+		}
 	};
+
+	// useEffect(() => {
+	// 	apiLogoutTest();
+	// }, [user]);
 
 	useEffect(() => {
 		setCurrentPage(1);
 	}, [rows]);
+
+	useEffect(() => {
+		console.log("DATA:", data);
+	}, [data]);
 
 	const table = useReactTable({
 		data,
@@ -104,7 +117,11 @@ export function DataTable() {
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id} colSpan={header.colSpan} style={{ width: `${header.getSize()}px` }}>
+										<TableHead
+											key={header.id}
+											colSpan={header.colSpan}
+											style={{ width: `${header.getSize()}px` }}
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(

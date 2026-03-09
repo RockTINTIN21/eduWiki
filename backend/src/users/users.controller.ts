@@ -5,7 +5,8 @@ import {
   Get,
   Param,
   Patch,
-  Query, Req,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -15,7 +16,6 @@ import { Roles } from '../auth/roles/roles.decorator';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { SearchLabelsTypes } from './types/users.types';
 import type { Request } from 'express';
-import { RefreshTokenGuard } from '../auth/guard/refreshToken.guard';
 
 @Controller('users')
 export class UsersController {
@@ -30,6 +30,7 @@ export class UsersController {
     @Query('label') label: SearchLabelsTypes,
     @Query('value') value: string,
   ) {
+    console.log('FINDALL');
     return this.usersService.findAll({ page, limit, label, value });
   }
 
@@ -62,9 +63,16 @@ export class UsersController {
     await this.usersService.deleteUser(id);
   }
 
-  @Get(':username')
+  @Get('public-profile/:username')
   getPublicProfile(@Req() req: Request, @Param('username') username: string) {
     const token: string | undefined = req.cookies['access_token'];
     return this.usersService.getPublicProfile(username, token);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('me')
+  me(@Req() req: Request) {
+    const token: string = req.cookies['access_token'];
+    return this.usersService.me(token);
   }
 }

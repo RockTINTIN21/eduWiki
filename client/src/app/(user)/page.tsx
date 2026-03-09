@@ -11,18 +11,11 @@ import { useEffect, useState } from "react";
 import Card from "@/components/ui/card";
 import Anchor from "@/components/ui/anchor";
 import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
 
 
 export default function Home() {
 	const [countryData, setCountryData] = useState<any>();
-
-	useEffect(() => {
-		// const fetchData = async() => {
-		//   const res = await apiFetch("/countries");
-		//   setCountryData(res)
-		// }
-		// fetchData();
-	}, []);
 
 	return (
 		<div className="text-[#111827] relative mx-4 md:w-[960px] md:mx-auto pt-20 flex flex-col gap-6 pb-12">

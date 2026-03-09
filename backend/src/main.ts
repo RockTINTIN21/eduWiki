@@ -7,12 +7,12 @@ import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('/api');
   app.enableCors({
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-      'http://192.168.3.2:3001',
+      'http://26.216.9.84:3000',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -35,6 +35,6 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(5000, '0.0.0.0');
 }
 bootstrap();

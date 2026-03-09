@@ -1,7 +1,8 @@
 "use client";
 
 import { toast } from "sonner";
-import { apiGuardFetch } from "@/lib/api/api";
+import {http} from "@/lib/api/http";
+
 
 interface ReviewCardLikesProps {
 	likes: number;
@@ -22,7 +23,7 @@ const ReviewCardLikes = ({
 				position: "top-center",
 			});
 		try {
-			await apiGuardFetch("");
+			await http.get("");
 		} catch (e) {
 			toast.error("Пожалуйста повторите попытку позже", {
 				position: "top-center",
@@ -36,7 +37,7 @@ const ReviewCardLikes = ({
 				position: "top-center",
 			});
 		try {
-			await apiGuardFetch("");
+      await http.get("");
 		} catch (e) {
 			toast.error("Пожалуйста повторите попытку позже", {
 				position: "top-center",

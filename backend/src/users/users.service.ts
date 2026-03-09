@@ -12,7 +12,6 @@ import { CreateUserInputService } from './types/users.types';
 import { GetUsersInput } from './types/users.types';
 import { isUUID } from 'class-validator';
 import { ReviewEnum } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -188,5 +187,10 @@ export class UsersService {
     if (res) {
       return this.repo.deleteUser(id);
     }
+  }
+
+  async me(token: string) {
+    const decoded = this.jwtService.decode(token);
+    return this.findById(decoded.id);
   }
 }

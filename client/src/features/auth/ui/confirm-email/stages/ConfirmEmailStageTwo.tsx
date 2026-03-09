@@ -9,13 +9,14 @@ import {
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Spinner } from "@/components/ui/spinner";
-import { errorMessages } from "@/features/auth/lib/error-messages";
+
 import type {
 	AutoDialogModeType,
 	ConfirmStep,
 } from "@/features/auth/ui/AuthDialog";
 import ResendOtpCode from "@/features/auth/ui/confirm-email/ResendOTPCode";
-import { ApiError, apiFetch } from "@/lib/api/api";
+import {errorMessages} from "@/lib/api/error-messages";
+import {ApiError, http} from "@/lib/api/http";
 
 interface RegisterFormStageTwoProps {
 	onChangeConfirmStep: (step: ConfirmStep) => void;
@@ -48,15 +49,14 @@ const RegisterFormStageTwo = ({
 			type: type,
 		};
 		try {
-			await apiFetch("/otp/verify", {
-				method: "POST",
+			await http.post("/otp/verify", {
 				json: formattedData,
 			});
-      console.log('vizov')
+
 			onChangeConfirmStep("AFTER_CONFIRM_FORM");
 		} catch (e) {
-			if (e instanceof ApiError)
-				form.setError(e.field, { message: errorMessages[e.code] });
+			if (e instanceof ApiError && e.errors)
+        form.setError(e.errors[0].field, { message: errorMessages[e.code] });
 		}
 	}
 

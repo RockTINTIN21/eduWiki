@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
-import { apiFetch } from "@/lib/api/api";
+import {http} from "@/lib/api/http";
+
 
 const ResendOtpCode = ({
 	email,
@@ -32,8 +33,7 @@ const ResendOtpCode = ({
 	const resendCode = async () => {
 		setTime(59);
 		setOver(false);
-		await apiFetch("/otp/verification-otp", {
-			method: "POST",
+		await http.post("/otp/verification-otp", {
 			json: {
 				email,
 				type,

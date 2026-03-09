@@ -8,15 +8,14 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
-
-import { TextField } from "@/components/ui/text-field";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
+import { TextField } from "@/components/ui/text-field";
 import RegisterPassword from "@/features/auth/ui/forms/RegisterPassword";
-import { apiFetch } from "@/lib/api/api";
+import { AUTH_ENDPOINTS } from "@/lib/api/endpoints/auth.endpoints";
+import {http} from "@/lib/api/http";
 
 const RegisterForm = ({
 	email,
@@ -63,8 +62,7 @@ const RegisterForm = ({
 		formData.append("password", data.password);
 		formData.append("username", data.username);
 
-		await apiFetch(AUTH_ENDPOINTS.register, {
-			method: "POST",
+		await http.post(AUTH_ENDPOINTS.register, {
 			body: formData,
 		});
 		toast.success("Вы успешно зарегистрированы", { position: "top-center" });
@@ -90,7 +88,7 @@ const RegisterForm = ({
 
 	const checkUsername = async () => {
 		setLoading(true);
-		const res = await apiFetch<{ available: boolean }>(
+		const res = await http.get<{ available: boolean }>(
 			`/auth/check-username/${debouncedValue}`,
 		);
 		if (!res.available) {

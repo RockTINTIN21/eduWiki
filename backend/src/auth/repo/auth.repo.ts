@@ -13,7 +13,6 @@ export class AuthRepo {
         email: true,
         username: true,
         avatarUrl: true,
-        refreshToken: true,
         password: true,
         role: {
           select: { name: true },
@@ -34,7 +33,6 @@ export class AuthRepo {
         email: true,
         username: true,
         avatarUrl: true,
-        refreshToken: true,
         password: true,
         role: {
           select: { name: true },

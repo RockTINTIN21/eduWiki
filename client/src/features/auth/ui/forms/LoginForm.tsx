@@ -8,10 +8,11 @@ import { TextField } from "@/components/ui/text-field";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { fetchLogin } from "@/features/auth/api/auth.requests";
-import { errorMessages } from "@/features/auth/lib/error-messages";
+
 import type { AutoDialogModeType } from "@/features/auth/ui/AuthDialog";
-import { ApiError } from "@/lib/api/api";
 import { useAppDispatch } from "@/lib/store/store";
+import {errorMessages} from "@/lib/api/error-messages";
+import {ApiError} from "@/lib/api/http";
 
 const LoginForm = ({
 	onChangeMode,
@@ -34,11 +35,18 @@ const LoginForm = ({
 	});
 
 	async function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log('data:',data)
 		try {
 			await dispatch(fetchLogin(data));
 		} catch (e) {
-			if (e instanceof ApiError) {
-				form.setError(e.field, { message: errorMessages[e.code] });
+      console.log('error', e);
+			if (e instanceof ApiError && e.errors) {
+        console.log(e.errors);
+        e.errors.map((error) => {
+          form.setError(error.field, {message: errorMessages[e.code]})
+          console.log('error:',error)
+        });
+				// form.setError(e.e, { message: errorMessages[e.code] });
 			}
 		}
 	}

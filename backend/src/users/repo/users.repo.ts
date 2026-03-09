@@ -71,19 +71,23 @@ export class UsersRepo {
   }
 
   async findById(id: string) {
-    return this.prisma.user.findUnique({
+    const res = await this.prisma.user.findUnique({
       where: { id },
       select: {
         id: true,
         email: true,
         username: true,
         avatarUrl: true,
-        refreshToken: true,
         role: {
           select: { name: true },
         },
       },
     });
+
+    return {
+      ...res,
+      role: res?.role.name,
+    };
   }
 
   async findByUsername(value: string) {

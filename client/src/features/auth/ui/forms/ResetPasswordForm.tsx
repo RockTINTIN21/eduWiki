@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { AUTH_ENDPOINTS } from "@/features/auth/api/auth.endpoints";
 import RegisterPassword from "@/features/auth/ui/forms/RegisterPassword";
-import { apiFetch } from "@/lib/api/api";
+import { AUTH_ENDPOINTS } from "@/lib/api/endpoints/auth.endpoints";
+import { http } from "@/lib/api/http";
 
 const ResetPasswordForm = ({
 	email,
@@ -36,8 +36,7 @@ const ResetPasswordForm = ({
 	});
 
 	async function onSubmit(data: z.infer<typeof formSchema>) {
-		await apiFetch(AUTH_ENDPOINTS.resetPassword, {
-			method: "POST",
+		await http.post(AUTH_ENDPOINTS.resetPassword, {
 			json: {
 				email: email,
 				password: data.password,

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { API_UPLOADS_URL } from "@/lib/api/api";
+import {API_UPLOADS_URL} from "@/lib/constants";
 
 interface UserCardProps {
 	avatarUrl?: string;
